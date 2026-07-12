@@ -31,6 +31,7 @@ def main():
     ap.add_argument("--lr", type=float, default=1e-4)
     ap.add_argument("--maxlen", type=int, default=1024)
     ap.add_argument("--max-steps", type=int, default=-1)
+    ap.add_argument("--resume", action="store_true")
     a = ap.parse_args()
     t0 = time.time()
     print(f"[load] {a.model}", flush=True)
@@ -54,7 +55,13 @@ def main():
                          peft_config=lora, processing_class=tok)
     trainer.model.print_trainable_parameters()
     print(f"[train] starting ({time.time()-t0:.0f}s)", flush=True)
-    trainer.train()
+    ckpt = None
+    if a.resume:
+        import glob
+        cks = sorted(glob.glob(str(Path(a.out)/"checkpoint-*")), key=lambda p: int(p.split("-")[-1]))
+        ckpt = cks[-1] if cks else None
+        if ckpt: print(f"[resume] {ckpt}", flush=True)
+    trainer.train(resume_from_checkpoint=ckpt)
     trainer.save_model(a.out); tok.save_pretrained(a.out)
     json.dump({"model": a.model, "n": len(ds), "epochs": a.epochs,
                "seconds": time.time()-t0}, open(Path(a.out)/"train_meta.json","w"), indent=2)
