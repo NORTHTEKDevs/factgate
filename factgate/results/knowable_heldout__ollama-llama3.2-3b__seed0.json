@@ -1,0 +1,27 @@
+{
+  "split": "knowable_heldout",
+  "target": "ollama:llama3.2:3b",
+  "n": 10,
+  "correct": 1,
+  "accuracy": 0.1,
+  "ci95": [
+    0.01787574951572113,
+    0.4041563854975721
+  ],
+  "config": {
+    "max_rounds": 6,
+    "limit": 10,
+    "kb_snapshot": "C:\\Users\\Krist\\projects\\active\\factgate\\kb_snapshot_eval90k",
+    "seed": 0
+  },
+  "metrics": {
+    "gate_claims_checked": 5,
+    "gated_hallucination_rate": 1.0,
+    "gate_verdict_counts": {
+      "OUT_OF_KB": 5
+    }
+  },
+  "notes": "",
+  "evidence_tier": "measured-fresh",
+  "timestamp": "2026-07-12T08:29:25.938445+00:00"
+}

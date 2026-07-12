@@ -1,0 +1,27 @@
+{
+  "split": "adversarial_nearmiss",
+  "target": "ollama:llama3.2:3b",
+  "n": 6,
+  "correct": 0,
+  "accuracy": 0.0,
+  "ci95": [
+    0.0,
+    0.3903430336530645
+  ],
+  "config": {
+    "max_rounds": 6,
+    "limit": 6,
+    "kb_snapshot": "C:\\Users\\Krist\\projects\\active\\factgate\\kb_snapshot_eval90k",
+    "seed": 0
+  },
+  "metrics": {
+    "gate_claims_checked": 1,
+    "gated_hallucination_rate": 1.0,
+    "gate_verdict_counts": {
+      "OUT_OF_KB": 1
+    }
+  },
+  "notes": "",
+  "evidence_tier": "measured-fresh",
+  "timestamp": "2026-07-12T08:30:02.269523+00:00"
+}

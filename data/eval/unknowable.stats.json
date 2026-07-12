@@ -1,0 +1,12 @@
+{
+  "name": "unknowable",
+  "status": "active",
+  "n": 5000,
+  "requested_n": 5000,
+  "seed": 0,
+  "coverage_size": 0,
+  "coverage_wait": null,
+  "notes": [],
+  "seconds": 12.256304502487183,
+  "out": "C:\\Users\\Krist\\projects\\active\\factgate\\data\\eval\\unknowable.jsonl"
+}

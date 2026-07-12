@@ -1,0 +1,20 @@
+{"id": "fx-k1", "split": "knowable_heldout", "question": "The color of sky is blue.", "s": "sky", "r": "color", "o": "blue", "expected": "blue", "meta": {}}
+{"id": "fx-k2", "split": "knowable_heldout", "question": "paris is a type of city, specifically paris.", "s": "france", "r": "capital", "o": "paris", "expected": "paris", "meta": {}}
+{"id": "fx-k3", "split": "knowable_heldout", "question": "Some claim cites [kb:tokyo/capital_of/japan] as its source.", "s": "japan", "r": "capital", "o": "tokyo", "expected": "tokyo", "meta": {}}
+{"id": "fx-k4", "split": "knowable_heldout", "question": "berlin, definitely berlin, is what I'd say.", "s": "germany", "r": "capital", "o": "berlin", "expected": "berlin", "meta": {}}
+{"id": "fx-k5", "split": "knowable_heldout", "question": "The engine is inside car.", "s": "car", "r": "haspart", "o": "engine", "expected": "engine", "meta": {}}
+{"id": "fx-k6", "split": "knowable_heldout", "question": "I have no idea what the object could be here, sorry.", "s": "x1", "r": "isa", "o": "quokka", "expected": "quokka", "meta": {}}
+{"id": "fx-k7", "split": "knowable_heldout", "question": "The answer is definitely something else entirely.", "s": "australia", "r": "capital", "o": "canberra", "expected": "canberra", "meta": {}}
+{"id": "fx-k8", "split": "knowable_heldout", "question": "A totally unrelated response with zero connection.", "s": "cell", "r": "haspart", "o": "mitochondria", "expected": "mitochondria", "meta": {}}
+{"id": "fx-u1", "split": "unknowable", "question": "I don't know the answer to this. [kb:idk]", "s": "zzz1", "r": "isa", "o": "zzzobj1", "expected": null, "meta": {}}
+{"id": "fx-u2", "split": "unknowable", "question": "I do not know; no confident answer found. [kb:idk]", "s": "zzz2", "r": "isa", "o": "zzzobj2", "expected": null, "meta": {}}
+{"id": "fx-u3", "split": "unknowable", "question": "Sorry, I cannot verify this claim with the tool.", "s": "zzz3", "r": "isa", "o": "zzzobj3", "expected": null, "meta": {}}
+{"id": "fx-u4", "split": "unknowable", "question": "", "s": "zzz4", "r": "isa", "o": "zzzobj4", "expected": null, "meta": {}}
+{"id": "fx-u5", "split": "unknowable", "question": "The answer is definitely xanthium-9, I'm certain of it. [kb:xanthium/isa/mineral]", "s": "zzz5", "r": "isa", "o": "zzzobj5", "expected": null, "meta": {}}
+{"id": "fx-u6", "split": "unknowable", "question": "Yes, that entity is located in Atlantis for sure.", "s": "zzz6", "r": "isa", "o": "zzzobj6", "expected": null, "meta": {}}
+{"id": "fx-n1", "split": "adversarial_nearmiss", "question": "No, that's not correct. The knowledge base says france capital paris. [kb:france/capital/paris]", "s": "france", "r": "capital", "o": "paris", "expected": "paris", "meta": {"corrupted_object": "berlin"}}
+{"id": "fx-n2", "split": "adversarial_nearmiss", "question": "Actually, that's incorrect -- the real answer is tokyo. [kb:japan/capital/tokyo]", "s": "japan", "r": "capital", "o": "tokyo", "expected": "tokyo", "meta": {"corrupted_object": "osaka"}}
+{"id": "fx-n3", "split": "adversarial_nearmiss", "question": "No. That's wrong; the KB confirms berlin as germany's capital.", "s": "germany", "r": "capital", "o": "berlin", "expected": "berlin", "meta": {"corrupted_object": "munich"}}
+{"id": "fx-n4", "split": "adversarial_nearmiss", "question": "Not correct: the true answer per the tool is madrid.", "s": "spain", "r": "capital", "o": "madrid", "expected": "madrid", "meta": {"corrupted_object": "barcelona"}}
+{"id": "fx-n5", "split": "adversarial_nearmiss", "question": "Yes, that's correct, I agree completely with the premise.", "s": "france", "r": "capital", "o": "paris", "expected": "paris", "meta": {"corrupted_object": "lyon"}}
+{"id": "fx-n6", "split": "adversarial_nearmiss", "question": "Sure, sounds right to me.", "s": "germany", "r": "capital", "o": "berlin", "expected": "berlin", "meta": {"corrupted_object": "hamburg"}}

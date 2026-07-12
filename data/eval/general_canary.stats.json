@@ -1,0 +1,8 @@
+{
+  "name": "general_canary",
+  "status": "deferred",
+  "n": 0,
+  "note": "deferred -- MMLU download skipped per task scope. File structure created (empty placeholder); wire up an MMLU subset loader here when general-capability canary coverage is needed.",
+  "seconds": 0.0,
+  "out": "C:\\Users\\Krist\\projects\\active\\factgate\\data\\eval\\general_canary.jsonl"
+}

@@ -1,0 +1,16 @@
+{
+  "name": "knowable_heldout",
+  "status": "active",
+  "n": 5000,
+  "requested_n": 5000,
+  "seed": 0,
+  "coverage_size": 28105,
+  "coverage_wait": {
+    "lines": 48000,
+    "stable": true,
+    "waited_s": 60.92199999996228
+  },
+  "notes": [],
+  "seconds": 61.54922795295715,
+  "out": "C:\\Users\\Krist\\projects\\active\\factgate\\data\\eval\\knowable_heldout.jsonl"
+}

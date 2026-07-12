@@ -1,0 +1,8 @@
+{
+  "name": "compositional",
+  "status": "deferred",
+  "n": 0,
+  "note": "deferred -- rain/raincg's bench suite (raincg/bench) already covers compositional generalization (SCAN/COGS/PCFG-SET); no FactGate-specific compositional split built yet.",
+  "seconds": 0.00154876708984375,
+  "out": "C:\\Users\\Krist\\projects\\active\\factgate\\data\\eval\\compositional.jsonl"
+}
