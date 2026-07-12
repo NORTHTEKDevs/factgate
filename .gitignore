@@ -10,3 +10,6 @@ data/sft_full.jsonl
 data/extractor_pairs.jsonl
 data/logs_*.txt
 .venv*/
+
+.venv-rocm/
+checkpoints/
