@@ -28,3 +28,11 @@
 - Every result -> contract JSON in factgate/results/ + RESULTS.md regen (raincg pattern)
 - Checkpoint after every phase: git commit in factgate repo + task list update + memory note
 - HYMN GPU validation: SKIPPED on this hardware tier unless B0 proves a torch GPU backend; logged either way
+
+## B0 VERDICT (2026-07-12, measured - probes/backend_probe.json, commit be83b93)
+- Training tier: extractor = DirectML fp16 (0.5-1.5B, LoRA or from-scratch tagger fallback);
+  generator v1 = PROMPTED tool-use via Ollama (qwen2.5:14b, 16 tok/s GPU) behind VerifiedBackend.
+- 7B+ local fine-tune: INFEASIBLE on proven stack (QLoRA unimplemented on DML; ROCm gfx1151
+  untested nightlies only, deferred - needs user present for TDR recovery, or rented GPU).
+- B2 acceptance re-scoped accordingly: ship whichever generator config wins the harness;
+  fine-tuned-generator row remains an open slot with documented unlock paths.
