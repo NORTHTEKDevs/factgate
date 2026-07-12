@@ -21,8 +21,7 @@ MAX_RESUMES = 30
 TRAIN = [PY, "scripts/train_lora.py", "--model", "Qwen/Qwen2.5-14B-Instruct",
          "--out", str(OUT), "--epochs", "1", "--bs", "2", "--accum", "8",
          "--maxlen", "1024", "--resume"]
-ENV = {**os.environ, "TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL": "1",
-       "HF_HUB_DISABLE_TELEMETRY": "1"}
+ENV = {**os.environ, "HF_HUB_DISABLE_TELEMETRY": "1"}  # NO experimental flash-attn (native crash)
 
 def log_done():
     return LOG.exists() and DONE_MARK in LOG.read_text(encoding="utf-8", errors="ignore")
