@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "factgate"
+version = "0.1.0"
+description = "Fact-verification gate for LLM claims backed by RCK (relational compositional knowledge)."
+requires-python = ">=3.11"
+dependencies = [
+    "numpy>=1.24",
+    "pydantic>=2.0",
+]
+
+# rck-kernel is not on PyPI. Install it separately as an editable local
+# package before running factgate:
+#   pip install -e C:/Users/Krist/projects/active/rck
+# See README.md.
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["factgate*"]
