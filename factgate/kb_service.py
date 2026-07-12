@@ -21,24 +21,36 @@ DEFAULT_SNAPSHOT = Path(__file__).resolve().parent.parent / "data" / "kb_snapsho
 
 def load_kb(jsonl_path: str | Path = DEFAULT_JSONL,
             snapshot_dir: str | Path = DEFAULT_SNAPSHOT,
-            *, dim: int = 4096, n_shards: int = 64, seed: int = 0,
-            force_rebuild: bool = False, symmetrize: bool = True,
+            *, dim: int = 4096, n_shards: int | None = None, seed: int = 0,
+            force_rebuild: bool = False, symmetrize: bool = False,
             max_facts: int | None = None) -> ConsciousAgent:
     """Load a ConsciousAgent-backed KB.
 
-    Fast path: if `snapshot_dir` already holds a saved session and
-    `force_rebuild` is False, reload it (should complete in a few
-    seconds regardless of KB size).
+    Config note (2026-07-12): defaults now match RCK's proven scale-study
+    setup -- ``symmetrize=False`` and ``n_shards=auto_shard_for_kb(n)`` (keeps
+    facts-per-shard within HRR bundle capacity so recall scores stay healthy).
+    The prior ``n_shards=64, symmetrize=True`` collapsed retrieval scores at
+    90k-fact scale, driving the gate to abstain on nearly every fact.
 
-    Slow path: bulk-ingest `jsonl_path` from scratch into a new
-    `ConsciousAgent`, then persist a snapshot to `snapshot_dir` so the
-    next call hits the fast path.
+    Fast path: if `snapshot_dir` already holds a saved session and
+    `force_rebuild` is False, reload it.
+
+    Slow path: bulk-ingest `jsonl_path` into a new `ConsciousAgent`, then
+    persist a snapshot to `snapshot_dir` so the next call hits the fast path.
     """
+    from rck.shard_sizing import auto_shard_for_kb
+
     snapshot_dir = Path(snapshot_dir)
     jsonl_path = Path(jsonl_path)
 
     if not force_rebuild and (snapshot_dir / "meta.json").exists():
         return load_session(snapshot_dir)
+
+    if n_shards is None:
+        n_facts = sum(1 for _ in open(jsonl_path, encoding="utf-8"))
+        if max_facts is not None:
+            n_facts = min(n_facts, max_facts)
+        n_shards = auto_shard_for_kb(n_facts, dim=dim)
 
     agent = ConsciousAgent(dim=dim, n_shards=n_shards, seed=seed)
     bulk_load_jsonl(agent.knowledge, jsonl_path,

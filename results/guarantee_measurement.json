@@ -1,0 +1,52 @@
+{
+  "true_stored": {
+    "n": 1500,
+    "verdicts": {
+      "VERIFIED": 510,
+      "CONTRADICTED": 35,
+      "OUT_OF_KB": 512,
+      "UNRESOLVED": 443
+    },
+    "true_verified_rate": 0.34,
+    "ci95": [
+      0.31646290335421945,
+      0.36435454444081433
+    ]
+  },
+  "holdout_absent": {
+    "n": 1500,
+    "verdicts": {
+      "VERIFIED": 0,
+      "CONTRADICTED": 108,
+      "OUT_OF_KB": 1052,
+      "UNRESOLVED": 340
+    },
+    "false_verified_rate": 0.0,
+    "ci95": [
+      0,
+      0.002554524359480413
+    ]
+  },
+  "corrupted_wrong_object": {
+    "n": 1500,
+    "verdicts": {
+      "VERIFIED": 0,
+      "CONTRADICTED": 630,
+      "OUT_OF_KB": 495,
+      "UNRESOLVED": 375
+    },
+    "false_verified_rate": 0.0,
+    "contradiction_catch_rate": 0.42,
+    "ci95_false_verified": [
+      0,
+      0.002554524359480413
+    ]
+  },
+  "kb_config": {
+    "facts": 90000,
+    "shards": 2048,
+    "symmetrize": false,
+    "known_threshold": 0.11
+  },
+  "seconds": 241.22698616981506
+}

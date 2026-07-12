@@ -1,0 +1,13 @@
+{
+  "counts": {
+    "qa_known": 33303,
+    "qa_idk": 697,
+    "idk_absent": 7281,
+    "idk_holdout": 6000,
+    "corrupt": 5876
+  },
+  "sft_total": 53157,
+  "known_threshold": 0.11,
+  "method": "live kb.answer, cite real RCK output; low-conf->IDK",
+  "seconds": 21.056856632232666
+}
