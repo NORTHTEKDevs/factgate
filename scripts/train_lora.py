@@ -47,7 +47,7 @@ def main():
     cfg = SFTConfig(output_dir=a.out, num_train_epochs=a.epochs,
                     per_device_train_batch_size=a.bs, gradient_accumulation_steps=a.accum,
                     learning_rate=a.lr, lr_scheduler_type="cosine", warmup_ratio=0.03,
-                    logging_steps=10, save_steps=200, save_total_limit=3,
+                    logging_steps=10, save_steps=100, save_total_limit=4,
                     bf16=True, max_length=a.maxlen, max_steps=a.max_steps,
                     gradient_checkpointing=True, report_to=[], dataset_num_proc=1,
                     completion_only_loss=False, packing=True)

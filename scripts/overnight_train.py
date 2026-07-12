@@ -19,9 +19,12 @@ CHECK_S = 300
 MAX_RESUMES = 30
 
 TRAIN = [PY, "scripts/train_lora.py", "--model", "Qwen/Qwen2.5-14B-Instruct",
-         "--out", str(OUT), "--epochs", "1", "--bs", "2", "--accum", "8",
-         "--maxlen", "1024", "--resume"]
-ENV = {**os.environ, "HF_HUB_DISABLE_TELEMETRY": "1"}  # NO experimental flash-attn (native crash)
+         "--out", str(OUT), "--epochs", "1", "--bs", "1", "--accum", "16",
+         "--maxlen", "1024", "--max-steps", "400", "--resume"]
+# PROVEN-STABLE env: expandable_segments fixes the HIP fragmentation crash at step 4-5;
+# NO experimental flash-attn (native crash). bs1 lowers activation pressure.
+ENV = {**os.environ, "HF_HUB_DISABLE_TELEMETRY": "1",
+       "PYTORCH_HIP_ALLOC_CONF": "expandable_segments:True"}
 
 def log_done():
     return LOG.exists() and DONE_MARK in LOG.read_text(encoding="utf-8", errors="ignore")
@@ -44,7 +47,7 @@ write_status(phase="watching", resumes=0)
 # wait out an initial grace so we don't fight the already-running launch
 time.sleep(CHECK_S)
 while True:
-    if log_done() or (OUT/"adapter_model.safetensors").exists():
+    if log_done() or (OUT/"adapter_model.safetensors").exists() or (OUT/"train_meta.json").exists():
         write_status(phase="training_done"); break
     if log_stale():
         if resumes >= MAX_RESUMES:
