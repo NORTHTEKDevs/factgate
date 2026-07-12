@@ -1,0 +1,10 @@
+{
+  "dml": {
+    "supported": false,
+    "error_type": "NotImplementedError",
+    "error": "Could not run 'bitsandbytes::quantize_4bit' with arguments from the 'AutogradPrivateUse1' backend. This could be because the operator doesn't exist for this backend, or was omitted during the selective/custom build process (if using custom build). If you are a Facebook employee using PyTorch on mobi"
+  },
+  "cpu": {
+    "supported": true
+  }
+}
