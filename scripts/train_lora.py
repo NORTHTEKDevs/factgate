@@ -50,7 +50,7 @@ def main():
                     logging_steps=10, save_steps=200, save_total_limit=3,
                     bf16=True, max_length=a.maxlen, max_steps=a.max_steps,
                     gradient_checkpointing=True, report_to=[], dataset_num_proc=1,
-                    completion_only_loss=False)
+                    completion_only_loss=False, packing=True)
     trainer = SFTTrainer(model=model, args=cfg, train_dataset=ds,
                          peft_config=lora, processing_class=tok)
     trainer.model.print_trainable_parameters()
