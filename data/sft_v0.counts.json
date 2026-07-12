@@ -1,0 +1,18 @@
+{
+  "source": "C:\\Users\\Krist\\projects\\active\\rck\\data\\conceptnet_scale_100k.jsonl",
+  "kb_facts_loaded": 20000,
+  "entity_count": 22684,
+  "holdout_facts": 0,
+  "counts": {
+    "qa": 100,
+    "chains": 100,
+    "idk_absent": 100,
+    "corrupt": 100
+  },
+  "total_examples": 400,
+  "schema_valid": 400,
+  "schema_total": 400,
+  "schema_errors": [],
+  "seconds": 8.14408802986145,
+  "out": "data\\sft_v0.jsonl"
+}
