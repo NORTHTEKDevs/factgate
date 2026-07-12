@@ -6,11 +6,13 @@
   "seed": 0,
   "coverage_size": 28105,
   "coverage_wait": {
-    "lines": 48000,
-    "stable": true,
-    "waited_s": 60.92199999996228
+    "lines": 53157,
+    "stable": false,
+    "waited_s": 5.1560000000172295
   },
-  "notes": [],
-  "seconds": 61.54922795295715,
+  "notes": [
+    "coverage set computed from an IN-PROGRESS sft_full.jsonl snapshot (53157 lines; file was still growing after 5s of polling) -- some of these 'held-out' facts may still end up in training data once generation finishes; re-run with force=True once scripts/generate_full.py completes for an authoritative exclusion set."
+  ],
+  "seconds": 5.803539037704468,
   "out": "C:\\Users\\Krist\\projects\\active\\factgate\\data\\eval\\knowable_heldout.jsonl"
 }

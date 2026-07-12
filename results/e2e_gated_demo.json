@@ -1,0 +1,17 @@
+[
+  {
+    "case": "known fact (dog isa)",
+    "inner_said": "A dog is an animal. [kb:dog/isa/animal]",
+    "gated_output": "A dog is an animal. [kb:dog/isa/animal] [unverified]\n\n---verification---\n{\"claims_checked\": 1, \"supported\": 0, \"contradicted\": 0, \"out_of_kb\": 1, \"claims\": [{\"subject\": \"dog\", \"relation\": \"isa\", \"object\": \"animal\", \"verdict\": \"AMBIGUOUS\"}], \"tool_loop_iterations\": 0}"
+  },
+  {
+    "case": "false premise",
+    "inner_said": "The capital of france is berlin. [kb:france/capital/berlin]",
+    "gated_output": "The capital of france is berlin. [kb:france/capital/berlin] [unverified]\n\n---verification---\n{\"claims_checked\": 1, \"supported\": 0, \"contradicted\": 0, \"out_of_kb\": 1, \"claims\": [{\"subject\": \"france\", \"relation\": \"capital\", \"object\": \"berlin\", \"verdict\": \"OUT_OF_KB\"}], \"tool_loop_iterations\": 0}"
+  },
+  {
+    "case": "out-of-KB entity",
+    "inner_said": "A glorptron is a kind of zibbler. [kb:glorptron/isa/zibbler]",
+    "gated_output": "A glorptron is a kind of zibbler. [kb:glorptron/isa/zibbler] [unverified]\n\n---verification---\n{\"claims_checked\": 1, \"supported\": 0, \"contradicted\": 0, \"out_of_kb\": 1, \"claims\": [{\"subject\": \"glorptron\", \"relation\": \"isa\", \"object\": \"zibbler\", \"verdict\": \"OUT_OF_KB\"}], \"tool_loop_iterations\": 0}"
+  }
+]

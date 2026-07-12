@@ -1,20 +1,18 @@
 {
   "name": "adversarial_nearmiss",
   "status": "active",
-  "n": 6,
+  "n": 2000,
   "requested_n": 2000,
   "seed": 0,
   "coverage_size": 28105,
   "coverage_wait": {
-    "lines": 48000,
-    "stable": true,
-    "waited_s": 60.90600000001723
+    "lines": 53157,
+    "stable": false,
+    "waited_s": 5.155999999959022
   },
   "notes": [
-    "produced 6 < requested 2000 despite a pool of 58549 candidate isa/locatedin facts and 60000 corrupt.generate() attempts (max_attempts_factor=30). Root cause: the eval-90k RCK KB (dim=4096, n_shards=1024) rarely returns a top-1 retrieval score >= CONFIDENT_THRESHOLD=0.15 at this fact count -- the SAME sparsity independently visible in data/sft_full.counts.json (qa_known=4 vs qa_idk=33996 for the live-KB QA generator). This is a measured property of the KB at 90k-fact scale, not a harness bug; corrupt.py's confidence gate was left untouched (reused as-is per task scope) rather than lowered to manufacture more examples."
+    "coverage set computed from an IN-PROGRESS sft_full.jsonl snapshot (53157 lines; file was still growing after 5s of polling) -- some of these 'held-out' facts may still end up in training data once generation finishes; re-run with force=True once scripts/generate_full.py completes for an authoritative exclusion set."
   ],
-  "seconds": 101.84582829475403,
-  "out": "C:\\Users\\Krist\\projects\\active\\factgate\\data\\eval\\adversarial_nearmiss.jsonl",
-  "max_attempts_factor_used": 30,
-  "attempts_budget": 60000
+  "seconds": 9.02700161933899,
+  "out": "C:\\Users\\Krist\\projects\\active\\factgate\\data\\eval\\adversarial_nearmiss.jsonl"
 }

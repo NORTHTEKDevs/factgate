@@ -1,27 +1,27 @@
 {
   "split": "knowable_heldout",
   "target": "ollama:llama3.2:3b",
-  "n": 10,
-  "correct": 1,
-  "accuracy": 0.1,
+  "n": 60,
+  "correct": 9,
+  "accuracy": 0.15,
   "ci95": [
-    0.01787574951572113,
-    0.4041563854975721
+    0.08097349242295687,
+    0.26114825891159615
   ],
   "config": {
     "max_rounds": 6,
-    "limit": 10,
-    "kb_snapshot": "C:\\Users\\Krist\\projects\\active\\factgate\\kb_snapshot_eval90k",
+    "limit": 60,
+    "kb_snapshot": "kb_snapshot_eval90k",
     "seed": 0
   },
   "metrics": {
-    "gate_claims_checked": 5,
+    "gate_claims_checked": 36,
     "gated_hallucination_rate": 1.0,
     "gate_verdict_counts": {
-      "OUT_OF_KB": 5
+      "OUT_OF_KB": 36
     }
   },
   "notes": "",
   "evidence_tier": "measured-fresh",
-  "timestamp": "2026-07-12T08:29:25.938445+00:00"
+  "timestamp": "2026-07-12T08:57:52.375519+00:00"
 }
