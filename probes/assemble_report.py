@@ -3,7 +3,7 @@ Every number here is either read directly from a captured command-output JSON fi
 or is an arithmetic derivation of those measured numbers (labeled as such)."""
 import json, os
 
-OUT_DIR = r"C:\Users\Krist\projects\active\factgate\probes"
+OUT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def load(name):
     with open(os.path.join(OUT_DIR, name)) as f:
@@ -239,7 +239,7 @@ probe = {
         },
         "cpu": {
             "status": "measured",
-            "baseline_venv": "rain venv (C:/Users/Krist/projects/active/rain/.venv), torch 2.13.0+cpu, 32 threads -- the official baseline per task spec",
+            "baseline_venv": "a sibling project's venv, torch 2.13.0+cpu, 32 threads -- the official baseline per task spec",
             "steps_s_10M": cpu_rain["steps_s_10M_cpu"],
             "tok_s_10M": round(tok_s_cpu_rain_10M, 1),
             "param_count_10M_model": cpu_rain["param_count"],

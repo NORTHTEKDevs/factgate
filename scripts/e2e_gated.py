@@ -1,13 +1,20 @@
-"""B4 end-to-end: drive Hyperion's VerifiedBackend (ollama inner + real RCK gate)
-on 3 diagnostic prompts. Proves the deployment path, not just the gate in isolation."""
+"""B4 end-to-end: drive the serving gateway's VerifiedBackend (ollama inner + real
+RCK gate) on 3 diagnostic prompts. Proves the deployment path, not just the gate
+in isolation.
+
+Requires a separate OpenAI-compatible serving gateway checked out alongside this
+repo (not included here) that exposes `serving.factgate_backend.VerifiedBackend`.
+Point SERVING_GATEWAY_PATH at that checkout before running.
+"""
 import json, sys, os
 from pathlib import Path
 FG = Path(__file__).resolve().parents[1]
-HYP = Path.home()/"projects/active/hyperion"
-sys.path.insert(0, str(HYP)); sys.path.insert(0, str(FG))
-os.environ["HYPERION_FACTGATE_MODE"] = "inproc"
-os.environ["HYPERION_FACTGATE_INNER"] = "ollama"
-os.environ["HYPERION_FACTGATE_REPO"] = str(FG)
+SERVING_GATEWAY = Path(os.environ.get(
+    "SERVING_GATEWAY_PATH", str(FG.parent / "serving-gateway")))
+sys.path.insert(0, str(SERVING_GATEWAY)); sys.path.insert(0, str(FG))
+os.environ["SERVING_GATEWAY_FACTGATE_MODE"] = "inproc"
+os.environ["SERVING_GATEWAY_FACTGATE_INNER"] = "ollama"
+os.environ["SERVING_GATEWAY_FACTGATE_REPO"] = str(FG)
 os.environ.setdefault("OLLAMA_MODEL", "llama3.2:3b")
 
 # point the inproc gate at the corrected eval-90k snapshot

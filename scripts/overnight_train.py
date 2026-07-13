@@ -89,7 +89,7 @@ Adapter: `checkpoints/factgate-14b/adapter_model.safetensors`. Resumes used: {re
 - **gate leaked (false-VERIFIED): {res.get('gate_leaked_verified','?')}**  (target 0)
 
 The trained model is the fluent generator; the RCK gate is the hard guarantee.
-Serve via Hyperion VerifiedBackend (HYPERION_BACKEND=verified). See RESULTS.md.
+Serve via the VerifiedBackend serving gateway (SERVING_BACKEND=verified). See RESULTS.md.
 """)
     write_status(phase="DONE", resumes=resumes, eval=res)
 else:

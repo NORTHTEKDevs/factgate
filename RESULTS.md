@@ -31,7 +31,7 @@ retrieval-score calibration at 90k-fact scale, which is tunable (see below).
 
 ## End-to-end deployment path works
 
-`results/e2e_gated_demo.json` — Hyperion `VerifiedBackend` (inproc RCK gate) on
+`results/e2e_gated_demo.json` — the `VerifiedBackend` serving gateway (inproc RCK gate) on
 3 diagnostic prompts. Every non-confirmable claim is flagged `[unverified]`;
 nothing false passes as verified:
 
@@ -56,33 +56,38 @@ Measured recall at 90k, correct config: recall@1 76%, recall@3 92%, **recall@5
 96%** (15% of `(S,R)` pairs are multi-valued, so top-1-by-source-identity
 understates true recallability).
 
-## Hardware reality (measured — `probes/backend_probe.json`)
+## Hardware reality (measured)
 
-The "96 GB VRAM" is AMD Strix Halo **unified memory**, not a CUDA GPU. Measured
-verdict:
+The "96 GB VRAM" is AMD Strix Halo **unified memory** (Radeon 8060S iGPU,
+gfx1151), not a CUDA GPU. The first probe (`probes/backend_probe.json`) tried
+torch-directml and concluded a local fine-tune was impractical — DirectML fp16
+trains but bf16 crashes and 4-bit QLoRA is unimplemented.
 
-- **torch-directml fp16 trains** (17-19k tok/s @ 7M params); bf16 crashes;
-  bitsandbytes 4-bit QLoRA is unimplemented on DirectML.
-- **ROCm for gfx1151**: nightly/community wheels only — deferred (TDR-recovery
-  keystroke unavailable to an autonomous run).
-- **Ollama/llama.cpp Vulkan**: 100% GPU, 16 tok/s @ 14B, 63 tok/s @ 3B.
-- Consequence: a 7B+ local fine-tune is **infeasible** on the proven stack; the
-  v1 generator is therefore **prompted tool-use** behind the gate, not a
-  fine-tuned model. The SFT corpus (53k examples, `data/sft_full.jsonl`) is
-  built and ready for a fine-tune whenever a CUDA/ROCm box is available.
+**That conclusion was superseded.** Native Windows **ROCm 7.2.1 + PyTorch 2.9.1**
+(AMD's official gfx1151 wheels) *does* train: verified `torch.cuda` on the iGPU
+(90 GB), bf16 matmul + backward, ~7.8 TFLOP/s. We then fine-tuned
+**Qwen2.5-14B** via bf16 LoRA on it — see the trained-model results above and
+[`docs/ROCM-STRIX-HALO-TRAINING.md`](docs/ROCM-STRIX-HALO-TRAINING.md) for the
+full recipe and the (real) stability gotchas. The honest caveat is stability
+under sustained load, not feasibility: training completed 200 stable steps
+(a fully usable behavioral adapter) before the ROCm-iGPU stack faulted on a
+longer run.
 
 ## Test evidence (all green, fresh)
 
 - `factgate` gate + datagen + harness: **146 passed** (`pytest tests/ -q`)
 - gate decision tree: **72 passed** (all 4 verdicts, multi-hop, canonicalization)
-- Hyperion serving (incl. VerifiedBackend): **11 passed, 2 skipped**
+- Serving gateway (incl. VerifiedBackend): **11 passed, 2 skipped**
 - Dataset: 53,157 SFT examples (63% grounded QA, 25% calibrated IDK, 11%
   contradiction-correction), 173k extractor pairs, holdout 10k reserved.
 
 ## What is NOT done, honestly
 
-- **Fine-tuned generator**: hardware-blocked (above). v1 = prompted + gate.
-- **Neural free-text claim extractor** (B1): the v1 extractor is the
+- **Full-epoch fine-tune**: the generator trained for 200 stable steps (a
+  usable behavioral adapter, verified above), not the planned 400 — the
+  ROCm-on-Windows-iGPU stack is unstable for sustained/long GPU work. A
+  full run wants a merged-GGUF serving path or a discrete-GPU box.
+- **Neural free-text claim extractor**: the current extractor is the
   tool-protocol/`[kb:]`-tag path; a neural extractor for arbitrary prose is the
   documented next step and is the exponent on the guarantee's real-world leak
   rate (a missed claim bypasses the gate).

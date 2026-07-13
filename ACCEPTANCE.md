@@ -9,7 +9,7 @@
 - A5 extractor-data: round-trip extract(render(t))==t     -> >=97% on 5k sample
 - A6 harness:     python -m factgate.bench.run --target ollama:qwen2.5:14b --smoke
                                                           -> all 5 splits produce contract JSONs
-- A7 serving:     pytest hyperion tests (serving subset)  -> >=234 passed incl new VerifiedBackend tests
+- A7 serving:     pytest serving-gateway tests (serving subset)  -> >=234 passed incl new VerifiedBackend tests
 
 ## Phase B (GPU-dependent, tiered by probe results)
 - B0 probe:       python -m factgate.probes.backends      -> JSON of {rocm, directml, vulkan_llamacpp, cpu}

@@ -23,8 +23,8 @@ Actual outputs (held-out questions the model was never trained on):
 
 The fine-tune imprinted the target behavior: extract the entity, map the question to
 the correct KB relation, emit a valid lookup, and defer the fact to RCK. Combined with
-the RCK gate (measured 0% false-VERIFIED, N=1500) and the Hyperion VerifiedBackend
-(E2E-proven), this is the complete anti-hallucination pipeline.
+the RCK gate (measured 0% false-VERIFIED, N=1500) and the VerifiedBackend serving
+gateway (E2E-proven), this is the complete anti-hallucination pipeline.
 
 ## Honest limits
 
@@ -40,5 +40,5 @@ the RCK gate (measured 0% false-VERIFIED, N=1500) and the Hyperion VerifiedBacke
   with RCK, not standalone chat quality.
 
 ## To use it
-Merge + serve behind Hyperion VerifiedBackend (HYPERION_BACKEND=verified), or continue
-training from checkpoint-200 with `scripts/train_lora.py --resume`.
+Merge + serve behind the `VerifiedBackend` serving gateway (verified-backend mode), or
+continue training from checkpoint-200 with `scripts/train_lora.py --resume`.

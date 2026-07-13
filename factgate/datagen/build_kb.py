@@ -1,9 +1,9 @@
 """CLI: bulk-load the ConceptNet-scale JSONL into an RCK KB and snapshot it.
 
     python -m factgate.datagen.build_kb \
-        --input C:/Users/Krist/projects/active/rck/data/conceptnet_scale_100k.jsonl \
-        --out C:/Users/Krist/projects/active/factgate/kb_snapshot \
-        --manifest C:/Users/Krist/projects/active/factgate/kb_snapshot/kb_manifest.json
+        --input data/conceptnet_scale_100k.jsonl \
+        --out kb_snapshot \
+        --manifest kb_snapshot/kb_manifest.json
 
 Also writes kb_manifest.json: fact count, relation histogram, entity count.
 
@@ -11,12 +11,17 @@ NOTE: this is a distinct snapshot directory from factgate/kb_service.py's
 runtime default (factgate/data/kb_snapshot) -- that one is the gate's
 own lazily-built cache; this one is the datagen pipeline's fixed,
 reproducible corpus snapshot.
+
+The source JSONL is not shipped in this repo (regenerable, ConceptNet-derived
+-- see data/README.md). Set --input to your own copy, or generate one with
+RCK's ConceptNet ingestion tooling (github.com/NORTHTEKDevs/rck).
 """
 from __future__ import annotations
 
 import argparse
 import collections
 import json
+import os
 import time
 from pathlib import Path
 
@@ -24,8 +29,10 @@ from rck.bulk_ingest import bulk_load_jsonl
 from rck.conscious_agent import ConsciousAgent
 from rck.session import save_session
 
-DEFAULT_INPUT = Path(
-    "C:/Users/Krist/projects/active/rck/data/conceptnet_scale_100k.jsonl")
+DEFAULT_INPUT = Path(os.environ.get(
+    "FACTGATE_KB_SOURCE_JSONL",
+    str(Path(__file__).resolve().parent.parent.parent / "data" / "conceptnet_scale_100k.jsonl"),
+))
 DEFAULT_OUT = Path(__file__).resolve().parent.parent.parent / "kb_snapshot"
 
 

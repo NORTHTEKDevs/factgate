@@ -13,3 +13,6 @@ data/logs_*.txt
 
 .venv-rocm/
 checkpoints/
+*.safetensors
+data/conceptnet_scale_100k.jsonl
+probes/scale_stderr.log

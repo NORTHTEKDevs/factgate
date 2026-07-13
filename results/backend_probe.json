@@ -107,7 +107,7 @@
     },
     "cpu": {
       "status": "measured",
-      "baseline_venv": "rain venv (C:/Users/Krist/projects/active/rain/.venv), torch 2.13.0+cpu, 32 threads -- the official baseline per task spec",
+      "baseline_venv": "a sibling project's venv, torch 2.13.0+cpu, 32 threads -- the official baseline per task spec",
       "steps_s_10M": 0.6444570598704983,
       "tok_s_10M": 2639.7,
       "param_count_10M_model": 7394624,

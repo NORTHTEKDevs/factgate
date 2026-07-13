@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import time
 from pathlib import Path
 
@@ -19,8 +20,13 @@ from rck.conscious_agent import ConsciousAgent
 from factgate.datagen import chains, corrupt, idk, qa
 from factgate.datagen.schema import validate_file
 
-DEFAULT_SOURCE = Path(
-    "C:/Users/Krist/projects/active/rck/data/conceptnet_scale_100k.jsonl")
+# The source JSONL is not shipped in this repo (regenerable, ConceptNet-derived
+# -- see data/README.md). Set FACTGATE_KB_SOURCE_JSONL to your own copy, or
+# generate one with RCK's ConceptNet ingestion tooling (github.com/NORTHTEKDevs/rck).
+DEFAULT_SOURCE = Path(os.environ.get(
+    "FACTGATE_KB_SOURCE_JSONL",
+    str(Path(__file__).resolve().parent.parent.parent / "data" / "conceptnet_scale_100k.jsonl"),
+))
 DEFAULT_OUT = Path(__file__).resolve().parent.parent.parent / "data" / "sft_v0.jsonl"
 
 

@@ -43,7 +43,7 @@ Sources: [ROCm/TheRock #655](https://github.com/ROCm/TheRock/discussions/655), [
 
 ## 5. CPU training baseline (measured)
 
-Reused rain venv (`C:/Users/Krist/projects/active/rain/.venv`), torch 2.13.0+cpu, 32 threads, same 10M-class model script: **0.6444–0.6448 steps/s → ~2,640 tok/s.** This is the official CPU baseline per the probe spec.
+Reused a sibling project's venv (torch 2.13.0+cpu, 32 threads), same 10M-class model script: **0.6444–0.6448 steps/s → ~2,640 tok/s.** This is the official CPU baseline per the probe spec.
 
 Cross-check in the probe venv (torch 2.4.1+cpu, same 32 threads, identical model/config): **2.70–2.97 steps/s → ~11,050–12,180 tok/s — roughly 4.2x faster than the rain venv's torch 2.13.0+cpu**, on identical hardware and thread count. Both are real measurements from the same script; the delta is reported as-is (candidate cause: differing default BLAS/MKL backend or thread pinning between the two torch builds — not independently isolated in this probe).
 

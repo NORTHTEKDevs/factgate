@@ -3,23 +3,30 @@ built, so idk.py's deletion-holdout mode can generate IDK-by-construction
 questions with ground truth about what was withheld.
 
     python scripts/holdout_split.py \
-        --input C:/Users/Krist/projects/active/rck/data/conceptnet_scale_100k.jsonl \
-        --out-train C:/Users/Krist/projects/active/factgate/data/kb_train.jsonl \
-        --out-holdout C:/Users/Krist/projects/active/factgate/data/holdout.jsonl \
+        --input data/conceptnet_scale_100k.jsonl \
+        --out-train data/kb_train.jsonl \
+        --out-holdout data/holdout.jsonl \
         --holdout-size 10000 --seed 0
 
 kb_train.jsonl is what build_kb.py / run_all.py should ingest; the
 facts in holdout.jsonl must never be loaded into the KB.
+
+The source JSONL is not shipped in this repo (regenerable, ConceptNet-derived
+-- see data/README.md). Set --input to your own copy, or generate one with
+RCK's ConceptNet ingestion tooling (github.com/NORTHTEKDevs/rck).
 """
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import random
 from pathlib import Path
 
-DEFAULT_INPUT = Path(
-    "C:/Users/Krist/projects/active/rck/data/conceptnet_scale_100k.jsonl")
+DEFAULT_INPUT = Path(os.environ.get(
+    "FACTGATE_KB_SOURCE_JSONL",
+    str(Path(__file__).resolve().parent.parent / "data" / "conceptnet_scale_100k.jsonl"),
+))
 DEFAULT_OUT_TRAIN = Path(__file__).resolve().parent.parent / "data" / "kb_train.jsonl"
 DEFAULT_OUT_HOLDOUT = Path(__file__).resolve().parent.parent / "data" / "holdout.jsonl"
 

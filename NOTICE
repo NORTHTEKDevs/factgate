@@ -1,0 +1,5 @@
+FACTGATE
+Copyright 2026 Kristian Baer / FrostByte LLC (Northtek)
+
+This product includes software that gates a language model through the RCK
+exact-fact kernel (github.com/NORTHTEKDevs/rck, Apache-2.0).

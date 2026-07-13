@@ -6,6 +6,7 @@ and snapshot it for next time.
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -13,9 +14,13 @@ from rck.bulk_ingest import bulk_load_jsonl
 from rck.conscious_agent import ConsciousAgent
 from rck.session import load_session, save_session
 
-DEFAULT_JSONL = Path(
-    "C:/Users/Krist/projects/active/rck/data/conceptnet_scale_100k.jsonl"
-)
+# Source triples are not shipped in this repo (regenerable, ConceptNet-derived --
+# see data/README.md). Point FACTGATE_KB_SOURCE_JSONL at your own copy, or use
+# RCK's ConceptNet ingestion tooling (github.com/NORTHTEKDevs/rck) to build one.
+DEFAULT_JSONL = Path(os.environ.get(
+    "FACTGATE_KB_SOURCE_JSONL",
+    str(Path(__file__).resolve().parent.parent / "data" / "conceptnet_scale_100k.jsonl"),
+))
 DEFAULT_SNAPSHOT = Path(__file__).resolve().parent.parent / "data" / "kb_snapshot"
 
 
