@@ -1,0 +1,27 @@
+{
+  "ckpt": "checkpoints/factgate-14b/checkpoint-200",
+  "n": 4,
+  "tool_call_rate": 1.0,
+  "abstention_rate": 0.0,
+  "claims_asserted": 0,
+  "gate_leaked_verified": 0,
+  "seconds": 579.6059250831604,
+  "samples": [
+    {
+      "q": "What category does foul_play belong to?",
+      "out": "<kb_q>{\"s\": \"foul_play\", \"r\": \"isa\", \"unknown\": \"O\"}</kb_q>"
+    },
+    {
+      "q": "What is bicycle capable of?",
+      "out": "<kb_q>{\"s\": \"bicycle\", \"r\": \"can\", \"unknown\": \"O\"}</kb_q>"
+    },
+    {
+      "q": "What category does octahedron belong to?",
+      "out": "<kb_q>{\"s\": \"octahedron\", \"r\": \"isa\", \"unknown\": \"O\"}</kb_q>"
+    },
+    {
+      "q": "What category does grand_total belong to?",
+      "out": "<kb_q>{\"s\": \"grand_total\", \"r\": \"isa\", \"unknown\": \"O\"}</kb_q>"
+    }
+  ]
+}
