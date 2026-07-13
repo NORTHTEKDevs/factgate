@@ -44,21 +44,23 @@ def resume():
 
 resumes = 0
 write_status(phase="watching", resumes=0)
-# wait out an initial grace so we don't fight the already-running launch
-time.sleep(CHECK_S)
 while True:
-    if log_done() or (OUT/"adapter_model.safetensors").exists() or (OUT/"train_meta.json").exists():
-        write_status(phase="training_done"); break
-    if log_stale():
-        if resumes >= MAX_RESUMES:
-            write_status(phase="STALLED", resumes=resumes); break
-        resumes += 1
-        write_status(phase="resuming", resumes=resumes)
-        resume()
-        time.sleep(600)   # let model reload (~8min) before re-checking
-    else:
-        write_status(phase="training", resumes=resumes,
-                     last_log_age_s=int(time.time()-LOG.stat().st_mtime))
+    try:
+        if log_done() or (OUT/"adapter_model.safetensors").exists() or (OUT/"train_meta.json").exists():
+            write_status(phase="training_done"); break
+        if log_stale():
+            if resumes >= MAX_RESUMES:
+                write_status(phase="STALLED", resumes=resumes); break
+            resumes += 1
+            write_status(phase="resuming", resumes=resumes)
+            resume()
+            time.sleep(600)
+        else:
+            write_status(phase="training", resumes=resumes,
+                         last_log_age_s=int(time.time()-LOG.stat().st_mtime))
+    except Exception as e:
+        try: write_status(phase="watch_error_recovered", err=str(e)[:200], resumes=resumes)
+        except Exception: pass
     time.sleep(CHECK_S)
 
 # --- evaluation ---
