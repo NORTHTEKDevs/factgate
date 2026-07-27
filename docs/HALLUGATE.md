@@ -359,7 +359,59 @@ reading `"$60 download"`), qualifier patterns may start with a non-word characte
 and the transport retries transient failures a bounded number of times -- a single Ollama
 timeout had killed an eight-minute run outright.
 
-## 8. Production hardening
+## 8. Ranges, and a document nobody chose
+
+Two gaps closed together, because the second exposed the first.
+
+**Ranges are now expressible.** Real documents state them constantly ("$1,500-3,000 setup",
+"$300-500/mo", "5 to 10 mg/kg"), and a `kind: quantity` relation previously rejected them
+at load, so such facts were simply dropped from every domain. The semantics are a
+deliberate asymmetry:
+
+| declared | claimed | verdict | why |
+|---|---|---|---|
+| range | point inside | VERIFIED | the document supports that figure |
+| range | point outside | BLOCK | provably unsupported |
+| range | the same range | VERIFIED | |
+| range | overlapping range | HELD | neither provably same nor different |
+| range | disjoint range | BLOCK | |
+| **point** | **range containing it** | **HELD** | a range cannot confirm a specific value |
+
+The last row is the safety-relevant one. If a protocol gives one dose and the model answers
+with a range, confirming it would let a reader infer the whole span is protocol-supported.
+
+**The document was selected mechanically.** Both earlier real-document tests used files
+chosen after browsing the machine -- an operator selection, and exactly the kind that looks
+harmless until the result depends on it. `scripts/select_eval_document.py` enumerates
+candidates by numeric density and size, then picks by sorting on the SHA-256 of the file
+path: deterministic, reproducible, and uncorrelated with content. The operator sees the
+document only after it is chosen. It picked a Series-A pitch deck; 19 facts were declared
+from it, 8 of them ranges that could not have been declared at all a day earlier.
+
+```
+BLIND, mechanically-selected document, qwen2.5:14b
+LEAK RATE        0/24  =  0%   CI95 [0%, 14%]     fact-clustered 0/13 [0%, 23%]
+OVER-BLOCK RATE  8/18  = 44%   CI95 [25%, 66%]
+```
+
+**44% is worse than the 8-33% band previously claimed, and that band was too narrow.** It
+was derived from documents chosen by the operator. On a document nobody chose, blind
+over-block is 44%. The honest range is **8-44%**, and the low end of it reflects
+familiarity with the document, not the library.
+
+### A third false leak, same family as the first two
+
+The first run of this document reported a 3% leak. It was the harness again, in a new form:
+corrupting `$4M-$8M` by scaling its first number produced `$8M-$8M`, whose leading value
+is $8M -- still **inside** the declared range. The gate verified it correctly; the trial
+was mislabeled.
+
+The fix is now a general invariant rather than a third patch: `compare_values(declared,
+corrupted)` must equal DIFFER before a trial runs at all. A "corruption" that is not
+provably different from the declared value is not a corruption, and counting it as one is
+precisely how every false leak in this project got reported.
+
+## 9. Production hardening
 
 Five changes aimed at business use rather than at the benchmark. None moved the measured
 numbers (0% leak, 8% over-block on clinical/qwen2.5:14b), which is the point: they close

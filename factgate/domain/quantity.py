@@ -91,6 +91,81 @@ def parse_quantity(raw: str | None) -> Quantity | None:
 
 MATCH, DIFFER, INCOMPARABLE = "MATCH", "DIFFER", "INCOMPARABLE"
 
+
+@dataclass(frozen=True)
+class Range:
+    low: float
+    high: float
+    unit: str
+
+
+# "5-10 mg/kg", "5 to 10 mg/kg", "$1,500-3,000", "$25M-$40M", "15-25%". The second bound
+# often omits the currency symbol, so the unit is taken from whichever side carries one.
+# A magnitude letter must not be followed by another letter, or the "m" of "mg/kg" reads
+# as "million" and "5-10 mg/kg" becomes a range topping out at ten million.
+_RANGE_RE = re.compile(
+    r"^\s*(US\$|[$£€¥])?\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*([kKmMbB](?![a-zA-Z]))?\s*"
+    r"(?:-|–|—|\bto\b)\s*"
+    r"(US\$|[$£€¥])?\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*([kKmMbB](?![a-zA-Z]))?\s*"
+    r"([a-zA-Zµ%°][a-zA-Zµ%°/\s]*)?\s*$")
+
+
+def parse_range(raw: str | None) -> Range | None:
+    """Parse a two-bound range, or None. Reversed bounds are rejected, not swapped:
+    "10-5" is a typo, and silently reinterpreting it would accept a bad declaration."""
+    if not raw:
+        return None
+    m = _RANGE_RE.match(raw)
+    if not m:
+        return None
+    cur_lo, lo_s, mag_lo, cur_hi, hi_s, mag_hi, tail = m.groups()
+    try:
+        low, high = float(lo_s.replace(",", "")), float(hi_s.replace(",", ""))
+    except ValueError:
+        return None
+    if mag_lo:
+        low *= _MAGNITUDE[mag_lo.lower()]
+    if mag_hi:
+        high *= _MAGNITUDE[mag_hi.lower()]
+    if low >= high:
+        return None
+    cur = cur_lo or cur_hi
+    unit = _CURRENCY[cur] if cur else re.sub(r"\s*", "", tail or "")
+    if not unit:
+        return None
+    return Range(low, high, unit)
+
+
+def _compare_range(declared: str, claimed: str) -> str | None:
+    """Comparison when either side is a range. None if neither side is one.
+
+    Deliberate asymmetry: a POINT inside a declared RANGE verifies (the document supports
+    that figure), but a claimed RANGE against a declared POINT does NOT -- a range cannot
+    confirm a specific value, and treating it as a match would let a reader infer the
+    whole span is document-supported.
+    """
+    dr, cr = parse_range(declared), parse_range(claimed)
+    if dr is None and cr is None:
+        return None
+
+    if dr is not None and cr is not None:
+        if dr.unit != cr.unit:
+            return INCOMPARABLE
+        if (dr.low, dr.high) == (cr.low, cr.high):
+            return MATCH
+        if cr.high < dr.low or cr.low > dr.high:
+            return DIFFER                      # disjoint -> provably different
+        return INCOMPARABLE                    # overlapping but not equal
+
+    if dr is not None:
+        cq = parse_quantity(claimed) or _leading(claimed)
+        if cq is None or cq.unit != dr.unit:
+            return INCOMPARABLE
+        return MATCH if dr.low <= cq.value <= dr.high else DIFFER
+
+    # Declared is a point, claim is a range.
+    return INCOMPARABLE
+
 # A number followed by a unit run, ignoring any trailing annotation ("PO", "q6h").
 _LEADING_QTY_RE = re.compile(
     r"^\s*([-+]?[0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?|[-+]?[0-9]*\.?[0-9]+)\s*"
@@ -153,6 +228,9 @@ def compare_values(declared: str, claimed: str | None) -> str:
     """
     if claimed is None:
         return INCOMPARABLE
+    ranged = _compare_range(declared, claimed)
+    if ranged is not None:
+        return ranged
     dq, cq = parse_quantity(declared), parse_quantity(claimed)
     if dq is not None and cq is not None:
         if dq.value != cq.value:

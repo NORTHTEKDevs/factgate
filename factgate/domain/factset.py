@@ -16,7 +16,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from factgate.domain.quantity import parse_quantity
+from factgate.domain.quantity import parse_quantity, parse_range
 
 
 class ValidationError(ValueError):
@@ -117,7 +117,8 @@ class FactSet:
                 raise ValidationError(f"fact declares undeclared entity {s!r}")
             if r not in relations:
                 raise ValidationError(f"fact declares undeclared relation {r!r}")
-            if relations[r].get("kind") == "quantity" and parse_quantity(o) is None:
+            if (relations[r].get("kind") == "quantity"
+                    and parse_quantity(o) is None and parse_range(o) is None):
                 raise ValidationError(
                     f"relation {r!r} is kind=quantity but value {o!r} is not a quantity")
             when = raw.get("when") or {}

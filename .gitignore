@@ -29,3 +29,6 @@ build/
 data/domains/real_*.json
 results/domain_gate_bench_northtek-*
 results/domain_gate_bench_rain-*
+
+# Derived artifacts from private source documents (domain spec sets "private": true)
+results/private/

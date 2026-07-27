@@ -28,7 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from factgate.domain.factset import FactSet
 from factgate.domain.gate import BLOCK, HELD, VERIFIED, gate_claim
 from factgate.domain.link import link_targeted, value_is_grounded
-from factgate.domain.quantity import parse_quantity
+from factgate.domain.quantity import DIFFER, compare_values, parse_quantity
 from factgate.llm import ollama
 from factgate.stats import cluster_wilson, wilson
 
@@ -53,11 +53,25 @@ def corrupt(value: str, k: int) -> str:
     rewrote a different number and left the value under test intact -- 8 trials were then
     mislabeled as leaks. Scaling the surface number keeps "$150M" -> "$300M".
     """
-    m = re.search(r"[0-9][0-9,]*(?:\.[0-9]+)?", value or "")
-    if m is None:
+    # A range must be corrupted OUT of itself. Scaling only the first number of
+    # "$4M-$8M" produced "$8M-$8M", whose leading value is still inside the declared
+    # range, so the gate verified it correctly and the harness scored a false leak.
+    # Scaling every number in the value moves the whole range.
+    factor = (2.0, 0.5, 3.0, 10.0)[k % 4]
+    if not re.search(r"[0-9]", value or ""):
         return "unspecified"
-    scaled = float(m.group(0).replace(",", "")) * (2.0, 0.5, 3.0, 10.0)[k % 4]
-    return value[:m.start()] + f"{scaled:g}" + value[m.end():]
+    out = re.sub(r"[0-9][0-9,]*(?:\.[0-9]+)?",
+                 lambda mm: f"{float(mm.group(0).replace(',', '')) * factor:g}", value)
+    # Verify the corruption is provably wrong before using it. Anything else is not a
+    # corruption, and counting it as one is how false leaks get reported.
+    if compare_values(value, out) != DIFFER:
+        for alt in (100.0, 0.01, 1000.0):
+            cand = re.sub(r"[0-9][0-9,]*(?:\.[0-9]+)?",
+                          lambda mm: f"{float(mm.group(0).replace(',', '')) * alt:g}", value)
+            if compare_values(value, cand) == DIFFER:
+                return cand
+        return value          # caller skips when wrong == declared
+    return out
 
 
 def question_for(fs: FactSet, s: str, r: str) -> str:
@@ -137,7 +151,11 @@ def main() -> None:
 
         for k in range(a.trials):
             wrong = corrupt(fact.o, k)
-            if wrong == fact.o:
+            # Never run a trial whose corrupted value is not provably different
+            # from the declared one -- that is not a corruption, and scoring it
+            # as one is exactly how a false leak gets reported.
+            if wrong == fact.o or compare_values(fact.o, wrong) != DIFFER:
+                invalid["corruption_not_provably_wrong"] += 1
                 continue
             bad = ollama(a.model, FORCE.format(wrong=wrong, source=fact.source), 100)
             # A corrupted trial is valid only if the wrong value is present AND the
@@ -209,7 +227,16 @@ def main() -> None:
     # Per-domain filename: a single shared path meant each domain silently
     # overwrote the previous one's artifact, so a published number could not be
     # traced back to the domain that produced it.
-    out = REPO / "results" / f"domain_gate_bench_{fs.domain}.json"
+    # Derived artifacts inherit the privacy of their source. A domain built from a
+    # private document produces rows quoting that document, and naming the ignore
+    # patterns one domain at a time has already failed twice.
+    if spec.get("private"):
+        outdir = REPO / "results" / "private"
+        outdir.mkdir(parents=True, exist_ok=True)
+        print("  domain is marked private: artifacts -> results/private/ (gitignored)")
+    else:
+        outdir = REPO / "results"
+    out = outdir / f"domain_gate_bench_{fs.domain}.json"
     json.dump(res, open(out, "w"), indent=2)
     with open(out.with_suffix(".rows.jsonl"), "w", encoding="utf-8") as f:
         for p in per_example:
