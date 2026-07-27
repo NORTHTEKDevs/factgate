@@ -21,6 +21,11 @@ from pathlib import Path
 # Filenames to skip so a "fresh" pick is genuinely fresh. Passed in rather than hardcoded:
 # naming your own private documents in a public repository discloses that they exist.
 
+# Vendored dependency trees are full of numeric-dense READMEs that are not the user's
+# documents at all. Excluding them is a filter correction, not a content preference.
+_SKIP_DIRS = {"node_modules", "vendor", ".git", "dist", "build", "target", "__pycache__",
+              ".venv", "site-packages"}
+
 _NUMERIC = re.compile(r"\$[0-9][0-9,]*(?:\.[0-9]+)?[KMB]?|[0-9]+(?:\.[0-9]+)?%"
                       r"|\b[0-9]+(?:\.[0-9]+)?\s*(?:days?|months?|years?|hours?|users?|seats?)\b")
 
@@ -30,6 +35,8 @@ def candidates(root: Path, min_facts: int, max_bytes: int,
     out = []
     for p in sorted(root.rglob("*")):
         if p.suffix.lower() not in (".md", ".txt") or not p.is_file():
+            continue
+        if _SKIP_DIRS & set(p.parts):
             continue
         if p.name in (exclude or set()):
             continue

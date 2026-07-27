@@ -411,7 +411,59 @@ corrupted)` must equal DIFFER before a trial runs at all. A "corruption" that is
 provably different from the declared value is not a corruption, and counting it as one is
 precisely how every false leak in this project got reported.
 
-## 9. Production hardening
+## 9. Someone else's vocabulary, on a document the author never read
+
+Every measurement to this point shared a flaw: the same person wrote the vocabulary, ran
+the benchmark, and interpreted it. Declaring "blind" removes tuning-on-results, but not the
+accumulated knowledge of this library's failure modes, which a first-time author does not
+have.
+
+That is separable. The document was selected mechanically (§8). The domain was then
+declared by an agent given **only** `docs/AUTHORING.md` and the document, explicitly barred
+from reading this file, the README, the tests, or any result. Its declaration was measured
+unmodified.
+
+```
+BLIND vocabulary by a first-time author, mechanically-selected document, qwen2.5:14b
+28 facts declared (19 of them ranges), 17 facts reached by the harness
+
+LEAK RATE        0/34  =  0%   CI95 [0%, 10%]    fact-clustered 0/17 [0%, 18%]
+OVER-BLOCK RATE 13/28  = 46%   CI95 [30%, 64%]
+```
+
+**The leak rate held at 0% on a vocabulary the maintainer did not write, for a document the
+maintainer never read.** That is the strongest safety evidence in this project, and the
+largest sample: 34 wrong-value trials.
+
+Over-block was 46%, against 44% when the maintainer declared a mechanically-selected
+document blind. The two are indistinguishable at this sample size, which is itself the
+finding: **the maintainer's accumulated knowledge was worth nothing on an unfamiliar
+document.** The 8% figures earlier in this file measure familiarity with the source, not
+skill with the library, and should be read that way.
+
+### What the first-time author reported, unprompted
+
+The exercise was also a usability test, and it found real defects that months of
+maintainer use had not:
+
+- **The value grammar is enforced at load and was undocumented.** `~$2,000`, `~$100M+` and
+  `$5k cloud credit` all raised `ValidationError`, costing the author two debugging cycles
+  and forcing information-lossy edits.
+- **A genuine asymmetry:** `12 weeks engineering` parsed while `$5k cloud credit` did not.
+  Currency was the stricter case for no reason a reader could predict.
+- **`$100M+` had no representation.** Parsing it as exactly `$100M` would verify that one
+  figure and block every larger one, inverting the document's meaning.
+- Two facts were dropped entirely because ratios (`2,000-4,000x cheaper`) had no documented
+  shape.
+
+All are fixed: currency accepts trailing words like any quantity, `~` is accepted and
+ignored, `X+` parses as an open range, and `docs/AUTHORING.md` now documents the grammar as
+a table. Every value the author was forced to mangle or discard now loads.
+
+The lesson generalises past this library: the maintainer could not find these because the
+maintainer already knew the answers.
+
+## 10. Production hardening
 
 Five changes aimed at business use rather than at the benchmark. None moved the measured
 numbers (0% leak, 8% over-block on clinical/qwen2.5:14b), which is the point: they close

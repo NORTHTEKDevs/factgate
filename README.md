@@ -8,7 +8,7 @@ verdict. The guarantee is scoped to claims that reach the gate; see
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-416%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-420%20passing-brightgreen)
 
 ## The idea, in 3 sentences
 
@@ -40,7 +40,7 @@ gate's own false-accept rate, not an observed hallucination rate of any model.
 | False-VERIFIED rate, absent facts (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | False-VERIFIED rate, corrupted claims (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | True-fact verify coverage (N=1500) | **34%** | [31.6%, 36.4%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| Test suite | **416 passed** | — | `pytest tests/ -q` |
+| Test suite | **420 passed** | — | `pytest tests/ -q` |
 
 **LLM-in-the-loop results.** Only these involved a running model. Note the sample size.
 
@@ -108,7 +108,8 @@ durations) with its vocabulary declared before any run measures the honest start
 
 | domain | vocabulary | leak | over-block |
 |---|---|---|---|
-| **real pitch deck, chosen mechanically** | **blind** | **0%** (0/24) | **44%** (8/18) |
+| **real doc, chosen mechanically, vocabulary by a first-time author** | **blind, not the maintainer's** | **0%** (0/34) | **46%** (13/28) |
+| real pitch deck, chosen mechanically | blind | **0%** (0/24) | 44% (8/18) |
 | real business memo | declared | **0%** (0/19) | 8% (1/12) |
 | real financial model | **blind** | **0%** (0/22) | 8% (1/12) |
 | lending, realistic prose | **blind** | **0%** | 33% |
@@ -138,10 +139,13 @@ Full write-up, including a live false-BLOCK bug and its fix, is in
 **Not production ready.** The safety property has held at 0% leak across seven domains
 including three real business documents, one of them selected mechanically rather than by
 a human (`scripts/select_eval_document.py`). The coverage cost is not dependable: blind
-over-block spans **8-44%**, and the low end reflects familiarity with the document rather
-than anything about the library. On a document nobody chose, it was 44%. Treat this as a
-working research implementation with a measured safety property, not a shippable
-component.
+over-block spans **8-46%**, and the low end reflects familiarity with the document rather
+than anything about the library — a first-time author who had never seen this codebase,
+declaring a vocabulary for a mechanically-chosen document, measured 46%. The leak rate held
+at 0% there too, on 34 trials. Treat this as a working research implementation with a
+measured safety property, not a shippable component.
+
+New authors should start with [`docs/AUTHORING.md`](docs/AUTHORING.md).
 
 ### Using it
 
@@ -273,7 +277,7 @@ python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -e .
 ./.venv/Scripts/python.exe -m pip install -e ../rck   # path to your local RCK checkout
 
-# run the test suite (416 tests, no network, <10s)
+# run the test suite (420 tests, no network, <10s)
 ./.venv/Scripts/python.exe -m pytest tests/ -q
 
 # reproduce the headline guarantee measurement (N=1500/class against the live KB)

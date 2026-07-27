@@ -14,7 +14,7 @@ from dataclasses import dataclass
 # them stopped the demo fact set from loading at all. Whitespace inside the unit is
 # stripped during normalisation, so comparison stays exact on both sides.
 _QTY_RE = re.compile(
-    r"^\s*([-+]?[0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?|[-+]?[0-9]*\.?[0-9]+)\s*"
+    r"^\s*~?\s*([-+]?[0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?|[-+]?[0-9]*\.?[0-9]+)\s*"
     r"([a-zA-Zµ%°]+(?:[\s/]+[a-zA-Zµ°%]+)*)?\s*$")
 
 
@@ -40,9 +40,14 @@ _CURRENCY_WORDS = {"dollars": "usd", "dollar": "usd", "usd": "usd",
                    "pounds": "gbp", "gbp": "gbp", "euros": "eur", "eur": "eur"}
 _MAGNITUDE = {"k": 1e3, "m": 1e6, "b": 1e9,
               "thousand": 1e3, "million": 1e6, "billion": 1e9}
+# A trailing descriptive word is allowed here for the same reason it is allowed on a
+# plain quantity: "12 weeks engineering" parsed while "$5k cloud credit" was rejected at
+# load, an asymmetry a first-time author has no way to predict. The words become part of
+# the unit, so "$5k cloud credit" and "$5k" remain distinct.
 _CURRENCY_RE = re.compile(
-    r"^\s*(US\$|[$£€¥])\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?|[0-9]*\.?[0-9]+)"
-    r"\s*([kKmMbB]|thousand|million|billion)?\s*$")
+    r"^\s*~?\s*(US\$|[$£€¥])\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?|[0-9]*\.?[0-9]+)"
+    r"\s*([kKmMbB]|thousand|million|billion)?"
+    r"\s*([a-zA-Z][a-zA-Z\s/]*)?\s*$")
 # "150 million dollars" -- magnitude spelled out, currency as a word.
 _WORDY_RE = re.compile(
     r"^\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?|[0-9]*\.?[0-9]+)\s*"
@@ -60,7 +65,10 @@ def _currency_quantity(raw: str) -> Quantity | None:
         value = float(m.group(2).replace(",", ""))
         if m.group(3):
             value *= _MAGNITUDE[m.group(3).lower()]
-        return Quantity(value, _CURRENCY[m.group(1)])
+        unit = _CURRENCY[m.group(1)]
+        if m.lastindex and m.lastindex >= 4 and m.group(4):
+            unit += re.sub(r"\s*", "", m.group(4)).lower()
+        return Quantity(value, unit)
     m = _WORDY_RE.match(raw)
     if m and m.group(3).lower() in _CURRENCY_WORDS:
         value = float(m.group(1).replace(",", ""))
@@ -110,11 +118,35 @@ _RANGE_RE = re.compile(
     r"([a-zA-Zµ%°][a-zA-Zµ%°/\s]*)?\s*$")
 
 
+# "$100M+", "18 months+" -- an open-ended lower bound. Reported by a first-time author as
+# a hard load error. Parsing it as the point value would verify that one figure and block
+# every larger one, exactly inverting what the document says.
+_OPEN_RANGE_RE = re.compile(
+    r"^\s*~?\s*(US\$|[$£€¥])?\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*"
+    r"([kKmMbB](?![a-zA-Z])|thousand|million|billion)?\s*"
+    r"([a-zA-Zµ%°][a-zA-Zµ%°/\s]*)?\+\s*$")
+
+
 def parse_range(raw: str | None) -> Range | None:
-    """Parse a two-bound range, or None. Reversed bounds are rejected, not swapped:
-    "10-5" is a typo, and silently reinterpreting it would accept a bad declaration."""
+    """Parse a range, or None.
+
+    Reversed bounds are rejected rather than swapped: "10-5" is a typo, and silently
+    reinterpreting it would accept a bad declaration. A trailing "+" gives an open upper
+    bound.
+    """
     if not raw:
         return None
+    m = _OPEN_RANGE_RE.match(raw)
+    if m:
+        cur, num, mag, tail = m.groups()
+        try:
+            low = float(num.replace(",", ""))
+        except ValueError:
+            return None
+        if mag:
+            low *= _MAGNITUDE[mag.lower()]
+        unit = _CURRENCY[cur] if cur else re.sub(r"\s*", "", tail or "")
+        return Range(low, float("inf"), unit) if unit else None
     m = _RANGE_RE.match(raw)
     if not m:
         return None

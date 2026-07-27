@@ -153,3 +153,38 @@ def test_corrupting_a_point_still_lands_outside():
     for v in ("15 mg/kg", "$199", "$150M"):
         for k in range(4):
             assert compare_values(v, m.corrupt(v, k)) == DIFFER
+
+
+# ----------------------------- reported by a first-time author, unprompted
+def test_currency_may_carry_trailing_words_like_a_plain_quantity():
+    """Reported as an unpredictable asymmetry: "12 weeks engineering" parsed but
+    "$5k cloud credit" was rejected at load. Both are a number with descriptive words;
+    there is no reason for currency to be the stricter case."""
+    from factgate.domain.quantity import parse_quantity
+    q = parse_quantity("$5k cloud credit")
+    assert q is not None and q.value == 5000.0
+    # trailing words are part of the unit, exactly as for plain quantities
+    assert parse_quantity("$5k cloud credit") != parse_quantity("$5k")
+
+
+def test_leading_approximation_marker_is_accepted():
+    """The document writes "~$2,000". Rejecting it at load forced the author to strip the
+    tilde, discarding the "approximate" signal the source was careful to convey. The gate
+    has no tolerance by design, so the marker is accepted and ignored -- but the file
+    loads."""
+    from factgate.domain.quantity import parse_quantity
+    assert parse_quantity("~$2,000") == parse_quantity("$2,000")
+    assert parse_quantity("~15 mg/kg") == parse_quantity("15 mg/kg")
+
+
+def test_trailing_plus_is_an_open_range_not_a_point():
+    """"$100M+" means "at least $100M". Parsing it as exactly $100M would verify that one
+    figure and block every larger one, inverting the document's meaning."""
+    r = parse_range("$100M+")
+    assert r is not None and r.low == 100_000_000.0 and r.high == float("inf")
+    assert compare_values("$100M+", "$150M") == MATCH
+    assert compare_values("$100M+", "$50M") == DIFFER
+
+
+def test_open_range_still_respects_units():
+    assert compare_values("$100M+", "150 mg/kg") == INCOMPARABLE
