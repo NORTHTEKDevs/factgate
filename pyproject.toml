@@ -13,12 +13,16 @@ authors = [
     { name = "Kristian Baer / Northtek" },
 ]
 classifiers = [
-    "License :: OSI Approved :: Apache Software License",
+    # No "License :: OSI Approved :: ..." classifier here on purpose: setuptools >= 77
+    # hard-errors when a legacy license classifier is combined with the SPDX `license`
+    # field above, which made `pip install -e .` fail outright for anyone following the
+    # README. The SPDX expression is the supported way to declare this.
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
+# numpy was declared but never imported anywhere in factgate/; it is a
+# transitive need of the optional rck engine, which declares it itself.
 dependencies = [
-    "numpy>=1.24",
     "pydantic>=2.0",
 ]
 

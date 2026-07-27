@@ -16,3 +16,16 @@ checkpoints/
 *.safetensors
 data/conceptnet_scale_100k.jsonl
 probes/scale_stderr.log
+
+# RAGTruth dataset (36MB, MIT) -- regenerable via scripts/fetch_ragtruth.py
+data/ragtruth/
+
+# pip/setuptools build artifacts
+build/
+*.egg-info/
+
+# Real source documents and their derived artifacts are NEVER committed: the domain
+# files embed the source corpus verbatim, and this repository is public.
+data/domains/real_*.json
+results/domain_gate_bench_northtek-*
+results/domain_gate_bench_rain-*

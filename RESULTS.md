@@ -5,20 +5,28 @@
 > (Strix Halo) workstation. Every number below comes from an executed command;
 > artifacts are in `results/`.
 
-## The headline: the anti-hallucination guarantee is real and measured
+## The headline: the gate's false-accept rate on structured claims is 0%, measured
 
 `results/guarantee_measurement.json` — 1,500 claims per class through the real
-gate (`factgate.gate.verify_claim`) against the live 90k-fact RCK KB:
+gate (`factgate.gate.verify_claim`) against the live 90k-fact RCK KB.
 
-| Claim class | n | **false-VERIFIED (leak)** | 95% CI | Behavior |
+**Scope of this measurement:** claims are supplied as pre-parsed `(subject, relation,
+object)` triples read from JSONL. There is no generation step and no LLM in this loop, so
+"false-VERIFIED" below means *the gate's own false-accept rate on structured claims* — not an
+observed rate of hallucinated content leaking from a model to a user. The end-to-end quantity
+is not yet measured; see "What is NOT done, honestly".
+
+| Claim class | n | **false-VERIFIED rate** | 95% CI | Behavior |
 |---|---|---|---|---|
 | Absent facts (held out of KB) | 1500 | **0.0%** | [0, 0.26%] | 70% OUT_OF_KB, 23% UNRESOLVED, 7% CONTRADICTED — all safe |
 | Corrupted claims (wrong object) | 1500 | **0.0%** | [0, 0.26%] | 42% caught as CONTRADICTED, rest abstain |
 | True stored facts | 1500 | — | — | 34% VERIFIED (coverage); rest safely abstain |
 
-**The gate never emits a false claim as verified.** This holds *by construction
-of the emission path* — the gate is a deterministic program between the model
-and the socket — independent of model weights, temperature, or prompt injection.
+**The gate never emits a false claim as verified, for every claim that reaches the gate.**
+This holds *by construction of the emission path* — the gate is a deterministic program between
+the model and the socket — independent of model weights, temperature, or prompt injection.
+A claim asserted in free prose without an emitted lookup never reaches the gate at all, so this
+is a property of the gate, not yet a measured end-to-end property of the system.
 That is the categorical difference from RLHF, which only lowers hallucination
 probability.
 
@@ -29,13 +37,16 @@ rest are flagged/abstained. This is a *safe* failure direction ("I can't
 confirm that" instead of a confident wrong answer), and it is bounded by RCK's
 retrieval-score calibration at 90k-fact scale, which is tunable (see below).
 
-## End-to-end deployment path works
+## The serving-gateway wiring works (scripted inner, not a live model)
 
 `results/e2e_gated_demo.json` — the `VerifiedBackend` serving gateway (inproc RCK gate) on
-3 diagnostic prompts. Every non-confirmable claim is flagged `[unverified]`;
-nothing false passes as verified:
+3 diagnostic prompts. **The inner "model" here is a `ScriptedInner` stub emitting hand-written
+strings that already contain the `[kb:...]` tag** (`scripts/e2e_gated.py`), chosen for
+determinism and speed. This proves the gate plumbing is correctly wired; it does *not*
+demonstrate an LLM routing its own claims through the gate. Every non-confirmable claim is
+flagged `[unverified]`; nothing false passes as verified:
 
-| Inner model said | Gated output |
+| Scripted inner emitted | Gated output |
 |---|---|
 | "A dog is an animal. [kb:dog/isa/animal]" | `… [unverified]` (true, but KB can't confirm the specific object above threshold) |
 | "The capital of france is berlin. [kb:france/capital/berlin]" | `… [unverified]` (false premise, not confirmed) |
@@ -101,6 +112,7 @@ longer run.
 ```bash
 python scripts/generate_v2.py          # SFT data (live RCK, cite real answers)
 python scripts/measure_guarantee.py    # the headline table (N=1500/class)
-python scripts/e2e_gated.py            # deployment-path demo
+python scripts/e2e_gated.py            # gateway wiring check (scripted inner; needs
+                                       #   an unshipped serving-gateway checkout)
 python -m pytest tests/ -q             # 146 tests
 ```

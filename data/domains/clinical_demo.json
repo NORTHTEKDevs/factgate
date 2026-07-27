@@ -1,0 +1,177 @@
+{
+  "domain": "clinical-dosing-demo",
+  "_disclaimer": "SYNTHETIC ILLUSTRATIVE DATA. Authored for a software safety demo to show a deterministic gate blocking wrong numeric values. NOT medical guidance and NOT derived from any real clinical protocol. Do not use for patient care.",
+  "corpus": "SYNTHETIC DEMO PROTOCOL (illustrative only). Give acetaminophen 15 mg/kg PO every 4 to 6 hours. The maximum daily acetaminophen total is 75 mg/kg. Give ibuprofen 10 mg/kg PO every 6 hours for children over 6 months. The maximum daily ibuprofen total is 40 mg/kg. Give amoxicillin 45 mg/kg PO divided every 12 hours. Ondansetron is dosed at 0.15 mg/kg IV. Escalate to the on-call physician when respiratory rate exceeds 60 breaths per minute. Escalate when oxygen saturation falls below 92 percent. Begin fluid resuscitation at 20 ml/kg over 1 hour. Record a temperature above 38 degrees celsius as fever. Epinephrine for anaphylaxis is 0.01 mg/kg IM. The observation period after epinephrine is 4 hours.",
+  "entities": {
+    "acetaminophen": [
+      "tylenol",
+      "paracetamol",
+      "apap"
+    ],
+    "ibuprofen": [
+      "advil",
+      "motrin"
+    ],
+    "amoxicillin": [
+      "amox"
+    ],
+    "ondansetron": [
+      "zofran"
+    ],
+    "epinephrine": [
+      "adrenaline",
+      "epi"
+    ],
+    "respiratory rate": [
+      "rr",
+      "breathing rate"
+    ],
+    "oxygen saturation": [
+      "spo2",
+      "o2 sat",
+      "oxygen sat"
+    ],
+    "fluid resuscitation": [
+      "fluid bolus",
+      "iv fluids"
+    ],
+    "fever": [
+      "febrile threshold",
+      "fever threshold"
+    ]
+  },
+  "relations": {
+    "pediatric_dose": {
+      "kind": "quantity",
+      "description": "the amount to give per dose (dose, dosage, how much to administer)",
+      "question": "what is the dose of {entity}?"
+    },
+    "max_daily": {
+      "kind": "quantity",
+      "description": "the maximum total permitted in 24 hours (max daily, daily limit, ceiling)",
+      "question": "what is the maximum daily total for {entity}?"
+    },
+    "escalation_threshold": {
+      "kind": "quantity",
+      "description": "the measured value at which to escalate or which defines the threshold",
+      "question": "what {entity} value triggers escalation?"
+    },
+    "observation_period": {
+      "kind": "quantity",
+      "description": "how long to observe or monitor afterwards",
+      "question": "how long is the observation period after {entity}?"
+    },
+    "route": {
+      "kind": "text",
+      "description": "how it is administered (oral, IV, IM)",
+      "question": "what is the route for {entity}?"
+    }
+  },
+  "facts": [
+    {
+      "s": "acetaminophen",
+      "r": "pediatric_dose",
+      "o": "15 mg/kg",
+      "source": "Give acetaminophen 15 mg/kg PO every 4 to 6 hours."
+    },
+    {
+      "s": "acetaminophen",
+      "r": "max_daily",
+      "o": "75 mg/kg",
+      "source": "The maximum daily acetaminophen total is 75 mg/kg."
+    },
+    {
+      "s": "ibuprofen",
+      "r": "pediatric_dose",
+      "o": "10 mg/kg",
+      "source": "Give ibuprofen 10 mg/kg PO every 6 hours for children over 6 months."
+    },
+    {
+      "s": "ibuprofen",
+      "r": "max_daily",
+      "o": "40 mg/kg",
+      "source": "The maximum daily ibuprofen total is 40 mg/kg."
+    },
+    {
+      "s": "amoxicillin",
+      "r": "pediatric_dose",
+      "o": "45 mg/kg",
+      "source": "Give amoxicillin 45 mg/kg PO divided every 12 hours."
+    },
+    {
+      "s": "ondansetron",
+      "r": "pediatric_dose",
+      "o": "0.15 mg/kg",
+      "source": "Ondansetron is dosed at 0.15 mg/kg IV."
+    },
+    {
+      "s": "epinephrine",
+      "r": "pediatric_dose",
+      "o": "0.01 mg/kg",
+      "source": "Epinephrine for anaphylaxis is 0.01 mg/kg IM."
+    },
+    {
+      "s": "epinephrine",
+      "r": "observation_period",
+      "o": "4 hours",
+      "source": "The observation period after epinephrine is 4 hours."
+    },
+    {
+      "s": "respiratory rate",
+      "r": "escalation_threshold",
+      "o": "60 breaths per minute",
+      "source": "Escalate to the on-call physician when respiratory rate exceeds 60 breaths per minute."
+    },
+    {
+      "s": "oxygen saturation",
+      "r": "escalation_threshold",
+      "o": "92 percent",
+      "source": "Escalate when oxygen saturation falls below 92 percent."
+    },
+    {
+      "s": "fluid resuscitation",
+      "r": "pediatric_dose",
+      "o": "20 ml/kg",
+      "source": "Begin fluid resuscitation at 20 ml/kg over 1 hour."
+    },
+    {
+      "s": "fever",
+      "r": "escalation_threshold",
+      "o": "38 degrees celsius",
+      "source": "Record a temperature above 38 degrees celsius as fever."
+    }
+  ],
+  "value_qualifiers": [
+    "PO",
+    "IV",
+    "IM",
+    "orally",
+    "intravenously",
+    "divided",
+    "divided every \\d+ hours?",
+    "every \\d+(?: to \\d+)? hours?",
+    "q\\d+(?:-\\d+)?h",
+    "over \\d+ hours?",
+    "for children over \\d+ months?",
+    "or above",
+    "or higher",
+    "or more",
+    "or greater",
+    "below",
+    "above",
+    "under",
+    "at least",
+    "at most",
+    "exceeding",
+    "greater than",
+    "less than",
+    "a rate of",
+    "a temperature of",
+    "a temperature recording of"
+  ],
+  "unit_aliases": {
+    "%": "percent",
+    "\u00b0C": "degrees celsius",
+    "C": "degrees celsius"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "domain": "consumer-lending-demo",
+  "_disclaimer": "SYNTHETIC ILLUSTRATIVE DATA. Authored as a BLIND generalisation test of the bounded-domain gate: the entities, relations, value_qualifiers and question phrasings below were written from priors BEFORE any benchmark run, and were not revised in response to results. Not a real product disclosure.",
+  "_method_note": "Deliberately a different value space from the clinical demo: percentages, currency amounts and calendar durations rather than weight-based doses.",
+  "corpus": "SYNTHETIC DEMO TERMS (illustrative only). The personal loan carries an annual rate of 7.99 percent. The personal loan has a maximum term of 60 months. The personal loan origination fee is 2 percent. The credit line carries an annual rate of 12.5 percent. The credit line minimum payment is 25 dollars. The savings account earns an annual rate of 4.25 percent. The savings account requires a minimum balance of 500 dollars. The overdraft fee is 35 dollars. The overdraft grace period is 3 days. The late payment fee is 39 dollars. The late payment grace period is 15 days. The wire transfer fee is 30 dollars.",
+  "entities": {
+    "personal loan": ["personal loans", "the loan"],
+    "credit line": ["line of credit", "revolving line"],
+    "savings account": ["savings"],
+    "overdraft": ["overdrafts"],
+    "late payment": ["late payments"],
+    "wire transfer": ["wire transfers", "wire"]
+  },
+  "relations": {
+    "annual_rate": {
+      "kind": "quantity",
+      "description": "the yearly interest rate",
+      "question": "what is the annual rate for the {entity}?"
+    },
+    "maximum_term": {
+      "kind": "quantity",
+      "description": "the longest permitted duration",
+      "question": "what is the maximum term for the {entity}?"
+    },
+    "origination_fee": {
+      "kind": "quantity",
+      "description": "the fee charged to open it",
+      "question": "what is the origination fee for the {entity}?"
+    },
+    "minimum_payment": {
+      "kind": "quantity",
+      "description": "the smallest permitted payment",
+      "question": "what is the minimum payment for the {entity}?"
+    },
+    "minimum_balance": {
+      "kind": "quantity",
+      "description": "the smallest permitted balance",
+      "question": "what is the minimum balance for the {entity}?"
+    },
+    "fee": {
+      "kind": "quantity",
+      "description": "the charge applied",
+      "question": "what is the fee for {entity}?"
+    },
+    "grace_period": {
+      "kind": "quantity",
+      "description": "how long before the charge applies",
+      "question": "what is the grace period for {entity}?"
+    }
+  },
+  "value_qualifiers": [
+    "APR", "per year", "per annum", "annually", "yearly",
+    "per month", "monthly", "each month",
+    "approximately", "about", "roughly",
+    "up to", "a maximum of", "a minimum of", "at least", "no more than", "no less than",
+    "or less", "or more", "flat",
+    "a fee of", "a rate of", "an annual rate of", "a balance of"
+  ],
+  "unit_aliases": {
+    "%": "percent",
+    "USD": "dollars"
+  },
+  "facts": [
+    {"s": "personal loan", "r": "annual_rate", "o": "7.99 percent",
+     "source": "The personal loan carries an annual rate of 7.99 percent."},
+    {"s": "personal loan", "r": "maximum_term", "o": "60 months",
+     "source": "The personal loan has a maximum term of 60 months."},
+    {"s": "personal loan", "r": "origination_fee", "o": "2 percent",
+     "source": "The personal loan origination fee is 2 percent."},
+    {"s": "credit line", "r": "annual_rate", "o": "12.5 percent",
+     "source": "The credit line carries an annual rate of 12.5 percent."},
+    {"s": "credit line", "r": "minimum_payment", "o": "25 dollars",
+     "source": "The credit line minimum payment is 25 dollars."},
+    {"s": "savings account", "r": "annual_rate", "o": "4.25 percent",
+     "source": "The savings account earns an annual rate of 4.25 percent."},
+    {"s": "savings account", "r": "minimum_balance", "o": "500 dollars",
+     "source": "The savings account requires a minimum balance of 500 dollars."},
+    {"s": "overdraft", "r": "fee", "o": "35 dollars",
+     "source": "The overdraft fee is 35 dollars."},
+    {"s": "overdraft", "r": "grace_period", "o": "3 days",
+     "source": "The overdraft grace period is 3 days."},
+    {"s": "late payment", "r": "fee", "o": "39 dollars",
+     "source": "The late payment fee is 39 dollars."},
+    {"s": "late payment", "r": "grace_period", "o": "15 days",
+     "source": "The late payment grace period is 15 days."},
+    {"s": "wire transfer", "r": "fee", "o": "30 dollars",
+     "source": "The wire transfer fee is 30 dollars."}
+  ]
+}

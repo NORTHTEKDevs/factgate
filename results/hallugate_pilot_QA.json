@@ -1,0 +1,27 @@
+{
+  "n_scored": 122,
+  "n_hallucinated": 12,
+  "n_faithful": 110,
+  "leak_rate": 0.0,
+  "leak_ci95": [
+    0.0,
+    0.2425007574992425
+  ],
+  "over_block_rate": 1.0,
+  "over_block_ci95": [
+    0.9662548664108728,
+    1.0
+  ],
+  "leaks": 0,
+  "blocked_faithful": 110,
+  "task": "QA",
+  "extractor_model": "llama3.2:3b",
+  "n_examples": 25,
+  "unique_sources": 5,
+  "json_parse_failures": 8,
+  "state_counts": {
+    "HELD": 122,
+    "SKIP": 25
+  },
+  "seconds": 173.8
+}

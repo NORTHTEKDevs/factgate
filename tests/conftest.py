@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import pytest
 
-from rck.knowledge_base import ShardedKnowledgeBase
-from rck.negative_facts import deny
-from rck.provenance import ProvenanceStore
+# rck is imported INSIDE the fixture, not at module scope: a module-level import made
+# every test in the suite -- including the domain-gate tests, which never touch rck --
+# uncollectable without a knowledge-base engine installed.
 
 CAPITALS = [
     ("france", "paris"), ("germany", "berlin"), ("japan", "tokyo"),
@@ -39,6 +39,10 @@ HASPART_FACTS = [
 
 @pytest.fixture(scope="session")
 def kb_prov():
+    from rck.knowledge_base import ShardedKnowledgeBase
+    from rck.negative_facts import deny
+    from rck.provenance import ProvenanceStore
+
     kb = ShardedKnowledgeBase(dim=4096, n_shards=64, seed=0)
     prov = ProvenanceStore()
 

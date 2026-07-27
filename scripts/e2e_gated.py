@@ -1,6 +1,10 @@
-"""B4 end-to-end: drive the serving gateway's VerifiedBackend (ollama inner + real
-RCK gate) on 3 diagnostic prompts. Proves the deployment path, not just the gate
-in isolation.
+"""B4 serving-gateway wiring check: drive the serving gateway's VerifiedBackend on 3
+diagnostic prompts using a SCRIPTED inner (see ScriptedInner below) plus the real RCK gate.
+
+The inner is deliberately NOT an LLM: it returns hand-written strings that already contain
+the `[kb:s/r/o]` tag, so the run is deterministic and fast. This proves the gate plumbing
+is correctly wired end to end; it does NOT demonstrate a live model routing its own claims
+through the gate, and it does not exercise claim extraction at all.
 
 Requires a separate OpenAI-compatible serving gateway checked out alongside this
 repo (not included here) that exposes `serving.factgate_backend.VerifiedBackend`.
