@@ -197,3 +197,52 @@ def test_slot_answer_takes_the_first_line_before_any_commentary():
 def test_first_line_rule_does_not_rescue_a_refusal():
     assert normalise_slot_answer("NONE\n\nThe passage does not state it.") is None
     assert normalise_slot_answer("Not provided.\nSee section 2.") is None
+
+
+# ------------------- entity matching, from a first-time author's declaration
+def _fs(entities):
+    from factgate.domain.factset import FactSet
+    return FactSet.from_dict({
+        "domain": "d", "entities": entities,
+        "relations": {"p": {"kind": "quantity"}},
+        "facts": [{"s": list(entities)[0], "r": "p", "o": "$5", "source": "q"}]})
+
+
+def test_spacing_around_punctuation_is_normalised():
+    """The author copied "Agency A / Agency B Grant" from a table cell; the model wrote
+    "Agency A/Agency B Grant". Same name, different spacing around a slash -- the same class as the
+    hyphen and line-break normalisation already applied."""
+    fs = _fs({"grant_programme": ["Agency A / Agency B Grant"]})
+    assert mentioned_entities("The ask from Agency A/Agency B Grant is $250k.", fs) == {"grant_programme"}
+    assert mentioned_entities("The ask from Agency A / Agency B Grant is $250k.", fs) == {"grant_programme"}
+
+
+def test_trailing_parenthetical_in_an_alias_is_optional():
+    """"Pre-seed angels (early stage)" -- the parenthetical is the author disambiguating
+    a table row, not part of what anyone calls the thing."""
+    fs = _fs({"early_investors": ["Pre-seed angels (early stage)"]})
+    assert mentioned_entities("Pre-seed angels take 5-15% equity.", fs) == {"early_investors"}
+    assert mentioned_entities("Pre-seed angels (early stage) take 5%.", fs) == {"early_investors"}
+
+
+def test_multipart_alias_matches_when_all_parts_are_present():
+    """"Alpha Fund / Beta Fund / Gamma Partners" vs "Alpha Fund, Beta Fund, and Gamma
+    Partners" -- a list joined differently. ALL parts must appear, so a stray mention of one
+    common word cannot fire."""
+    fs = _fs({"seed_funds": ["Alpha Fund / Beta Fund / Gamma Partners"]})
+    assert mentioned_entities(
+        "Alpha Fund, Beta Fund, and Gamma Partners ask for $500k-2M.", fs) == {"seed_funds"}
+
+
+def test_multipart_alias_does_not_fire_on_one_part_alone():
+    """The safety side of the previous rule: "alpha" in its ordinary English sense
+    must not resolve to a fund."""
+    fs = _fs({"seed_funds": ["Alpha Fund / Beta Fund / Gamma Partners"]})
+    assert mentioned_entities("The alpha channel was empty.", fs) == set()
+
+
+def test_a_genuinely_missing_alias_is_still_missed():
+    """"AX" declared, "Accelerator X" written. No library rule can bridge that, and
+    pretending otherwise would mean guessing at names."""
+    fs = _fs({"yc": ["AX"]})
+    assert mentioned_entities("Accelerator X takes 7% equity.", fs) == set()

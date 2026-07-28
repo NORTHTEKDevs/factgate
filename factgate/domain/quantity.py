@@ -168,6 +168,34 @@ def parse_range(raw: str | None) -> Range | None:
     return Range(low, high, unit)
 
 
+def _leading_range(claimed: str, declared: Range) -> Range | None:
+    """Recover a range from a claim carrying a trailing clause.
+
+    Measured: declared "12-16 weeks", model answered "12-16 weeks after v0.5", which parses
+    as nothing. Points already had a leading-quantity fallback for exactly this; ranges did
+    not, so any range with a trailing clause was uncomparable.
+
+    Done by prefix search rather than an unanchored regex, because the unit pattern is
+    greedy and swallows the trailing prose ("weeksafterv"). The longest prefix whose unit
+    matches the declared one wins. If the declared bounds ALSO appear in the remainder, the
+    claim is not a clean single value and nothing is returned, so the caller holds.
+    """
+    if not claimed:
+        return None
+    tokens = claimed.split()
+    for n in range(len(tokens), 0, -1):
+        candidate = " ".join(tokens[:n]).rstrip(".,;:")
+        r = parse_range(candidate)
+        if r is None or r.unit != declared.unit:
+            continue
+        rest = " ".join(tokens[n:])
+        others = {_as_float(t) for t in _NUMBER_RE.findall(rest)}
+        if declared.low in others or declared.high in others:
+            return None          # ambiguous: the declared bounds recur later
+        return r
+    return None
+
+
 def _compare_range(declared: str, claimed: str) -> str | None:
     """Comparison when either side is a range. None if neither side is one.
 
@@ -177,6 +205,8 @@ def _compare_range(declared: str, claimed: str) -> str | None:
     whole span is document-supported.
     """
     dr, cr = parse_range(declared), parse_range(claimed)
+    if dr is not None and cr is None:
+        cr = _leading_range(claimed, dr)
     if dr is None and cr is None:
         return None
 

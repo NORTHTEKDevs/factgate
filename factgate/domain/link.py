@@ -103,15 +103,46 @@ def mentioned_entities(text: str, fs: FactSet) -> set[str]:
     # wrap "oxygen saturation" across lines and hyphenate compound modifiers
     # ("fluid-resuscitation protocol"); missing those is a silent coverage hole that
     # surfaces as HELD rather than as an error.
-    low = re.sub(r"[\s\-‐-―]+", " ", text.lower())
+    low = _norm_surface(text)
     found = set()
     for canon, aliases in fs.entities.items():
         for surface in (canon, *aliases):
-            norm = re.sub(r"[\s\-‐-―]+", " ", surface.lower())
-            if re.search(rf"\b{re.escape(norm)}\b", low):
+            if _surface_matches(surface, low):
                 found.add(canon)
                 break
     return found
+
+
+def _norm_surface(s: str) -> str:
+    """Collapse the punctuation and spacing that vary between a table cell and prose.
+
+    A first-time author copies aliases out of the document's tables ("Agency A / Agency B Grant")
+    while the model paraphrases in prose ("Agency A/Agency B Grant"). Treating runs of separator
+    punctuation as a single space makes those the same name.
+    """
+    return re.sub(r"[\s\-‐-―_/,&]+", " ", s.lower()).strip()
+
+
+def _surface_matches(surface: str, normalised_text: str) -> bool:
+    """Does this declared surface form appear in the (already normalised) text?
+
+    Three allowances, each from a real declaration that failed to match:
+      - separator punctuation and spacing are normalised on both sides
+      - a TRAILING PARENTHETICAL is a disambiguator the author added to a table row
+        ("Pre-seed angels (alt-arch AI)"), not part of what anyone calls the thing
+      - a name listing several parties ("Alpha Fund / Beta Fund / Gamma Partners")
+        matches when ALL parts are present, in any order and however joined. Requiring
+        all of them is what stops a common word like "conviction" resolving on its own.
+    """
+    base = re.sub(r"\s*\([^)]*\)\s*$", "", surface.strip())
+    norm = _norm_surface(base)
+    if norm and re.search(rf"\b{re.escape(norm)}\b", normalised_text):
+        return True
+    parts = [_norm_surface(p) for p in re.split(r"\s*[/,]\s*|\s+and\s+", base) if p.strip()]
+    if len(parts) > 1 and all(
+            p and re.search(rf"\b{re.escape(p)}\b", normalised_text) for p in parts):
+        return True
+    return False
 
 
 def normalise_slot_answer(raw: str | None) -> str | None:

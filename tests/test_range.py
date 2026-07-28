@@ -188,3 +188,18 @@ def test_trailing_plus_is_an_open_range_not_a_point():
 
 def test_open_range_still_respects_units():
     assert compare_values("$100M+", "150 mg/kg") == INCOMPARABLE
+
+
+def test_claimed_range_with_trailing_text_falls_back_to_its_leading_range():
+    """Measured: declared "12-16 weeks", model answered "12-16 weeks after v0.5". Points
+    already had a leading-quantity fallback for exactly this; ranges did not, so any range
+    with a trailing clause was uncomparable."""
+    assert compare_values("12-16 weeks", "12-16 weeks after v0.5") == MATCH
+    assert compare_values("12-16 weeks", "20-30 weeks after v0.5") == DIFFER
+
+
+def test_leading_range_fallback_does_not_rescue_an_ambiguous_claim():
+    """If the declared range's own bounds appear elsewhere in the claim it is not a clean
+    single value, and the safe answer is to hold."""
+    assert compare_values("12-16 weeks", "20-30 weeks, revised from 12-16 weeks") \
+        == INCOMPARABLE

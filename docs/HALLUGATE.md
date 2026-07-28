@@ -463,6 +463,45 @@ a table. Every value the author was forced to mangle or discard now loads.
 The lesson generalises past this library: the maintainer could not find these because the
 maintainer already knew the answers.
 
+### Attacking the 46%, without touching the vocabulary
+
+The 13 held values split cleanly into library deficiencies and vocabulary gaps. Only the
+first kind was fixed; **the author's domain file was not edited**, because tuning it would
+have reintroduced exactly the bias the exercise removed.
+
+| held value | cause | whose problem |
+|---|---|---|
+| 7 empty extractions | entity aliases copied from table cells never matched the model's prose | **library** |
+| `12-16 weeks after v0.5` | a claimed RANGE with a trailing clause had no fallback, though points had one | **library** |
+| `$100M+`, `$5k cloud credit` | load-time rejection forced lossy declarations (§9) | **library**, already fixed |
+| `8% equity` | needs `equity` declared as a qualifier | **author** |
+| `AX` vs `Accelerator X` | a missing alias no rule can infer | **author** |
+
+The entity-matching rules added, each from a real declaration that failed:
+
+- separator punctuation and spacing normalise on both sides, so `Agency A / Agency B Grant` matches
+  `Agency A/Agency B Grant`
+- a **trailing parenthetical** in an alias is a disambiguator the author added to a table
+  row (`Pre-seed angels (early stage)`), not part of the name
+- a name listing several parties (`Alpha Fund / Beta Fund / Gamma Partners`) matches when
+  **all** parts are present, however joined. Requiring all of them is what stops a common
+  word like "alpha" resolving on its own -- that case is tested explicitly.
+
+```
+same document, same vocabulary, library fixes only
+OVER-BLOCK  13/28 = 46%   ->   5/28 = 18%   CI95 [8%, 36%]
+LEAK RATE    0/34 =  0%   ->   0/34 =  0%   unchanged
+```
+
+Two thirds of what looked like an irreducible coverage cost was the library failing to
+recognise names a person would read as identical. The residue is genuine vocabulary work,
+and the author's own report said as much before any of this was measured.
+
+**The same fixes moved the §8 pitch-deck domain not at all** -- still 44%, re-measured
+rather than assumed. Its holds have a different cause, so the honest over-block range is
+still **8-44%**. A fix that halves one document's coverage cost and does nothing for
+another is a reminder that "over-block" is not one phenomenon with one remedy.
+
 ## 10. Production hardening
 
 Five changes aimed at business use rather than at the benchmark. None moved the measured
