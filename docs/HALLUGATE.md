@@ -502,7 +502,49 @@ rather than assumed. Its holds have a different cause, so the honest over-block 
 still **8-44%**. A fix that halves one document's coverage cost and does nothing for
 another is a reminder that "over-block" is not one phenomenon with one remedy.
 
-## 10. Production hardening
+## 10. Closing the coverage gap: 46% -> 11%
+
+Attacking the remaining holds separated into three kinds of work, and only the middle one
+is the library's.
+
+**Library gaps (fixed).** Two more forms the model produces and the parser did not accept:
+
+- ranges written as prose. The document writes `$500K-$2M`; the model writes
+  `between $500K and $2M`. Three of one domain's eight holds were this single form, and
+  the slot filter discarded it before the gate saw it (five words, no leading digit).
+- category errors. Asked "how much is the raise?" on a passage about runway, the extractor
+  answered `18 months`. A currency value and a duration are not competing readings of one
+  slot; comparing them is meaningless and DIFFER would wrongly imply a contradiction, so
+  the pair is now INCOMPARABLE.
+
+**Vocabulary (the author's, by design).** The residue is trailing text the domain has not
+declared irrelevant: `$1.50 per customer query` against a declared `$1.50`. The library
+must not strip that by inference -- declaring `per day` irrelevant on a per-dose value
+would silently make a wrong value verify -- so the decision stays with the author.
+
+**Tooling (new).** `factgate.domain.suggest.suggest_qualifiers` reports the exact trailing
+text that caused each hold, as candidates to approve or reject. It only proposes a residue
+whose removal actually rescues the claim (a wrong value is not a qualifier problem), and it
+flags time or basis wording as risky. Nothing it returns changes a verdict.
+
+Run against the independently-declared domain it proposed three items; two were genuine.
+
+```
+independently-declared domain, mechanically-chosen document, qwen2.5:14b
+
+blind, as the author wrote it            46%  (13/28)     leak 0/34
++ library fixes, vocabulary untouched    18%  ( 5/28)     leak 0/34
++ author accepts 2 suggested qualifiers  11%  ( 3/28)     leak 0/34
+```
+
+25 of 28 correct values verify, every wrong value is caught, and the path from 46% to 11%
+is a documented loop rather than a diagnostic exercise.
+
+The other mechanically-chosen document moved 44% -> 28% on the library fixes alone; its
+suggestion loop has not been run. **The honest span is 11-33%**, and the low end now
+requires one review pass rather than familiarity with the document.
+
+## 11. Production hardening
 
 Five changes aimed at business use rather than at the benchmark. None moved the measured
 numbers (0% leak, 8% over-block on clinical/qwen2.5:14b), which is the point: they close

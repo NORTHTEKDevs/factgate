@@ -16,7 +16,7 @@ from __future__ import annotations
 import re
 
 from factgate.domain.factset import FactSet
-from factgate.domain.quantity import parse_quantity
+from factgate.domain.quantity import parse_quantity, parse_range
 from factgate.llm import ollama
 
 _SENT = re.compile(r"[^.!?]*[.!?]+|[^.!?]+$")
@@ -172,6 +172,10 @@ def normalise_slot_answer(raw: str | None) -> str | None:
     # normalisation decides which qualifiers are safe to ignore; that is not this
     # function's call to make.
     if _LEADS_WITH_NUMBER.match(s):
+        return s
+    # A range written as prose ("between $500K and $2M") is five words and does not lead
+    # with a digit, so the value-shape whitelist discarded it before the gate saw it.
+    if parse_range(s) is not None:
         return s
     if len(s.split()) > 3 or any(p in s for p in (". ", "; ", ", however")):
         return None

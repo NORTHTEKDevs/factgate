@@ -542,3 +542,24 @@ def test_plain_qualifiers_raise_no_warning():
         "value_qualifiers": ["one-time", "download"],
         "facts": [{"s": "x", "r": "price", "o": "$5", "source": "q"}]})
     assert fs.qualifier_warnings == []
+
+
+# ------------------------------------------- wrong-slot answers are category errors
+def test_a_duration_answer_against_a_currency_fact_is_incomparable():
+    """Measured: asked "how much is the raise?" on a passage about runway, the extractor
+    answered "18 months" -- a category error, not a competing amount. Comparing it as a
+    value is meaningless; the honest verdict is that it cannot be compared."""
+    assert compare_values("$5M-$10M", "18 months") == INCOMPARABLE
+    assert compare_values("$199", "18 months") == INCOMPARABLE
+
+
+def test_a_currency_answer_against_a_non_currency_fact_is_incomparable():
+    assert compare_values("18 months", "$199") == INCOMPARABLE
+    assert compare_values("60 breaths per minute", "$30") == INCOMPARABLE
+
+
+def test_same_category_comparisons_are_unaffected():
+    """The guard must not touch the cases that already worked."""
+    assert compare_values("$199", "$398") == DIFFER
+    assert compare_values("$199", "$199") == MATCH
+    assert compare_values("15 mg/kg", "30 mg/kg") == DIFFER

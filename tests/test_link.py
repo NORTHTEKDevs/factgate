@@ -246,3 +246,14 @@ def test_a_genuinely_missing_alias_is_still_missed():
     pretending otherwise would mean guessing at names."""
     fs = _fs({"yc": ["AX"]})
     assert mentioned_entities("Accelerator X takes 7% equity.", fs) == set()
+
+
+def test_range_shaped_slot_answers_survive_the_length_filter():
+    """"between $500K and $2M" is five words and does not lead with a digit, so the
+    value-shape whitelist dropped it before the gate ever saw it."""
+    assert normalise_slot_answer("between $500K and $2M") == "between $500K and $2M"
+    assert normalise_slot_answer("between 5 and 10 mg/kg") == "between 5 and 10 mg/kg"
+
+
+def test_prose_that_is_not_a_range_is_still_rejected():
+    assert normalise_slot_answer("between the lines there is no value stated") is None

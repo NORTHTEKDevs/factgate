@@ -203,3 +203,23 @@ def test_leading_range_fallback_does_not_rescue_an_ambiguous_claim():
     single value, and the safe answer is to hold."""
     assert compare_values("12-16 weeks", "20-30 weeks, revised from 12-16 weeks") \
         == INCOMPARABLE
+
+
+# ------------------------------------------- ranges written as prose
+@pytest.mark.parametrize("raw,lo,hi,unit", [
+    ("between $500K and $2M", 500_000.0, 2_000_000.0, "usd"),
+    ("between $5K and $50K", 5_000.0, 50_000.0, "usd"),
+    ("between 5 and 10 mg/kg", 5.0, 10.0, "mg/kg"),
+    ("between 15 and 25%", 15.0, 25.0, "%"),
+])
+def test_between_x_and_y_is_a_range(raw, lo, hi, unit):
+    """Measured: the model writes ranges as prose ("between $500K and $2M") where the
+    document writes them with a dash. Three of one document's eight held values were this
+    single unrecognised form."""
+    r = parse_range(raw)
+    assert r is not None and (r.low, r.high, r.unit) == (lo, hi, unit)
+
+
+def test_prose_range_compares_like_any_other():
+    assert compare_values("$500K-$2M", "between $500K and $2M") == MATCH
+    assert compare_values("$500K-$2M", "between $5M and $9M") == DIFFER

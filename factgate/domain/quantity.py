@@ -112,8 +112,12 @@ class Range:
 # A magnitude letter must not be followed by another letter, or the "m" of "mg/kg" reads
 # as "million" and "5-10 mg/kg" becomes a range topping out at ten million.
 _RANGE_RE = re.compile(
-    r"^\s*(US\$|[$£€¥])?\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*([kKmMbB](?![a-zA-Z]))?\s*"
-    r"(?:-|–|—|\bto\b)\s*"
+    r"^\s*(?:between\s+)?(US\$|[$£€¥])?\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*([kKmMbB](?![a-zA-Z]))?\s*"
+    # "and" is accepted as a separator, so "between $500K and $2M" parses -- and so does a
+    # bare "5 and 10 mg/kg". That is deliberate but not free: "5 and 10" could mean two
+    # separate values rather than a span. It only matters when the DECLARED value is also
+    # a range, and reading the claim as a range is the reading that can be checked.
+    r"(?:-|–|—|\bto\b|\band\b)\s*"
     r"(US\$|[$£€¥])?\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*([kKmMbB](?![a-zA-Z]))?\s*"
     r"([a-zA-Zµ%°][a-zA-Zµ%°/\s]*)?\s*$")
 
@@ -276,6 +280,23 @@ def _leading(raw: str) -> Quantity | None:
         return None
 
 
+_CURRENCY_UNITS = set(_CURRENCY.values()) | set(_CURRENCY_WORDS.values())
+
+
+def _is_currency(raw: str | None) -> bool | None:
+    """True/False if the side parses, None if it does not parse at all."""
+    for parse in (parse_quantity, parse_range):
+        v = parse(raw)
+        if v is not None:
+            return v.unit.split("/")[0][:3] in _CURRENCY_UNITS or v.unit[:3] in _CURRENCY_UNITS
+    return None
+
+
+def _currency_mismatch(declared: str, claimed: str | None) -> bool:
+    d, c = _is_currency(declared), _is_currency(claimed)
+    return d is not None and c is not None and d != c
+
+
 def compare_values(declared: str, claimed: str | None) -> str:
     """Three-valued comparison. The third value is the safety-critical one.
 
@@ -289,6 +310,12 @@ def compare_values(declared: str, claimed: str | None) -> str:
     would be worse: "10 mg/kg per day" prefixes identically and means something else.
     """
     if claimed is None:
+        return INCOMPARABLE
+    # A currency value and a non-currency one are not competing readings of the same
+    # slot, they are a category error. Measured: asked "how much is the raise?" on a
+    # passage about runway, the extractor answered "18 months". Comparing that as an
+    # amount is meaningless, and DIFFER would wrongly imply a contradiction.
+    if _currency_mismatch(declared, claimed):
         return INCOMPARABLE
     ranged = _compare_range(declared, claimed)
     if ranged is not None:
