@@ -585,7 +585,60 @@ suggested value_qualifiers (review before declaring):
       'per customer query' x2  e.g. .../daily_unit_cost -> '$1.50 per customer query'
 ```
 
-## 11. Production hardening
+## 11. Property testing found a leak I had introduced
+
+Every bug found up to here came from a hand-written case, which only covers what someone
+thought of. `tests/test_invariants.py` generates inputs nobody chose and asserts the
+properties that must hold for all of them:
+
+| | invariant |
+|---|---|
+| I1 | VERIFIED requires equality re-derivable **without** the code under test |
+| I2 | BLOCK requires provable difference |
+| I3 | total: every input yields a verdict, no exception escapes |
+| I4 | MATCH is symmetric except for the documented range/point asymmetry |
+| I5 | reflexive |
+| I6 | no absence marker ever verifies |
+
+**It broke I1 within its first run**, on a leak I had introduced two sections earlier:
+
+```
+declared  US$5,547M+
+claimed   US$5,547M+ per query
+verdict   VERIFIED
+```
+
+The range paths were ignoring unexplained trailing text while the point path rejected it.
+`"10 mg/kg PO"` against a declared `"10 mg/kg"` was INCOMPARABLE, but
+`"12-16 weeks after v0.5"` against `"12-16 weeks"` was MATCH -- the same shape of input,
+opposite verdicts, and the permissive one verified a claim the gate had not fully parsed.
+
+Fixed by making the rule uniform: **unexplained trailing text may still support a DIFFER
+(a provably other magnitude is other however it is dressed) but it can never support a
+MATCH.** Recovering that coverage means declaring the qualifier, not ignoring the words.
+
+**That cost coverage, and the cost is reported rather than absorbed:** the
+independently-declared domain went 11% -> 18% over-block. I would rather pay seven points
+than keep an inconsistency the fuzzer classified as a leak.
+
+The fuzzer was also right where I was wrong. My first I4 asserted plain symmetry; it broke
+on `"$5,173 million+"` vs `"$41.72B"`. That asymmetry is the design -- a point inside a
+declared range is document-supported, a range never confirms a declared point -- so the
+invariant was corrected, not the code. A property test that disagrees with the code is not
+automatically right about which one to change.
+
+### Campaign results after the fix
+
+```
+comparator   160,000 cases (40 seeds x 4,000)    0 violations across I1, I2, I3, I5, I6
+gate + link   13,844 cases, hostile inputs        0 raises, 0 non-derivable VERIFIED,
+                                                  0 out-of-domain not held
+```
+
+Absence of failures here is not proof of correctness. It is a search several orders of
+magnitude wider than the example tests, and it found a real leak the example tests missed.
+
+## 12. Production hardening
 
 Five changes aimed at business use rather than at the benchmark. None moved the measured
 numbers (0% leak, 8% over-block on clinical/qwen2.5:14b), which is the point: they close

@@ -192,7 +192,7 @@ def _leading_range(claimed: str, declared: Range) -> Range | None:
         r = parse_range(candidate)
         if r is None or r.unit != declared.unit:
             continue
-        rest = " ".join(tokens[n:])
+        rest = " ".join(tokens[n:]).strip(" ,.;:")
         others = {_as_float(t) for t in _NUMBER_RE.findall(rest)}
         if declared.low in others or declared.high in others:
             return None          # ambiguous: the declared bounds recur later
@@ -209,25 +209,37 @@ def _compare_range(declared: str, claimed: str) -> str | None:
     whole span is document-supported.
     """
     dr, cr = parse_range(declared), parse_range(claimed)
+    # Whether the claim needed a fallback, i.e. carries text the parser did not consume.
+    # FOUND BY FUZZING: without this, unexplained trailing text was ignored on the range
+    # paths while the point path rejected it, so "US$5,547M+ per query" VERIFIED against a
+    # declared "US$5,547M+". Junk may still support a DIFFER (a provably other magnitude
+    # is provably other however it is dressed) but it must never support a MATCH.
+    inexact = False
     if dr is not None and cr is None:
         cr = _leading_range(claimed, dr)
+        inexact = cr is not None
     if dr is None and cr is None:
         return None
 
     if dr is not None and cr is not None:
         if dr.unit != cr.unit:
             return INCOMPARABLE
-        if (dr.low, dr.high) == (cr.low, cr.high):
-            return MATCH
         if cr.high < dr.low or cr.low > dr.high:
             return DIFFER                      # disjoint -> provably different
+        if (dr.low, dr.high) == (cr.low, cr.high):
+            return INCOMPARABLE if inexact else MATCH
         return INCOMPARABLE                    # overlapping but not equal
 
     if dr is not None:
-        cq = parse_quantity(claimed) or _leading(claimed)
+        cq = parse_quantity(claimed)
+        clean = cq is not None
+        if cq is None:
+            cq = _leading(claimed)
         if cq is None or cq.unit != dr.unit:
             return INCOMPARABLE
-        return MATCH if dr.low <= cq.value <= dr.high else DIFFER
+        if not (dr.low <= cq.value <= dr.high):
+            return DIFFER          # outside the range however the claim is dressed
+        return MATCH if clean else INCOMPARABLE
 
     # Declared is a point, claim is a range.
     return INCOMPARABLE
