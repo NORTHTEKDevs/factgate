@@ -8,7 +8,7 @@ verdict. The guarantee is scoped to claims that reach the gate; see
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-444%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-446%20passing-brightgreen)
 
 ## The idea, in 3 sentences
 
@@ -40,7 +40,7 @@ gate's own false-accept rate, not an observed hallucination rate of any model.
 | False-VERIFIED rate, absent facts (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | False-VERIFIED rate, corrupted claims (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | True-fact verify coverage (N=1500) | **34%** | [31.6%, 36.4%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| Test suite | **444 passed** | — | `pytest tests/ -q` |
+| Test suite | **446 passed** | — | `pytest tests/ -q` |
 
 **LLM-in-the-loop results.** Only these involved a running model. Note the sample size.
 
@@ -109,7 +109,7 @@ durations) with its vocabulary declared before any run measures the honest start
 | domain | vocabulary | leak | over-block |
 |---|---|---|---|
 | **real doc, chosen mechanically, vocabulary by a first-time author** | blind + one review pass | **0%** (0/34) | **11%** (3/28) |
-| real pitch deck, chosen mechanically | blind, no review pass | **0%** (0/24) | 28% (5/18) |
+| real pitch deck, chosen mechanically | blind + one review pass | **0%** (0/24) | 22% (4/18), half of them correct holds |
 | real business memo | declared | **0%** (0/19) | 8% (1/12) |
 | real financial model | **blind** | **0%** (0/22) | 8% (1/12) |
 | lending, realistic prose | **blind** | **0%** | 33% |
@@ -146,8 +146,16 @@ proposed by `factgate.domain.suggest`. A second mechanically-chosen document sit
 with no review pass run. The leak rate held at 0% in every configuration, across 34 trials
 at the largest.
 
-The coverage cost is therefore a reviewable list, not an unknown tax -- but it still costs
-a review pass per document, and no deployment has run unsupervised. Treat this as a working research implementation with a
+The coverage cost is therefore a reviewable list, not an unknown tax. The benchmark emits
+the review list itself, so the loop is run / read / declare / re-run.
+
+**Not every hold is an over-block.** Where the model rebases a figure -- answering
+"$1.50 per customer query" for a source reading "$1.50/day" -- holding it is the gate being
+correct, and the metric counts it as a failure anyway. Runs now report those separately; on
+one document they were half the remaining holds. Two suggested qualifiers were *rejected*
+on review for exactly this reason.
+
+It still costs a review pass per document, and no deployment has run unsupervised. Treat this as a working research implementation with a
 measured safety property, not a shippable component.
 
 New authors should start with [`docs/AUTHORING.md`](docs/AUTHORING.md).
@@ -282,7 +290,7 @@ python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -e .
 ./.venv/Scripts/python.exe -m pip install -e ../rck   # path to your local RCK checkout
 
-# run the test suite (444 tests, no network, <10s)
+# run the test suite (446 tests, no network, <10s)
 ./.venv/Scripts/python.exe -m pytest tests/ -q
 
 # reproduce the headline guarantee measurement (N=1500/class against the live KB)

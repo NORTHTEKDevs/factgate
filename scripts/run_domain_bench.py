@@ -28,6 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from factgate.domain.factset import FactSet
 from factgate.domain.gate import BLOCK, HELD, VERIFIED, gate_claim
 from factgate.domain.link import link_targeted, value_is_grounded
+from factgate.domain.suggest import render_suggestions
 from factgate.domain.quantity import DIFFER, compare_values, parse_quantity
 from factgate.llm import ollama
 from factgate.stats import cluster_wilson, wilson
@@ -202,6 +203,28 @@ def main() -> None:
     lk_f, lk_n, lk_ci = cluster_wilson(leak_clusters)
     ob_f, ob_n, ob_ci = cluster_wilson(ob_clusters)
 
+    # Not every hold is an over-block. Where the extracted MAGNITUDE matches the declared
+    # value but the qualifier differs, the model rebased the figure -- "$1.50 per customer
+    # query" against a source reading "$1.50/day" -- and holding it is the gate being
+    # right. Reported separately rather than folded into one number.
+    rebased = 0
+    for p in per_example:
+        if p["condition"] != "FAITHFUL" or p["status"] == VERIFIED:
+            continue
+        declared = p["fact"][2]
+        dq = parse_quantity(declared) or None
+        for c in p["claims"]:
+            cq = parse_quantity(c[2])
+            if cq is None:
+                from factgate.domain.quantity import _leading
+                cq = _leading(c[2])
+            if dq and cq and dq.value == cq.value and dq.unit != cq.unit:
+                rebased += 1
+                break
+    if rebased:
+        print(f"  NOTE: {rebased} of {overblock} holds had the right magnitude with a "
+              "DIFFERENT basis (the model rebased the figure); holding those is correct, "
+              "so the true over-block is lower than the headline.")
     res = {
         "domain": fs.domain, "model": a.model,
         "n_faithful": len(faith), "n_corrupted": len(corr),
@@ -219,6 +242,7 @@ def main() -> None:
             sum(1 for st in spont if st == VERIFIED) / len(spont)) if spont else None,
         "leak_by_fact": {"failed": lk_f, "n_facts": lk_n, "ci95": lk_ci},
         "over_block_by_fact": {"failed": ob_f, "n_facts": ob_n, "ci95": ob_ci},
+        "holds_on_basis_mismatch": rebased,
         "n_distinct_facts": len({tuple(p["fact"]) for p in per_example}),
         "ci_caveat": "trials from one fact are correlated; effective n is closer "
                      "to n_distinct_facts than to n_corrupted",
@@ -270,7 +294,16 @@ def main() -> None:
     print(f"  excluded as invalid trials: {dict(invalid)} "
           "(no value stated, so nothing to leak or verify)")
     print(f"  corrupted {res['corrupted_states']}")
-    print(f"  -> {out}")
+    # Close the loop in the run itself: a production author should not have to write a
+    # join script to find out which trailing text cost them coverage.
+
+    held = [(c[0], c[1], c[2]) for p in per_example
+            if p["condition"] == "FAITHFUL" and p["status"] != VERIFIED
+            for c in p["claims"]]
+    print()
+    for line in render_suggestions(fs, held).splitlines():
+        print("  " + line)
+    print(f"\n  -> {out}")
     print("=" * 70)
 
 

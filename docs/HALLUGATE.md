@@ -544,6 +544,47 @@ The other mechanically-chosen document moved 44% -> 28% on the library fixes alo
 suggestion loop has not been run. **The honest span is 11-33%**, and the low end now
 requires one review pass rather than familiarity with the document.
 
+### Not every hold is an over-block
+
+Pushing the second document's loop surfaced a measurement flaw worth more than the number
+it moved. Two of its four remaining holds looked like this:
+
+```
+document   system unit cost: ~$1.50/day
+model      "The daily unit cost is approximately $1.50 per customer query"
+verdict    HELD
+```
+
+The magnitude is right and the **basis is not** -- per day against per query. The gate held
+a figure the model had rebased. That is the gate being correct, and the over-block metric
+counts it as a failure, because the metric assumes a FAITHFUL answer is semantically
+identical to the declared fact. When the model rephrases with a different basis, it is not.
+
+The benchmark now reports these separately rather than folding them into one number:
+
+```
+NOTE: 2 of 4 holds had the right magnitude with a DIFFERENT basis (the model rebased
+the figure); holding those is correct, so the true over-block is lower than the headline.
+```
+
+This is also why the two suggestions the tool flagged were **rejected** on review:
+declaring `per customer query` irrelevant would have made a per-query figure verify against
+a per-day fact. The flag existed for exactly that case, and it earned its place.
+
+### The loop, as an operator would run it
+
+`render_suggestions` is now emitted by the benchmark itself, so the cycle is run, read,
+declare, re-run -- no join script, no diagnostic session:
+
+```
+suggested value_qualifiers (review before declaring):
+  paste into value_qualifiers:
+    "to Series B metrics"
+  REVIEW CAREFULLY -- these carry time or basis wording, and
+  declaring one irrelevant can make a wrong value verify:
+      'per customer query' x2  e.g. .../daily_unit_cost -> '$1.50 per customer query'
+```
+
 ## 11. Production hardening
 
 Five changes aimed at business use rather than at the benchmark. None moved the measured

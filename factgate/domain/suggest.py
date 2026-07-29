@@ -80,3 +80,32 @@ def suggest_qualifiers(fs: FactSet, held_claims) -> list[dict]:
                          residue, re.IGNORECASE) else None,
         })
     return out
+
+
+def render_suggestions(fs: FactSet, held_claims) -> str:
+    """Human-readable block a domain author can act on directly.
+
+    Safe items are emitted ready to paste into `value_qualifiers`. Items containing time
+    or basis wording are listed separately and NOT pasted, because declaring one of those
+    irrelevant is what makes a wrong value verify.
+    """
+    items = suggest_qualifiers(fs, held_claims)
+    if not items:
+        return "no qualifier suggestions -- remaining holds are not trailing-text issues"
+
+    safe = [i for i in items if not i["warning"]]
+    risky = [i for i in items if i["warning"]]
+    lines = ["suggested value_qualifiers (review before declaring):"]
+    if safe:
+        lines.append("  paste into value_qualifiers:")
+        lines.append("    " + ", ".join(f'"{i["qualifier"]}"' for i in safe))
+        for i in safe:
+            lines.append(f'      {i["qualifier"]!r} x{i["occurrences"]}'
+                         f'  e.g. {i["example_slot"]} -> {i["example_value"]!r}')
+    if risky:
+        lines.append("  REVIEW CAREFULLY -- these carry time or basis wording, and")
+        lines.append("  declaring one irrelevant can make a wrong value verify:")
+        for i in risky:
+            lines.append(f'      {i["qualifier"]!r} x{i["occurrences"]}'
+                         f'  e.g. {i["example_slot"]} -> {i["example_value"]!r}')
+    return "\n".join(lines)

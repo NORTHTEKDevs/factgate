@@ -65,3 +65,23 @@ def test_already_matching_claims_produce_nothing():
 def test_unknown_slot_is_ignored():
     fs = FactSet.from_dict(FACTS)
     assert suggest_qualifiers(fs, [("nobody", "daily_cost", "$1.50 per query")]) == []
+
+
+def test_suggestions_render_as_a_declarable_block():
+    """Production use means copy-paste, not a hand-written join script. The renderer
+    emits the JSON fragment to paste into value_qualifiers, with risky items commented."""
+    from factgate.domain.suggest import render_suggestions
+    fs = FactSet.from_dict(FACTS)
+    out = render_suggestions(fs, [
+        ("rain", "daily_cost", "$1.50 per customer query"),
+        ("rain", "daily_cost", "$1.50 flat"),
+    ])
+    assert '"flat"' in out
+    assert "per customer query" in out
+    assert "REVIEW" in out          # risky items are flagged, not silently included
+
+
+def test_renderer_says_so_when_there_is_nothing_to_suggest():
+    from factgate.domain.suggest import render_suggestions
+    fs = FactSet.from_dict(FACTS)
+    assert "no qualifier" in render_suggestions(fs, []).lower()
