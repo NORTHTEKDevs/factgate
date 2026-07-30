@@ -182,7 +182,48 @@ def normalise_slot_answer(raw: str | None) -> str | None:
     return s
 
 
-def value_is_grounded(value: str, passage: str) -> bool:
+# Unit spellings that mean the same thing regardless of what any domain declares.
+# parse_quantity already canonicalises "$"/"dollars" to "usd" and strips internal spaces,
+# so these map a CANONICAL unit back to the surface forms a document might actually use.
+_UNIT_SYNONYMS: dict[str, set[str]] = {
+    "usd": {"$", "us$", "usd", "dollar", "dollars"},
+    "gbp": {"£", "gbp", "pound", "pounds", "sterling"},
+    "eur": {"€", "eur", "euro", "euros"},
+    "jpy": {"¥", "jpy", "yen"},
+    "percent": {"%", "percent", "pct", "percentage"},
+    "%": {"%", "percent", "pct", "percentage"},
+}
+
+
+def respell_from_passage(value: str, passage: str) -> str:
+    """Restore the document's own spacing when the extractor mangled it.
+
+    MEASURED, and reproducible three times out of three: asked for the minimum balance in
+    "...a minimum balance of 500 dollars monthly to avoid the service charge.", qwen2.5:14b
+    answers "500 dollarsmonthly" -- the right words with the space removed. The declared
+    fact is "500 dollars" and "monthly" is a declared qualifier, but the qualifier patterns
+    are word-bounded, so nothing can strip "monthly" out of "dollarsmonthly". A correct
+    reading was held because of one missing space.
+
+    The document is the authority on how the document is spelled. If the value matches the
+    passage once whitespace is allowed to differ, adopt the passage's version verbatim.
+    Only whitespace may differ -- every other character must match in order -- so this
+    cannot turn one value into a different one.
+    """
+    if not value or not passage:
+        return value
+    flat = re.sub(r"\s+", "", value)
+    if not flat or value.lower() in " ".join(passage.lower().split()):
+        return value
+    pattern = r"\s*".join(re.escape(c) for c in flat)
+    m = re.search(pattern, passage, re.IGNORECASE)
+    if m is None:
+        return value
+    recovered = " ".join(m.group(0).split())
+    return recovered if re.sub(r"\s+", "", recovered).lower() == flat.lower() else value
+
+
+def value_is_grounded(value: str, passage: str, fs: FactSet | None = None) -> bool:
     """Is this extracted value actually present in the passage it came from?
 
     MEASURED LEAK, and the deepest failure mode in the design: asked for the dose in
@@ -191,9 +232,26 @@ def value_is_grounded(value: str, passage: str) -> bool:
     because the gate can only adjudicate the claim it is handed. A parameter-free verdict
     is no protection when the input itself is fabricated.
 
-    The check is deterministic: for a quantity the magnitude must occur in the passage
-    (the unit may be spelled differently, which is what unit_aliases reconcile); for text
-    the value must occur as a substring. Nothing here consults a model.
+    The check is deterministic: for a quantity BOTH the magnitude and the unit must occur
+    in the passage; for text the value must occur as a substring. Nothing here consults a
+    model.
+
+    Grounding the unit as well as the number closes a second leak of the same family,
+    found by probing this function directly:
+
+        value_is_grounded("500 zorkmids", "...a minimum balance of 500 dollars...")
+        -> True, because only "500" was ever looked for.
+
+    On its own that was harmless -- a fabricated unit does not match the declared one, so
+    the gate held it. It stopped being harmless in a domain declaring unit_aliases: a
+    passage reading "500 units of stock", an extractor answering "500 usd", and an alias
+    usd -> dollars against a declared "500 dollars" VERIFIES a currency the document never
+    mentions. The number was grounded and the unit was taken on trust.
+
+    A unit counts as present if the passage contains the unit itself, any declared alias
+    that canonicalises to it, or -- for currency -- the corresponding symbol. Unit spelling
+    genuinely varies ("mg/kg" against "milligrams per kilogram"), so alias-aware matching
+    is what makes this safe to require rather than merely strict.
     """
     if not value or not passage:
         return False
@@ -216,8 +274,45 @@ def value_is_grounded(value: str, passage: str) -> bool:
     if surface:
         forms.add(surface.group(0).replace(",", ""))
         forms.add(surface.group(0))
-    return any(re.search(rf"(?<![0-9.]){re.escape(n)}(?![0-9]|\.[0-9])", low)
-               for n in forms)
+    if not any(re.search(rf"(?<![0-9.]){re.escape(n)}(?![0-9]|\.[0-9])", low)
+               for n in forms):
+        return False
+    return _unit_is_grounded(q.unit, low, fs)
+
+
+def _unit_is_grounded(unit: str, low: str, fs: FactSet | None) -> bool:
+    """Does some spelling of `unit` occur in the (already lowercased, collapsed) passage?
+
+    A bare number carries no unit to ground, so it passes. Everything else must show up
+    under its own name, under a declared alias that canonicalises to it, or as a currency
+    symbol.
+    """
+    if not unit:
+        return True
+    u = unit.lower()
+    # A currency amount with a worded unit parses as ONE glued token: "$30 per million
+    # tokens" -> "usdpermilliontokens". The "usd" half is a canonical code the document
+    # never spells, the rest is the document's own words, so requiring the whole thing
+    # verbatim rejected correct readings -- measured as two verdicts regressing from
+    # VERIFIED to no-claim-at-all. Check the currency and the wording separately.
+    for code in ("usd", "gbp", "eur", "jpy"):
+        if u.startswith(code) and len(u) > len(code):
+            return (_spelling_present(code, low, fs)
+                    and _spelling_present(u[len(code):], low, fs))
+    return _spelling_present(u, low, fs)
+
+
+def _spelling_present(u: str, low: str, fs: FactSet | None) -> bool:
+    spellings = {u} | _UNIT_SYNONYMS.get(u, set())
+    spellings.add(u[:-1] if u.endswith("s") else u + "s")     # week / weeks
+    if fs is not None:
+        for alias, canon in getattr(fs, "unit_aliases", {}).items():
+            if re.sub(r"\s+", "", str(canon)).lower() == u:
+                spellings.add(str(alias).lower())
+    # The unit is written without internal spaces by parse_quantity ("mg/kg", "perday"),
+    # so compare against a space-stripped passage as well as the literal one.
+    flat = low.replace(" ", "")
+    return any(s in low or re.sub(r"\s+", "", s) in flat for s in spellings if s)
 
 
 def ambiguous_candidates(value: str, passage: str, fs: FactSet | None = None,
@@ -281,6 +376,8 @@ def link_targeted(text: str, fs: FactSet, model: str,
             answer = ollama(model, SLOT_PROMPT.format(
                 text=text, question=slot_question(fs, entity, relation)), 60, **kw)
             value = normalise_slot_answer(answer)
+            if value is not None:
+                value = respell_from_passage(value, text)
             # An extracted value that does not occur in the passage was invented by the
             # extractor, not read from the text. Dropping it sends the claim to HELD,
             # which is the fail-closed answer; trusting it produced a measured leak.
@@ -289,7 +386,7 @@ def link_targeted(text: str, fs: FactSet, model: str,
             #                  the extractor inventing the declared value outright)
             #   unambiguous -- the passage must not carry a competing value for the slot
             #                  (the decoy attack: plant the declared value, state another)
-            if (value is not None and value_is_grounded(value, text)
+            if (value is not None and value_is_grounded(value, text, fs)
                     and not ambiguous_candidates(value, text, fs, entity, relation)):
                 claims.append((entity, relation, value))
     return claims

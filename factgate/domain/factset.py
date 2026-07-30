@@ -24,6 +24,52 @@ class ValidationError(ValueError):
     an incoherent KB makes every downstream verdict meaningless."""
 
 
+# Quantifiers that can match unboundedly many times. Nesting one inside a group that is
+# itself unboundedly quantified is what makes a regex backtrack exponentially.
+_OPEN_QUANT = re.compile(r"[*+]|\{\d+,\}|\{(\d+),(\d{2,})\}")
+
+
+def _reject_catastrophic(pattern: str) -> None:
+    """Refuse a value_qualifier whose shape can backtrack exponentially.
+
+    MEASURED: a fact set declaring the qualifier "(a+)+b" takes 4.84 SECONDS to normalise
+    a 26-character value, and the cost doubles per character -- 40 characters is hours.
+    Fact sets are authored input, and in any deployment where the author is not the
+    operator (a customer uploading their own domain, a fact set fetched from a registry)
+    that is a denial of service against the gate, delivered as data.
+
+    Qualifiers are deliberately regexes, not literals: real domains declare things like
+    r"every \\d+ (?:to \\d+ )?hours?" and r"q\\d+h", and flattening those to literals would
+    silently stop them matching. So the fix is not to remove the power but to reject the
+    one shape that causes the blowup -- an open-ended quantifier applied to a group that
+    already contains an open-ended quantifier. "(?:to \\d+ )?" is fine: `?` matches at most
+    once, so it cannot compound.
+
+    Linear scan, no execution of the pattern. Raises ValidationError at LOAD time, which
+    is the only moment an operator can still do something about it.
+    """
+    depth, group_start = 0, []
+    for i, ch in enumerate(pattern):
+        if ch == "\\":
+            continue
+        if ch == "(":
+            group_start.append(i)
+            depth += 1
+        elif ch == ")" and group_start:
+            start = group_start.pop()
+            depth -= 1
+            body = pattern[start:i]
+            follower = pattern[i + 1:i + 2]
+            quantified = follower in "*+" or (
+                follower == "{" and _OPEN_QUANT.match(pattern[i + 1:]) is not None)
+            if quantified and _OPEN_QUANT.search(body):
+                raise ValidationError(
+                    f"value_qualifier {pattern!r} nests an unbounded quantifier inside a "
+                    f"repeated group, which can backtrack exponentially and hang the gate. "
+                    f"Rewrite it without the nesting (for example use \\d+ directly rather "
+                    f"than (\\d+)+), or declare the alternatives as separate qualifiers.")
+
+
 @dataclass(frozen=True)
 class Fact:
     s: str
@@ -41,12 +87,66 @@ class Fact:
         return dict(self.when)
 
 
+def _check_shape(domain, entities, relations, facts, value_qualifiers, unit_aliases,
+                 conditions) -> None:
+    """Reject a structurally wrong fact set at LOAD, with a typed error naming the field.
+
+    Three of these were previously accepted in SILENCE, and two of them are correctness
+    bugs rather than ergonomics:
+
+      entities={"acetaminophen": "paracetamol"}   -- a string where a list of aliases
+        belongs. Python iterates the string, so the drug acquires the aliases
+        'a','c','e','l','m','o','p','r','t'. Measured: gate_claim(fs, "a", "dose",
+        "15 mg/kg") returned VERIFIED. A single letter anywhere in a response resolved to
+        a specific drug.
+
+      value_qualifiers="PO"                       -- likewise iterated, compiling the
+        qualifiers \\bP\\b and \\bO\\b, which silently strip standalone letters out of every
+        value in the domain.
+
+    The remaining cases raised AttributeError or TypeError from somewhere inside the
+    library, which a caller wrapping this in a service cannot reasonably catch or explain.
+    Everything here raises ValidationError, which is the documented failure mode.
+    """
+    def need(cond, field, saw, want):
+        if not cond:
+            raise ValidationError(
+                f"{field} must be {want}, got {type(saw).__name__}: {saw!r:.80}")
+
+    # Not required to be non-empty: FactSet.from_dict({}) deliberately loads as an empty
+    # gate that holds everything, which is a safe and tested default.
+    need(isinstance(domain, str), "domain", domain, "a string")
+    need(isinstance(entities, dict), "entities", entities, "a dict of name -> [aliases]")
+    for name, aliases in entities.items():
+        need(isinstance(name, str), "entity name", name, "a string")
+        need(isinstance(aliases, (list, tuple, set)), f"entities[{name!r}]", aliases,
+             "a LIST of aliases (a bare string is iterated character by character)")
+        for al in aliases:
+            need(isinstance(al, str), f"entities[{name!r}] alias", al, "a string")
+    need(isinstance(relations, dict), "relations", relations, "a dict of name -> spec")
+    for name, spec in relations.items():
+        need(isinstance(name, str), "relation name", name, "a string")
+        need(isinstance(spec, dict), f"relations[{name!r}]", spec, "a dict")
+    need(isinstance(facts, (list, tuple)), "facts", facts, "a list")
+    need(value_qualifiers is None or isinstance(value_qualifiers, (list, tuple)),
+         "value_qualifiers", value_qualifiers,
+         "a LIST of strings (a bare string is iterated character by character)")
+    for q in value_qualifiers or []:
+        need(isinstance(q, str), "value_qualifier", q, "a string")
+    need(unit_aliases is None or isinstance(unit_aliases, dict), "unit_aliases",
+         unit_aliases, "a dict of alias -> canonical unit")
+    need(conditions is None or isinstance(conditions, (list, tuple)), "conditions",
+         conditions, "a list of condition keys")
+
+
 class FactSet:
     def __init__(self, domain: str, entities: dict[str, list[str]],
                  relations: dict[str, dict], facts: list[Fact],
                  value_qualifiers: list[str] | None = None,
                  unit_aliases: dict[str, str] | None = None,
                  conditions: list[str] | None = None):
+        _check_shape(domain, entities, relations, facts, value_qualifiers,
+                     unit_aliases, conditions)
         self.domain = domain
         self.entities = entities
         self.relations = relations
@@ -58,6 +158,7 @@ class FactSet:
         self._qualifiers = []
         self.qualifier_warnings: list[str] = []
         for q in value_qualifiers or []:
+            _reject_catastrophic(q)
             # \b only asserts between a word and a non-word character, so a boundary is
             # applied only where the pattern edge is actually alphanumeric -- otherwise a
             # qualifier like "/mo" could never match.
@@ -102,8 +203,16 @@ class FactSet:
     # ------------------------------------------------------------- loading
     @classmethod
     def from_dict(cls, d: dict) -> "FactSet":
+        if not isinstance(d, dict):
+            raise ValidationError(f"fact set must be an object, got {type(d).__name__}")
         entities = d.get("entities", {})
         relations = d.get("relations", {})
+        # Shape-check BEFORE walking the facts: the fact loop dereferences
+        # relations[r].get(...), so a malformed relation spec raised AttributeError from
+        # inside the loop rather than the typed error the constructor would have given.
+        _check_shape(d.get("domain", ""), entities, relations, d.get("facts", []),
+                     d.get("value_qualifiers"), d.get("unit_aliases"),
+                     d.get("conditions"))
         declared_conditions = list(d.get("conditions") or [])
         facts, seen = [], {}
         for raw in d.get("facts", []):
@@ -182,6 +291,10 @@ class FactSet:
                    if all(ctx.get(k.lower()) == str(v).lower() for k, v in f.when)]
         return matches[0] if len(matches) == 1 else None
 
+    # A model-produced value is a short phrase. Anything longer is not a value, and a
+    # length cap keeps qualifier matching bounded no matter what a pattern does.
+    MAX_VALUE_CHARS = 512
+
     def normalise_value(self, value: str | None) -> str | None:
         """Strip qualifiers and apply unit aliases the DOMAIN declared irrelevant.
 
@@ -194,6 +307,8 @@ class FactSet:
         """
         if value is None:
             return None
+        if len(value) > self.MAX_VALUE_CHARS:
+            return value              # too long to be a value; leave it to fail closed
         out = value
         for pat in self._qualifiers:
             out = pat.sub(" ", out)
@@ -202,6 +317,14 @@ class FactSet:
         # Remove brackets this stripping just emptied: "$79(download)" -> "$79( )".
         # Tidying the strip's own residue, not inferring meaning.
         out = re.sub(r"[(\[{]\s*[)\]}]", " ", out)
+        # Same idea for separators the stripping orphaned. MEASURED: a domain declaring
+        # "of the amount advanced" and "deducted at closing" turned the claim "2 percent of
+        # the amount advanced, deducted at closing" into "2 percent ," -- a dangling comma
+        # that stops the value parsing, so a correct reading was HELD. Only punctuation
+        # left stranded by the strip is touched; "5,000 mg" keeps its comma because that
+        # one is between digits, not floating at an edge.
+        out = re.sub(r"\s+([,;])", r"\1", out)
+        out = out.strip(" ,;")
         return " ".join(out.split()) or value
 
     @property
@@ -254,6 +377,23 @@ class FactSet:
                                 f"distinct declared values {sorted(originals)} to the "
                                 f"same normalised form {norm!r}; the gate would verify "
                                 f"one against the other"),
+                })
+
+        # Warning: the fact's own source states a MORE SPECIFIC value than was declared.
+        # Real, from the shipped bench data: declared "$100M" against the source "GPT-4
+        # cost ~$100M+.". The document says at least $100M; the declaration says exactly
+        # $100M. A model that reads the document correctly and answers "$100M+" is then
+        # held, because a range cannot confirm a point -- the gate is right and the fact
+        # set is wrong, which is the hardest kind of over-block for an author to diagnose.
+        for f in self.facts:
+            flat = " ".join(str(f.source).split())
+            if re.search(rf"{re.escape(str(f.o))}\s*\+", flat):
+                problems.append({
+                    "level": "warning",
+                    "message": (f"fact {f.s!r}/{f.r!r} declares {f.o!r} but its own source "
+                                f"writes {f.o + '+'!r} (an open-ended range). A correct "
+                                f"reading of the document will be HELD, because a range "
+                                f"never confirms a declared point. Declare {f.o + '+'!r}."),
                 })
 
         # Warning: rate-bearing qualifiers, which usually do change meaning.

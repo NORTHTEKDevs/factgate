@@ -303,10 +303,30 @@ def test_unit_alias_does_not_collapse_different_magnitudes():
         == BLOCK
 
 
-def test_domains_without_declarations_are_unchanged():
-    """Defaults must be inert: an existing fact set gains no new stripping behaviour."""
+def test_wording_quoted_from_the_source_verifies_without_being_declared():
+    """BEHAVIOUR CHANGE, deliberate. This previously asserted HELD, on the principle that
+    a fact set declaring no qualifiers should gain no new stripping behaviour.
+
+    It is not stripping. The source reads "Give acetaminophen 15 mg/kg PO q4-6h." and the
+    claim is "15 mg/kg PO" -- the model quoted the document. Requiring the author to
+    declare "PO" before a correct reading could be confirmed is precisely the authoring
+    burden that produced the measured over-block, and the fact's own source sentence is
+    already a declared, validated part of the fact set.
+
+    The verdict records which route it took, so an auditor can tell the two apart."""
     fs = FactSet.from_dict(FACTS)
-    assert gate_claim(fs, "acetaminophen", "pediatric_dose", "15 mg/kg PO").status == HELD
+    v = gate_claim(fs, "acetaminophen", "pediatric_dose", "15 mg/kg PO")
+    assert v.status == VERIFIED
+    assert "quoted from" in v.reason
+
+
+def test_wording_the_source_does_not_state_is_still_held():
+    """The other half of the contract, and the reason the change is safe: a route the
+    source never mentions is not admitted just because it is short and plausible."""
+    fs = FactSet.from_dict(FACTS)
+    assert gate_claim(fs, "acetaminophen", "pediatric_dose", "15 mg/kg IV").status == HELD
+    assert gate_claim(fs, "acetaminophen", "pediatric_dose",
+                      "15 mg/kg per day").status == HELD
 
 
 # ---------------------------------------------------------- fact-set linting

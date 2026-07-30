@@ -122,10 +122,17 @@ def main() -> int:
                     declared = fs.lookup(entity if fs.resolve_entity(entity) else "",
                                          relation)
                     target = v.declared or (declared.o if declared else "")
-                    if not equal_by_reparse(target, fs.normalise_value(value) or ""):
+                    # S1 admits a second route since the residue rule landed: a claim may
+                    # be VERIFIED because the fact's own source sentence states it in
+                    # full. Re-derived here independently of residue.py -- plain
+                    # containment in the source, not the rule's clause logic.
+                    norm = fs.normalise_value(value) or ""
+                    src = " ".join((declared.source if declared else "").casefold().split())
+                    quoted = bool(src) and " ".join(norm.casefold().split()) in src
+                    if not equal_by_reparse(target, norm) and not quoted:
                         violations.append(                                     # S1
-                            f"{f.name} {entity}/{relation}: VERIFIED not re-derivable "
-                            f"declared={target!r} claimed={value!r}")
+                            f"{f.name} {entity}/{relation}: VERIFIED neither re-derivable "
+                            f"nor quoted from source declared={target!r} claimed={value!r}")
                     if not value_is_grounded(value, answer):                   # S2
                         violations.append(
                             f"{f.name} {entity}/{relation}: VERIFIED value not in the "

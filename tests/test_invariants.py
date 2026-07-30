@@ -178,6 +178,53 @@ def test_i6_absence_never_verifies():
             assert compare_values(d, marker) != MATCH, f"{marker!r} verified against {d!r}"
 
 
+def test_i7_verified_is_always_equal_or_quoted_from_the_source():
+    """The invariant that keeps the residue rule honest.
+
+    Admitting "35 dollars per occurrence" against a declared "35 dollars" means VERIFIED no
+    longer implies value equality, so I1 alone stops covering the gate. The weaker property
+    that must still hold for EVERY verified claim: it is either provably equal to the
+    declared value, or it occurs verbatim inside the fact's own source sentence. A verified
+    claim that is neither is text the gate invented agreement with.
+
+    The generator here deliberately builds sources that DO contain the value plus trailing
+    words, because the fuzz domain used by the test below sets source="q" and can never
+    exercise this path -- a blind spot found by writing this test."""
+    rng = random.Random(SEED + 7)
+    tails = ["per occurrence", "per day", "monthly", "PO", "for adults", "at closing",
+             "per statement cycle", "in cloud credits", "or more", "as tolerated"]
+    checked = 0
+    for _ in range(1500):
+        declared = _value(rng)
+        tail = rng.choice(tails)
+        source = rng.choice([
+            f"The declared figure is {declared} {tail}.",
+            f"Rate: {declared} {tail}, reviewed annually.",
+            f"It is {declared}. Separately, {tail} charges may apply.",
+            f"Adults take {declared}; it is contraindicated {tail}.",
+            "q",
+        ])
+        spec = {"domain": "fuzz", "entities": {"thing": ["the thing"]},
+                "relations": {"prop": {"kind": "text"}},
+                "facts": [{"s": "thing", "r": "prop", "o": declared, "source": source}]}
+        try:
+            fs = FactSet.from_dict(spec)
+        except ValidationError:
+            continue
+        claimed = rng.choice([declared, f"{declared} {tail}", _claim(rng, declared)])
+        v = gate_claim(fs, "thing", "prop", claimed)
+        checked += 1
+        if v.status != VERIFIED:
+            continue
+        norm = fs.normalise_value(v.claimed) or ""
+        equal = _equal_by_reparse(declared, norm)
+        quoted = " ".join(norm.casefold().split()) in " ".join(source.casefold().split())
+        assert equal or quoted, (
+            f"VERIFIED claim neither equal to the declared value nor quoted from the "
+            f"source: declared={declared!r} claimed={claimed!r} source={source!r}")
+    assert checked > 500, "generator produced too few loadable domains to be meaningful"
+
+
 def test_gate_is_total_over_generated_domains():
     """The same search one level up: through a real FactSet and gate_claim."""
     rng = random.Random(SEED + 6)
