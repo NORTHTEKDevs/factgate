@@ -1,0 +1,224 @@
+{
+  "domain": "construction-blind",
+  "_disclaimer": "SYNTHETIC ILLUSTRATIVE DATA. Authored as a BLIND generalisation test of the bounded-domain gate: the entities, relations, value_qualifiers and question phrasings below were written from priors BEFORE any benchmark run against this domain, and were not revised in response to results. Not a real project bid or contract.",
+  "corpus": "BID SCHEDULE -- NORTHVIEW LOGISTICS CENTER (synthetic, illustrative only). This schedule of values is submitted as part of the base bid for the Northview Logistics Center project. All unit prices are quoted in United States dollars and apply to the quantities established in the bid documents unless a written change order is issued. Sitework and earthwork, including clearing, grubbing, mass excavation, and rough grading, is priced at $4.25 per square foot of disturbed area. Cast-in-place concrete, including footings, foundation walls, and slab on grade, is priced at $18.75 per square foot and is scheduled for a duration of 6 weeks from notice to proceed on that scope. Structural steel framing, including the primary frame, secondary framing, and bracing, is priced at $32.00 per square foot and is scheduled for a duration of 8 weeks. Standing seam metal roofing, including underlayment and flashing, is priced at $14.50 per square foot. Perimeter security fencing, including posts, fabric, and gates, is priced at $46.00 per linear foot. Curb and gutter along the site access drive is priced at $28.00 per linear foot. The finish hardware allowance carried in this bid is $65,000 and shall be adjusted by change order if actual selections exceed the allowance. Mobilization, including move-in of equipment, temporary facilities, and site setup, is a lump sum of $185,000. Retainage shall be withheld at 10 percent of each progress payment until the project reaches 50 percent completion, after which retainage shall be reduced to 5 percent of each progress payment for the remainder of the contract. The owner's contingency carried in this bid is 8 percent of the base contract sum and is to be used only for owner-directed changes. Liquidated damages for failure to reach substantial completion by the contract completion date are assessed at $2,500 per calendar day. The overall project schedule duration from notice to proceed to substantial completion is 42 weeks.",
+  "entities": {
+    "sitework and earthwork": [
+      "sitework",
+      "earthwork",
+      "site work"
+    ],
+    "cast-in-place concrete": [
+      "concrete",
+      "cip concrete",
+      "cast in place concrete"
+    ],
+    "structural steel framing": [
+      "structural steel",
+      "steel framing"
+    ],
+    "standing seam metal roofing": [
+      "roofing",
+      "metal roofing",
+      "standing seam roofing"
+    ],
+    "perimeter security fencing": [
+      "security fencing",
+      "fencing",
+      "perimeter fencing"
+    ],
+    "curb and gutter": [
+      "curb",
+      "gutter",
+      "curb & gutter"
+    ],
+    "finish hardware": [
+      "finish hardware allowance",
+      "hardware allowance"
+    ],
+    "mobilization": [
+      "mobilization and demobilization",
+      "mob"
+    ],
+    "retainage": [
+      "retention"
+    ],
+    "owner's contingency": [
+      "contingency",
+      "owner contingency"
+    ],
+    "liquidated damages": [
+      "LDs",
+      "liquidated damages clause"
+    ],
+    "project schedule": [
+      "overall project schedule",
+      "schedule duration"
+    ]
+  },
+  "relations": {
+    "unit_price": {
+      "kind": "quantity",
+      "description": "the price per square foot or per linear foot for this scope of work",
+      "question": "what is the unit price for {entity}?"
+    },
+    "duration": {
+      "kind": "quantity",
+      "description": "how long this scope or the overall project is scheduled to take",
+      "question": "what is the schedule duration for {entity}?"
+    },
+    "allowance": {
+      "kind": "quantity",
+      "description": "the dollar allowance carried for this scope",
+      "question": "what is the allowance for {entity}?"
+    },
+    "lump_sum": {
+      "kind": "quantity",
+      "description": "the fixed lump sum cost for this scope",
+      "question": "what is the lump sum cost for {entity}?"
+    },
+    "retainage_rate": {
+      "kind": "quantity",
+      "description": "the percentage withheld from progress payments",
+      "question": "what is the retainage rate for {entity}?"
+    },
+    "contingency_rate": {
+      "kind": "quantity",
+      "description": "the percentage of the contract sum set aside for owner-directed changes",
+      "question": "what is the contingency rate for {entity}?"
+    },
+    "liquidated_damages_rate": {
+      "kind": "quantity",
+      "description": "the charge assessed per calendar day for late completion",
+      "question": "what is the liquidated damages rate for {entity}?"
+    }
+  },
+  "conditions": [
+    "completion_stage"
+  ],
+  "value_qualifiers": [
+    "of disturbed area",
+    "from notice to proceed",
+    "on that scope",
+    "for that scope",
+    "a lump sum of",
+    "an allowance of",
+    "of each progress payment",
+    "of the base contract sum",
+    "approximately",
+    "about",
+    "roughly",
+    "up to",
+    "at least",
+    "no more than",
+    "no less than",
+    "or less",
+    "or more",
+    "flat",
+    "not to exceed"
+  ],
+  "unit_aliases": {
+    "%": "percent",
+    "USD": "dollars",
+    "sf": "square foot",
+    "lf": "linear foot"
+  },
+  "facts": [
+    {
+      "s": "sitework and earthwork",
+      "r": "unit_price",
+      "o": "$4.25 per square foot",
+      "source": "Sitework and earthwork, including clearing, grubbing, mass excavation, and rough grading, is priced at $4.25 per square foot of disturbed area."
+    },
+    {
+      "s": "cast-in-place concrete",
+      "r": "unit_price",
+      "o": "$18.75 per square foot",
+      "source": "Cast-in-place concrete, including footings, foundation walls, and slab on grade, is priced at $18.75 per square foot and is scheduled for a duration of 6 weeks from notice to proceed on that scope."
+    },
+    {
+      "s": "cast-in-place concrete",
+      "r": "duration",
+      "o": "6 weeks",
+      "source": "Cast-in-place concrete, including footings, foundation walls, and slab on grade, is priced at $18.75 per square foot and is scheduled for a duration of 6 weeks from notice to proceed on that scope."
+    },
+    {
+      "s": "structural steel framing",
+      "r": "unit_price",
+      "o": "$32.00 per square foot",
+      "source": "Structural steel framing, including the primary frame, secondary framing, and bracing, is priced at $32.00 per square foot and is scheduled for a duration of 8 weeks."
+    },
+    {
+      "s": "structural steel framing",
+      "r": "duration",
+      "o": "8 weeks",
+      "source": "Structural steel framing, including the primary frame, secondary framing, and bracing, is priced at $32.00 per square foot and is scheduled for a duration of 8 weeks."
+    },
+    {
+      "s": "standing seam metal roofing",
+      "r": "unit_price",
+      "o": "$14.50 per square foot",
+      "source": "Standing seam metal roofing, including underlayment and flashing, is priced at $14.50 per square foot."
+    },
+    {
+      "s": "perimeter security fencing",
+      "r": "unit_price",
+      "o": "$46.00 per linear foot",
+      "source": "Perimeter security fencing, including posts, fabric, and gates, is priced at $46.00 per linear foot."
+    },
+    {
+      "s": "curb and gutter",
+      "r": "unit_price",
+      "o": "$28.00 per linear foot",
+      "source": "Curb and gutter along the site access drive is priced at $28.00 per linear foot."
+    },
+    {
+      "s": "finish hardware",
+      "r": "allowance",
+      "o": "$65,000",
+      "source": "The finish hardware allowance carried in this bid is $65,000 and shall be adjusted by change order if actual selections exceed the allowance."
+    },
+    {
+      "s": "mobilization",
+      "r": "lump_sum",
+      "o": "$185,000",
+      "source": "Mobilization, including move-in of equipment, temporary facilities, and site setup, is a lump sum of $185,000."
+    },
+    {
+      "s": "retainage",
+      "r": "retainage_rate",
+      "o": "10 percent",
+      "when": {
+        "completion_stage": "before_50_percent"
+      },
+      "source": "Retainage shall be withheld at 10 percent of each progress payment until the project reaches 50 percent completion, after which retainage shall be reduced to 5 percent of each progress payment for the remainder of the contract."
+    },
+    {
+      "s": "retainage",
+      "r": "retainage_rate",
+      "o": "5 percent",
+      "when": {
+        "completion_stage": "after_50_percent"
+      },
+      "source": "Retainage shall be withheld at 10 percent of each progress payment until the project reaches 50 percent completion, after which retainage shall be reduced to 5 percent of each progress payment for the remainder of the contract."
+    },
+    {
+      "s": "owner's contingency",
+      "r": "contingency_rate",
+      "o": "8 percent",
+      "source": "The owner's contingency carried in this bid is 8 percent of the base contract sum and is to be used only for owner-directed changes."
+    },
+    {
+      "s": "liquidated damages",
+      "r": "liquidated_damages_rate",
+      "o": "$2,500 per calendar day",
+      "source": "Liquidated damages for failure to reach substantial completion by the contract completion date are assessed at $2,500 per calendar day."
+    },
+    {
+      "s": "project schedule",
+      "r": "duration",
+      "o": "42 weeks",
+      "source": "The overall project schedule duration from notice to proceed to substantial completion is 42 weeks."
+    }
+  ]
+}

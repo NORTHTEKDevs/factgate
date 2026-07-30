@@ -1,0 +1,228 @@
+{
+  "domain": "saas-contract-blind",
+  "_disclaimer": "SYNTHETIC ILLUSTRATIVE DATA. Authored as a BLIND generalisation test of the bounded-domain gate: the entities, relations, value_qualifiers and question phrasings below were written from priors BEFORE any benchmark run, and were not revised in response to results. Not a real company's contract; not legal advice.",
+  "corpus": "This Master Services Agreement extract (the \"Agreement\") governs the SaaS platform (the \"Service\") that Vendor provides to Customer. Vendor guarantees a Monthly Uptime Percentage of 99.9 percent for the Service, measured over each calendar month. If the Monthly Uptime Percentage for a calendar month is below 99.9 percent but at least 99.0 percent, Customer will receive a Service Credit equal to 10 percent of the fees paid for that month. If the Monthly Uptime Percentage for a calendar month is below 99.0 percent but at least 95.0 percent, Customer will receive a Service Credit equal to 25 percent of the fees paid for that month. If the Monthly Uptime Percentage for a calendar month is below 95.0 percent, Customer will receive a Service Credit equal to 50 percent of the fees paid for that month. Either party may terminate this Agreement for convenience upon 60 days written notice to the other party. Either party may terminate this Agreement for cause upon 30 days written notice if the breaching party fails to cure a material breach within that period. Upon termination or expiration of this Agreement, Vendor will retain Customer Data for 90 days to permit export, after which it will be permanently deleted. Vendor will retain audit logs for 12 months following creation, for compliance and security review purposes. Standard tier accounts, covering 1 to 49 licensed seats, are billed at a per-seat price of 45 dollars per month. Growth tier accounts, covering 50 to 199 licensed seats, are billed at a per-seat price of 36 dollars per month. Enterprise tier accounts, covering 200 or more licensed seats, are billed at a per-seat price of 28 dollars per month. Except for breaches of confidentiality or infringement of intellectual property, each party's total liability arising out of this Agreement is capped at an amount equal to 12 months of fees paid by Customer in the 12 months preceding the claim. For breaches of confidentiality, each party's total liability arising out of this Agreement is capped at an amount equal to 24 months of fees paid by Customer in the 12 months preceding the claim. Vendor will provide Customer with 45 days advance written notice of any material change to the Data Processing Addendum. Support tickets classified as Severity 1 will receive an initial response within 1 hour of submission. Support tickets classified as Severity 2 will receive an initial response within 4 business hours of submission.",
+  "entities": {
+    "service": [
+      "saas platform",
+      "the service",
+      "platform"
+    ],
+    "termination for convenience": [
+      "terminate for convenience"
+    ],
+    "termination for cause": [
+      "terminate for cause"
+    ],
+    "customer data": [
+      "customer's data"
+    ],
+    "audit logs": [
+      "audit log"
+    ],
+    "standard tier": [
+      "standard"
+    ],
+    "growth tier": [
+      "growth"
+    ],
+    "enterprise tier": [
+      "enterprise"
+    ],
+    "agreement": [
+      "this agreement",
+      "msa"
+    ],
+    "data processing addendum": [
+      "dpa"
+    ],
+    "severity 1": [
+      "sev 1",
+      "severity one"
+    ],
+    "severity 2": [
+      "sev 2",
+      "severity two"
+    ]
+  },
+  "relations": {
+    "uptime_sla": {
+      "kind": "quantity",
+      "description": "the guaranteed monthly uptime percentage",
+      "question": "what is the uptime SLA for {entity}?"
+    },
+    "service_credit": {
+      "kind": "quantity",
+      "description": "the credit owed when uptime falls short, as a percent of fees for the affected month",
+      "question": "what is the service credit for {entity}?"
+    },
+    "notice_period": {
+      "kind": "quantity",
+      "description": "how much advance written notice is required",
+      "question": "what is the notice period for {entity}?"
+    },
+    "retention_period": {
+      "kind": "quantity",
+      "description": "how long the data is kept before deletion",
+      "question": "what is the retention period for {entity}?"
+    },
+    "per_seat_price": {
+      "kind": "quantity",
+      "description": "the monthly price per licensed seat at this volume tier",
+      "question": "what is the per-seat price for {entity}?"
+    },
+    "liability_cap": {
+      "kind": "quantity",
+      "description": "the maximum total liability, expressed as a multiple of fees paid",
+      "question": "what is the liability cap for {entity}?"
+    },
+    "response_time": {
+      "kind": "quantity",
+      "description": "the guaranteed initial support response time",
+      "question": "what is the response time for {entity}?"
+    }
+  },
+  "conditions": [
+    "uptime_band",
+    "breach_type"
+  ],
+  "value_qualifiers": [
+    "measured over each calendar month",
+    "of the fees paid for that month",
+    "written notice to the other party",
+    "written notice if the breaching party fails to cure a material breach within that period",
+    "advance written notice of any material change to the Data Processing Addendum",
+    "to permit export",
+    "after which it will be permanently deleted",
+    "following creation, for compliance and security review purposes",
+    "per month",
+    "per seat",
+    "of submission",
+    "an amount equal to",
+    "capped at",
+    "of fees paid by Customer in the 12 months preceding the claim",
+    "arising out of this Agreement",
+    "approximately",
+    "about",
+    "up to",
+    "at least",
+    "no more than",
+    "or more"
+  ],
+  "unit_aliases": {
+    "%": "percent"
+  },
+  "facts": [
+    {
+      "s": "service",
+      "r": "uptime_sla",
+      "o": "99.9 percent",
+      "source": "Vendor guarantees a Monthly Uptime Percentage of 99.9 percent for the Service, measured over each calendar month."
+    },
+    {
+      "s": "service",
+      "r": "service_credit",
+      "o": "10 percent",
+      "when": {
+        "uptime_band": "below_999_at_least_990"
+      },
+      "source": "If the Monthly Uptime Percentage for a calendar month is below 99.9 percent but at least 99.0 percent, Customer will receive a Service Credit equal to 10 percent of the fees paid for that month."
+    },
+    {
+      "s": "service",
+      "r": "service_credit",
+      "o": "25 percent",
+      "when": {
+        "uptime_band": "below_990_at_least_950"
+      },
+      "source": "If the Monthly Uptime Percentage for a calendar month is below 99.0 percent but at least 95.0 percent, Customer will receive a Service Credit equal to 25 percent of the fees paid for that month."
+    },
+    {
+      "s": "service",
+      "r": "service_credit",
+      "o": "50 percent",
+      "when": {
+        "uptime_band": "below_950"
+      },
+      "source": "If the Monthly Uptime Percentage for a calendar month is below 95.0 percent, Customer will receive a Service Credit equal to 50 percent of the fees paid for that month."
+    },
+    {
+      "s": "termination for convenience",
+      "r": "notice_period",
+      "o": "60 days",
+      "source": "Either party may terminate this Agreement for convenience upon 60 days written notice to the other party."
+    },
+    {
+      "s": "termination for cause",
+      "r": "notice_period",
+      "o": "30 days",
+      "source": "Either party may terminate this Agreement for cause upon 30 days written notice if the breaching party fails to cure a material breach within that period."
+    },
+    {
+      "s": "customer data",
+      "r": "retention_period",
+      "o": "90 days",
+      "source": "Upon termination or expiration of this Agreement, Vendor will retain Customer Data for 90 days to permit export, after which it will be permanently deleted."
+    },
+    {
+      "s": "audit logs",
+      "r": "retention_period",
+      "o": "12 months",
+      "source": "Vendor will retain audit logs for 12 months following creation, for compliance and security review purposes."
+    },
+    {
+      "s": "standard tier",
+      "r": "per_seat_price",
+      "o": "45 dollars",
+      "source": "Standard tier accounts, covering 1 to 49 licensed seats, are billed at a per-seat price of 45 dollars per month."
+    },
+    {
+      "s": "growth tier",
+      "r": "per_seat_price",
+      "o": "36 dollars",
+      "source": "Growth tier accounts, covering 50 to 199 licensed seats, are billed at a per-seat price of 36 dollars per month."
+    },
+    {
+      "s": "enterprise tier",
+      "r": "per_seat_price",
+      "o": "28 dollars",
+      "source": "Enterprise tier accounts, covering 200 or more licensed seats, are billed at a per-seat price of 28 dollars per month."
+    },
+    {
+      "s": "agreement",
+      "r": "liability_cap",
+      "o": "12 months of fees paid",
+      "when": {
+        "breach_type": "general"
+      },
+      "source": "Except for breaches of confidentiality or infringement of intellectual property, each party's total liability arising out of this Agreement is capped at an amount equal to 12 months of fees paid by Customer in the 12 months preceding the claim."
+    },
+    {
+      "s": "agreement",
+      "r": "liability_cap",
+      "o": "24 months of fees paid",
+      "when": {
+        "breach_type": "confidentiality"
+      },
+      "source": "For breaches of confidentiality, each party's total liability arising out of this Agreement is capped at an amount equal to 24 months of fees paid by Customer in the 12 months preceding the claim."
+    },
+    {
+      "s": "data processing addendum",
+      "r": "notice_period",
+      "o": "45 days",
+      "source": "Vendor will provide Customer with 45 days advance written notice of any material change to the Data Processing Addendum."
+    },
+    {
+      "s": "severity 1",
+      "r": "response_time",
+      "o": "1 hour",
+      "source": "Support tickets classified as Severity 1 will receive an initial response within 1 hour of submission."
+    },
+    {
+      "s": "severity 2",
+      "r": "response_time",
+      "o": "4 business hours",
+      "source": "Support tickets classified as Severity 2 will receive an initial response within 4 business hours of submission."
+    }
+  ]
+}

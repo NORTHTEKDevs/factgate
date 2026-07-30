@@ -1,0 +1,203 @@
+{
+  "domain": "clinical-lab-blind",
+  "_disclaimer": "SYNTHETIC ILLUSTRATIVE DATA. Authored as a BLIND vocabulary test of the bounded-domain gate: entities, relations, and value_qualifiers below were declared from the corpus text alone, before any benchmark run, without reading factgate/domain/*.py. Not derived from any accredited laboratory's proprietary reference intervals or standard operating procedures. Not medical guidance.",
+  "corpus": "CLINICAL LABORATORY REFERENCE RANGE AND SPECIMEN HANDLING SHEET (SYNTHETIC, illustrative only; not derived from any accredited laboratory's proprietary reference intervals or standard operating procedures). Basic Metabolic Panel. The reference range for sodium is 135-145 mmol/L. The critical value for sodium is below 120 mmol/L or above 160 mmol/L. Sodium specimen volume is 1 mL of serum collected in a gold-top tube. The reference range for potassium is 3.5-5.1 mmol/L. The critical value for potassium is above 6.5 mmol/L. Potassium turnaround time is 45 minutes for a stat order. The reference range for fasting glucose is 70-99 mg/dL, drawn after an 8 hour fast. Hematology. The reference range for hemoglobin in adult males is 13.5-17.5 g/dL. The reference range for hemoglobin in adult females is 12.0-15.5 g/dL. Hemoglobin specimens are stable for 24 hours at room temperature before analysis is required. The reference range for platelet count is 150-400 K/uL. The critical value for platelet count is below 20 K/uL. Renal Function. The reference range for creatinine in adult males is 0.74-1.35 mg/dL. The reference range for creatinine in adult females is 0.59-1.04 mg/dL. Cardiac Markers. The critical value for troponin I is above 0.4 ng/mL. Troponin I specimens are stable for 48 hours refrigerated at 2-8 degrees C before analysis is required.",
+  "entities": {
+    "sodium": [
+      "na",
+      "serum sodium"
+    ],
+    "potassium": [
+      "k",
+      "serum potassium"
+    ],
+    "fasting glucose": [
+      "glucose",
+      "blood glucose",
+      "fbg"
+    ],
+    "hemoglobin": [
+      "hgb",
+      "hb"
+    ],
+    "platelet count": [
+      "platelets",
+      "plt"
+    ],
+    "creatinine": [
+      "cr",
+      "serum creatinine"
+    ],
+    "troponin i": [
+      "troponin",
+      "trop i",
+      "cardiac troponin i"
+    ]
+  },
+  "relations": {
+    "reference_range": {
+      "kind": "quantity",
+      "description": "the normal interval for a healthy adult",
+      "question": "what is the reference range for {entity}?"
+    },
+    "critical_low": {
+      "kind": "quantity",
+      "description": "the low threshold requiring immediate notification",
+      "question": "what is the low critical value for {entity}?"
+    },
+    "critical_high": {
+      "kind": "quantity",
+      "description": "the high threshold requiring immediate notification",
+      "question": "what is the high critical value for {entity}?"
+    },
+    "turnaround_time": {
+      "kind": "quantity",
+      "description": "how long the result takes to report",
+      "question": "what is the turnaround time for {entity}?"
+    },
+    "stability_window": {
+      "kind": "quantity",
+      "description": "how long the specimen remains stable before analysis is required",
+      "question": "how long is {entity} stable before analysis is required?"
+    }
+  },
+  "conditions": [
+    "sex"
+  ],
+  "value_qualifiers": [
+    "below",
+    "above",
+    "less than",
+    "greater than",
+    "or below",
+    "or above",
+    "the reference range of",
+    "a reference range of",
+    "the critical value of",
+    "a critical value of",
+    "approximately",
+    "about",
+    "of serum",
+    "collected in a gold-top tube",
+    "at room temperature",
+    "refrigerated at \\d+-\\d+ degrees C",
+    "for a stat order",
+    "for a routine order",
+    "before analysis is required",
+    "drawn after an? \\d+ hour fast"
+  ],
+  "unit_aliases": {
+    "K/uL": "thousand per microliter",
+    "mL": "milliliter"
+  },
+  "facts": [
+    {
+      "s": "sodium",
+      "r": "reference_range",
+      "o": "135-145 mmol/L",
+      "source": "The reference range for sodium is 135-145 mmol/L."
+    },
+    {
+      "s": "sodium",
+      "r": "critical_low",
+      "o": "120 mmol/L",
+      "source": "The critical value for sodium is below 120 mmol/L or above 160 mmol/L."
+    },
+    {
+      "s": "sodium",
+      "r": "critical_high",
+      "o": "160 mmol/L",
+      "source": "The critical value for sodium is below 120 mmol/L or above 160 mmol/L."
+    },
+    {
+      "s": "potassium",
+      "r": "reference_range",
+      "o": "3.5-5.1 mmol/L",
+      "source": "The reference range for potassium is 3.5-5.1 mmol/L."
+    },
+    {
+      "s": "potassium",
+      "r": "critical_high",
+      "o": "6.5 mmol/L",
+      "source": "The critical value for potassium is above 6.5 mmol/L."
+    },
+    {
+      "s": "potassium",
+      "r": "turnaround_time",
+      "o": "45 minutes",
+      "source": "Potassium turnaround time is 45 minutes for a stat order."
+    },
+    {
+      "s": "fasting glucose",
+      "r": "reference_range",
+      "o": "70-99 mg/dL",
+      "source": "The reference range for fasting glucose is 70-99 mg/dL, drawn after an 8 hour fast."
+    },
+    {
+      "s": "hemoglobin",
+      "r": "reference_range",
+      "o": "13.5-17.5 g/dL",
+      "source": "The reference range for hemoglobin in adult males is 13.5-17.5 g/dL.",
+      "when": {
+        "sex": "male"
+      }
+    },
+    {
+      "s": "hemoglobin",
+      "r": "reference_range",
+      "o": "12.0-15.5 g/dL",
+      "source": "The reference range for hemoglobin in adult females is 12.0-15.5 g/dL.",
+      "when": {
+        "sex": "female"
+      }
+    },
+    {
+      "s": "hemoglobin",
+      "r": "stability_window",
+      "o": "24 hours",
+      "source": "Hemoglobin specimens are stable for 24 hours at room temperature before analysis is required."
+    },
+    {
+      "s": "platelet count",
+      "r": "reference_range",
+      "o": "150-400 K/uL",
+      "source": "The reference range for platelet count is 150-400 K/uL."
+    },
+    {
+      "s": "platelet count",
+      "r": "critical_low",
+      "o": "20 K/uL",
+      "source": "The critical value for platelet count is below 20 K/uL."
+    },
+    {
+      "s": "creatinine",
+      "r": "reference_range",
+      "o": "0.74-1.35 mg/dL",
+      "source": "The reference range for creatinine in adult males is 0.74-1.35 mg/dL.",
+      "when": {
+        "sex": "male"
+      }
+    },
+    {
+      "s": "creatinine",
+      "r": "reference_range",
+      "o": "0.59-1.04 mg/dL",
+      "source": "The reference range for creatinine in adult females is 0.59-1.04 mg/dL.",
+      "when": {
+        "sex": "female"
+      }
+    },
+    {
+      "s": "troponin i",
+      "r": "critical_high",
+      "o": "0.4 ng/mL",
+      "source": "The critical value for troponin I is above 0.4 ng/mL."
+    },
+    {
+      "s": "troponin i",
+      "r": "stability_window",
+      "o": "48 hours",
+      "source": "Troponin I specimens are stable for 48 hours refrigerated at 2-8 degrees C before analysis is required."
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "domain": "logistics-blind",
+  "_disclaimer": "SYNTHETIC ILLUSTRATIVE DATA. Authored as a BLIND vocabulary declaration for the bounded-domain gate: entities, relations, value_qualifiers and question phrasings below were written from priors before any benchmark run and were not revised in response to gate behaviour. Not a real carrier's tariff.",
+  "corpus": "NORTHBRIDGE FREIGHT & WAREHOUSING — RATE SCHEDULE (SYNTHETIC, ILLUSTRATIVE ONLY). This schedule applies to shipments tendered under the standard service agreement and is subject to the accessorial charges described below.\n\nLESS-THAN-TRUCKLOAD (LTL) SERVICE. The LTL linehaul rate is $18.50 per cwt, subject to the minimum and fuel surcharge described below. The minimum charge for any LTL shipment is $95, regardless of actual weight or cubic footage. A fuel surcharge of 18 percent is added to the base linehaul charge on all LTL shipments. Dimensional weight for LTL freight is calculated using a divisor of 194, and the greater of actual or dimensional weight is billed. Standard transit time for LTL shipments within the regional lane is 2 business days. Standard transit time for LTL shipments in the long-haul lane is 5 to 7 business days.\n\nFULL TRUCKLOAD (FTL) SERVICE. The truckload linehaul rate is $2.85 per mile for a standard 53-foot dry van. The minimum charge for any truckload shipment is $450 per load. A fuel surcharge of 22 percent is added to the base linehaul charge on all truckload shipments.\n\nEXPEDITED SERVICE. Expedited shipments are guaranteed a transit time of 1 business day from pickup to delivery. A fuel surcharge of 30 percent is added to the base linehaul charge on all expedited shipments, reflecting the priority routing.\n\nDOCK DETENTION. Drivers are allowed a free period of 2 hours for loading or unloading at the dock. After the free period elapses, a detention rate of $65 per hour is charged in 30-minute increments.\n\nWAREHOUSING AND STORAGE. The monthly storage rate is $14 per pallet position, billed on the average daily count for the month. The inbound and outbound handling fee is $6.25 per pallet, charged per touch.\n\nACCESSORIAL CHARGES. A residential delivery surcharge of $95 applies to any shipment delivered to a residential address.",
+  "entities": {
+    "LTL service": [
+      "LTL",
+      "less-than-truckload",
+      "less-than-truckload service",
+      "LTL shipments",
+      "LTL freight"
+    ],
+    "truckload service": [
+      "FTL",
+      "full truckload",
+      "truckload",
+      "truckload shipments"
+    ],
+    "expedited service": [
+      "expedited shipments",
+      "expedited freight"
+    ],
+    "warehousing": [
+      "storage",
+      "pallet storage",
+      "warehousing and storage"
+    ],
+    "dock detention": [
+      "detention",
+      "driver detention"
+    ],
+    "residential delivery": [
+      "residential deliveries",
+      "residential address delivery"
+    ]
+  },
+  "relations": {
+    "per_cwt_rate": {
+      "kind": "quantity",
+      "description": "the linehaul rate charged per hundredweight (cwt)",
+      "question": "what is the per-cwt rate for {entity}?"
+    },
+    "per_mile_rate": {
+      "kind": "quantity",
+      "description": "the linehaul rate charged per loaded mile",
+      "question": "what is the per-mile rate for {entity}?"
+    },
+    "minimum_charge": {
+      "kind": "quantity",
+      "description": "the minimum charge that applies regardless of weight or cube",
+      "question": "what is the minimum charge for {entity}?"
+    },
+    "fuel_surcharge": {
+      "kind": "quantity",
+      "description": "the fuel surcharge added to the base linehaul charge, as a percentage",
+      "question": "what is the fuel surcharge for {entity}?"
+    },
+    "transit_time": {
+      "kind": "quantity",
+      "description": "the standard transit time in business days",
+      "question": "what is the transit time for {entity}?"
+    },
+    "dim_weight_divisor": {
+      "kind": "quantity",
+      "description": "the divisor used to calculate dimensional weight",
+      "question": "what is the dimensional weight divisor for {entity}?"
+    },
+    "detention_free_period": {
+      "kind": "quantity",
+      "description": "the free time allowed before detention charges begin",
+      "question": "what is the free period before detention charges apply for {entity}?"
+    },
+    "detention_rate": {
+      "kind": "quantity",
+      "description": "the rate charged per hour once the free period elapses",
+      "question": "what is the detention rate for {entity}?"
+    },
+    "storage_rate": {
+      "kind": "quantity",
+      "description": "the monthly storage rate per pallet position",
+      "question": "what is the storage rate for {entity}?"
+    },
+    "handling_fee": {
+      "kind": "quantity",
+      "description": "the inbound/outbound handling fee per pallet",
+      "question": "what is the handling fee for {entity}?"
+    },
+    "residential_surcharge": {
+      "kind": "quantity",
+      "description": "the surcharge added for delivery to a residential address",
+      "question": "what is the residential delivery surcharge for {entity}?"
+    }
+  },
+  "conditions": [
+    "lane"
+  ],
+  "value_qualifiers": [
+    "approximately",
+    "about",
+    "roughly",
+    "up to",
+    "at least",
+    "no more than",
+    "a minimum of",
+    "a maximum of",
+    "a rate of",
+    "a fee of",
+    "a charge of",
+    "a surcharge of",
+    "flat",
+    "guaranteed",
+    "per load",
+    "per shipment",
+    "regardless of weight",
+    "regardless of cubic footage",
+    "in 30-minute increments",
+    "charged per touch",
+    "billed monthly"
+  ],
+  "unit_aliases": {
+    "%": "percent",
+    "hrs": "hours",
+    "hr": "hour",
+    "mi": "miles"
+  },
+  "facts": [
+    {
+      "s": "LTL service",
+      "r": "per_cwt_rate",
+      "o": "$18.50 per cwt",
+      "source": "The LTL linehaul rate is $18.50 per cwt, subject to the minimum and fuel surcharge described below."
+    },
+    {
+      "s": "LTL service",
+      "r": "minimum_charge",
+      "o": "$95",
+      "source": "The minimum charge for any LTL shipment is $95, regardless of actual weight or cubic footage."
+    },
+    {
+      "s": "LTL service",
+      "r": "fuel_surcharge",
+      "o": "18 percent",
+      "source": "A fuel surcharge of 18 percent is added to the base linehaul charge on all LTL shipments."
+    },
+    {
+      "s": "LTL service",
+      "r": "dim_weight_divisor",
+      "o": "194",
+      "source": "Dimensional weight for LTL freight is calculated using a divisor of 194, and the greater of actual or dimensional weight is billed."
+    },
+    {
+      "s": "LTL service",
+      "r": "transit_time",
+      "o": "2 business days",
+      "when": {
+        "lane": "regional"
+      },
+      "source": "Standard transit time for LTL shipments within the regional lane is 2 business days."
+    },
+    {
+      "s": "LTL service",
+      "r": "transit_time",
+      "o": "5 to 7 business days",
+      "when": {
+        "lane": "long_haul"
+      },
+      "source": "Standard transit time for LTL shipments in the long-haul lane is 5 to 7 business days."
+    },
+    {
+      "s": "truckload service",
+      "r": "per_mile_rate",
+      "o": "$2.85 per mile",
+      "source": "The truckload linehaul rate is $2.85 per mile for a standard 53-foot dry van."
+    },
+    {
+      "s": "truckload service",
+      "r": "minimum_charge",
+      "o": "$450",
+      "source": "The minimum charge for any truckload shipment is $450 per load."
+    },
+    {
+      "s": "truckload service",
+      "r": "fuel_surcharge",
+      "o": "22 percent",
+      "source": "A fuel surcharge of 22 percent is added to the base linehaul charge on all truckload shipments."
+    },
+    {
+      "s": "expedited service",
+      "r": "transit_time",
+      "o": "1 business day",
+      "source": "Expedited shipments are guaranteed a transit time of 1 business day from pickup to delivery."
+    },
+    {
+      "s": "expedited service",
+      "r": "fuel_surcharge",
+      "o": "30 percent",
+      "source": "A fuel surcharge of 30 percent is added to the base linehaul charge on all expedited shipments, reflecting the priority routing."
+    },
+    {
+      "s": "dock detention",
+      "r": "detention_free_period",
+      "o": "2 hours",
+      "source": "Drivers are allowed a free period of 2 hours for loading or unloading at the dock."
+    },
+    {
+      "s": "dock detention",
+      "r": "detention_rate",
+      "o": "$65 per hour",
+      "source": "After the free period elapses, a detention rate of $65 per hour is charged in 30-minute increments."
+    },
+    {
+      "s": "warehousing",
+      "r": "storage_rate",
+      "o": "$14 per pallet",
+      "source": "The monthly storage rate is $14 per pallet position, billed on the average daily count for the month."
+    },
+    {
+      "s": "warehousing",
+      "r": "handling_fee",
+      "o": "$6.25 per pallet",
+      "source": "The inbound and outbound handling fee is $6.25 per pallet, charged per touch."
+    },
+    {
+      "s": "residential delivery",
+      "r": "residential_surcharge",
+      "o": "$95",
+      "source": "A residential delivery surcharge of $95 applies to any shipment delivered to a residential address."
+    }
+  ]
+}
