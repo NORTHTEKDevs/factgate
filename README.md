@@ -8,7 +8,7 @@ verdict. The guarantee is scoped to claims that reach the gate; see
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-454%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-528%20passing-brightgreen)
 
 ## The idea, in 3 sentences
 
@@ -40,7 +40,7 @@ gate's own false-accept rate, not an observed hallucination rate of any model.
 | False-VERIFIED rate, absent facts (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | False-VERIFIED rate, corrupted claims (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | True-fact verify coverage (N=1500) | **34%** | [31.6%, 36.4%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| Test suite | **454 passed** | — | `pytest tests/ -q` |
+| Test suite | **528 passed** | — | `pytest tests/ -q` |
 
 **LLM-in-the-loop results.** Only these involved a running model. Note the sample size.
 
@@ -106,14 +106,12 @@ were fitted to its own observed failures.
 A **blind** test on a second, unrelated domain (consumer lending: percentages, currency,
 durations) with its vocabulary declared before any run measures the honest starting point:
 
-| domain | vocabulary | leak | over-block |
-|---|---|---|---|
-| **real doc, chosen mechanically, vocabulary by a first-time author** | blind + one review pass | **0%** (0/34) | **18%** (5/28) |
-| real pitch deck, chosen mechanically | blind + one review pass | **0%** (0/24) | 22% (4/18), half of them correct holds |
-| real business memo | declared | **0%** (0/19) | 8% (1/12) |
-| real financial model | **blind** | **0%** (0/22) | 8% (1/12) |
-| lending, realistic prose | **blind** | **0%** | 33% |
-| clinical, realistic prose | tuned | **0%** | 8% |
+Vocabularies were declared before any run in every case marked blind, including two
+documents chosen mechanically rather than by a human (`scripts/select_eval_document.py`)
+and one whose vocabulary was written by an author who had never seen this codebase.
+
+Current per-domain numbers are in [Status](#status) below and are re-measured on every
+full run; they are not duplicated here, because two tables of the same thing drift.
 
 The first row is a real product-strategy memo (kept private; not vendored), with source quotes
 pulled programmatically from the file. Its first run held **11 of 11** correct values,
@@ -125,8 +123,7 @@ express and the gate correctly refuses to confirm.
 **Leak rate was 0% in every configuration** — two value spaces, four vocabularies, blind
 and tuned. The safety property generalises; the coverage cost is earned per-domain by
 declaring vocabulary, and an undeclared qualifier always costs a HELD, never a leak.
-Expect ~a third of correct values held on day one. Details in
-[`docs/HALLUGATE.md`](docs/HALLUGATE.md).
+Details in [`docs/HALLUGATE.md`](docs/HALLUGATE.md).
 
 Both rates are always reported together. Either alone is meaningless: a gate that blocks
 everything has a 0% leak rate, and an early version of this pipeline did exactly that.
@@ -322,7 +319,7 @@ python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -e .
 ./.venv/Scripts/python.exe -m pip install -e ../rck   # path to your local RCK checkout
 
-# run the test suite (454 tests, no network, <10s)
+# run the test suite (528 tests, no network, <10s)
 ./.venv/Scripts/python.exe -m pytest tests/ -q
 
 # reproduce the headline guarantee measurement (N=1500/class against the live KB)
