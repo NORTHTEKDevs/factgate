@@ -168,6 +168,10 @@ holds, by a rule applied blind to the verdict. Of the 10:
 The headline rate is deliberately **not** adjusted by that breakdown. A metric that moved
 the number it explains would be marking its own homework.
 
+The live pipeline was re-soaked after these changes: 142 claims across eight domains,
+`{VERIFIED: 112, BLOCK: 11, HELD: 19}` against `{105, 11, 26}` before, with every safety
+invariant holding on every verdict.
+
 **Still not certified for unsupervised use.** No deployment has run without a human
 reviewing the held queue, the two real documents cost a review pass each, and the private
 evaluation corpora are not in this repository so those two rows cannot be reproduced from

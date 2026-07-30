@@ -692,6 +692,20 @@ SOAK  model=qwen2.5:14b  claims adjudicated=142
   INVARIANTS HELD on every live verdict
 ```
 
+Re-run after the residue rule and the hardening in section 15, same 142 claims:
+
+```
+SOAK  model=qwen2.5:14b  claims adjudicated=142
+  verdicts: {VERIFIED: 112, BLOCK: 11, HELD: 19}
+  INVARIANTS HELD on every live verdict
+```
+
+Seven more correct answers confirmed, seven fewer held, BLOCK unchanged, and every
+invariant still holding on every verdict a real model produced. The S1 check was widened
+to admit the second route to VERIFIED -- a claim quoted from the fact's own source -- and
+re-derives that independently of `residue.py` rather than trusting the rule to audit
+itself.
+
 142 verdicts from a real model reading real prose, every one of them re-derivable,
 grounded, and fingerprinted. This is the first check in the project that exercises the
 configuration production would actually run, rather than a rate on a fixed sample.
