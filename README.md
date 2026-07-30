@@ -136,27 +136,42 @@ Full write-up, including a live false-BLOCK bug and its fix, is in
 
 ### Status
 
-**Not production ready.** The safety property has held at 0% leak across seven domains
-including three real business documents, one of them selected mechanically rather than by
-a human (`scripts/select_eval_document.py`). The coverage cost is not dependable: blind
-over-block spans **18-33%** (was 11% before property testing found a leak whose fix cost seven points; see docs/HALLUGATE.md §11). A first-time author who had never seen this codebase,
-declaring a vocabulary for a mechanically-chosen document, measured 46%: that is now 18%
-on library fixes with their file unedited, and 11% after they accept two qualifiers
-proposed by `factgate.domain.suggest`. A second mechanically-chosen document sits at 28%
-with no review pass run. The leak rate held at 0% in every configuration, across 34 trials
-at the largest.
+Last full run, six domains, `qwen2.5:14b`, every number below executed rather than
+projected:
 
-The coverage cost is therefore a reviewable list, not an unknown tax. The benchmark emits
-the review list itself, so the loop is run / read / declare / re-run.
+| domain | leak | over-block | was |
+|---|---|---|---|
+| consumer lending, hard | 0/24 | **0/12** | 33% |
+| consumer lending, hard + tuned vocabulary | 0/24 | **0/12** | 25% |
+| consumer lending | 0/24 | 0/12 | 0% |
+| clinical dosing | 0/24 | 1/12 | 8% |
+| business document A (private) | 0/24 | 4/18 | 22% |
+| business document B (private) | 0/34 | 5/28 | 18% |
+| **total** | **0/154 = 0%** | **10/94 = 11%** | 18% |
 
-**Not every hold is an over-block.** Where the model rebases a figure -- answering
-"$1.50 per customer query" for a source reading "$1.50/day" -- holding it is the gate being
-correct, and the metric counts it as a failure anyway. Runs now report those separately; on
-one document they were half the remaining holds. Two suggested qualifiers were *rejected*
-on review for exactly this reason.
+**The leak rate is 0% and has been in every configuration ever measured.** Over-block on
+the four shipped demo domains is 1/48 = 2%; the remaining cost is concentrated in two real
+business documents.
 
-It still costs a review pass per document, and no deployment has run unsupervised. Treat this as a working research implementation with a
-measured safety property, not a shippable component.
+**Most of what is left is not the gate being wrong.** Every run now classifies its own
+holds, by a rule applied blind to the verdict. Of the 10:
+
+- **3** are the gate correctly refusing an invented basis. A source reading
+  `unit cost: ~$1.50/day` answered as `$1.50 per customer query` has the right magnitude
+  and a fabricated basis. Holding it is the product working.
+- **4** are claims that never reached the gate at all, almost all missing entity aliases --
+  the extractor found nothing to adjudicate.
+- **3** are genuine. Two are the local model emitting a Russian word mid-answer
+  (`12-16 weeks после v0`); one is a fact set declaring `$100M` where its own source says
+  `$100M+`, which `lint()` now reports.
+
+The headline rate is deliberately **not** adjusted by that breakdown. A metric that moved
+the number it explains would be marking its own homework.
+
+**Still not certified for unsupervised use.** No deployment has run without a human
+reviewing the held queue, the two real documents cost a review pass each, and the private
+evaluation corpora are not in this repository so those two rows cannot be reproduced from
+a clone. What is verified is stated above and re-runnable for the four public domains.
 
 New authors should start with [`docs/AUTHORING.md`](docs/AUTHORING.md).
 

@@ -777,6 +777,80 @@ is the expensive one and is a model call.
 - The gate is only as good as the declared fact set. `validate_sources` checks every fact
   traces to a corpus quote, but nothing checks the corpus itself is correct.
 
+## 15. Cutting the over-block, and the review that rewrote the fix
+
+Over-block sat at 18% (17 of 94 faithful trials). The largest single cause was a correct
+number followed by a basis phrase the declaration omitted:
+
+```
+declared "35 dollars"   claimed "35 dollars per occurrence"
+declared "2 percent"    claimed "2 percent of the amount advanced, deducted at closing"
+```
+
+Trailing text cannot simply be ignored -- that was a real leak once ("US$5,547M+" verified
+against "US$5,547M+ per query"), and the fix that closed it cost seven points of coverage.
+It cannot be accepted either: "$1.50 per day" and "$1.50 per query" are different prices.
+
+### The rule that shipped, and the four that did not
+
+The proposal admitted a claim two ways: contiguous substring of the source, OR every
+residue word appearing somewhere in the source. It was sent to an adversarial review
+BEFORE implementation. The review returned UNSOUND with five constructed leaks:
+
+| attack | what it proved |
+|---|---|
+| `intended for adults at 5 mg; contraindicated for pregnant patients` -> `5 mg for pregnant patients` | token membership confirmed a dose for a population the source FORBIDS |
+| `billing does not vary per customer or per query` -> `$550 per customer query` | residue assembled from the clause that negates it; token tests have no polarity |
+| `The setup fee is 35 dollars. Per-occurrence surcharges may apply` -> `35 dollars per occurrence` | dropping the full stop made it contiguous ACROSS A SENTENCE BOUNDARY |
+| `Start at 7 mg/kg and titrate to 14 mg/kg` -> whole phrase | residue containing a quantity is a second VALUE, not a basis |
+| `Standard cardholders pay 25 dollars...; premium cardholders pay no late fee` | residue harvested from a different tier's clause |
+
+The third is the one worth dwelling on. The token leg was the obviously risky half; the
+contiguity leg was the one I considered self-evidently safe, and it was independently
+unsound. A separate review pass then found a sixth, on real shipped data: declared `$100M`
+against a source reading `GPT-4 cost ~$100M+.` -- the residue is a bare `+`, which carries
+no digit but turns the claim into an open range, silently reversing the documented
+guarantee that a range never confirms a point.
+
+What shipped is one leg, not two: the claim must appear contiguously inside the clause of
+the fact's own source sentence that states the declared value, with no negation in that
+clause and no quantity in the residue. Every attack above is now a test in
+`tests/test_residue.py`.
+
+### Result
+
+| domain | leak | over-block | was |
+|---|---|---|---|
+| consumer lending, hard | 0/24 | 0/12 | 33% |
+| consumer lending, hard + tuned | 0/24 | 0/12 | 25% |
+| consumer lending | 0/24 | 0/12 | 0% |
+| clinical dosing | 0/24 | 1/12 | 8% |
+| business document A | 0/24 | 4/18 | 22% |
+| business document B | 0/34 | 5/28 | 18% |
+| **total** | **0/154** | **10/94 = 11%** | 18% |
+
+Four other defects surfaced on the way, each measured before it was fixed:
+
+- **A fact set was a denial-of-service payload.** `value_qualifiers` went straight into
+  `re.compile`, so `(a+)+b` took 4.84s on a 26-character value and doubled per character.
+  Rejected by shape at load; real patterns like `every \d+ (?:to \d+ )?hours?` still work.
+- **`entities={"drug": "alias"}` was accepted in silence.** Python iterates the string, so
+  the drug gained the aliases `a,c,e,l,m,o,p,r,t` and `gate_claim(fs, "a", "dose",
+  "15 mg/kg")` returned VERIFIED.
+- **The unit was never grounded.** `value_is_grounded("500 zorkmids", "...500 dollars...")`
+  was True because only the number was looked for.
+- **Qualifier stripping left `"2 percent ,"`** -- a floating comma that stopped the value
+  parsing, so an identical claim verified in one domain and was held in a sister domain
+  that declared more qualifiers.
+
+### What the remaining 10 actually are
+
+Every run now classifies its own holds, blind to the verdict: 3 are the gate correctly
+refusing an invented basis, 4 never reached the gate (missing entity aliases), and 3 are
+genuine -- two of those being the local model emitting a Russian word mid-answer. The
+headline rate is deliberately not adjusted by this breakdown; a metric that moved the
+number it explains would be marking its own homework.
+
 ## Reproduce
 
 ```bash

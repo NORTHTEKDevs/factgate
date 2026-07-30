@@ -88,6 +88,53 @@ def question_for(fs: FactSet, s: str, r: str) -> str:
     return f"What is the {r.replace('_', ' ')} for {s}?"
 
 
+# Words that belong to a value's own grammar rather than to the document's content. A
+# range written "between $5K and $50K" against a source writing "$5K-$50K" is the same
+# value, and a magnitude spelled "million" against a source writing "M" is the same
+# magnitude -- neither is the model introducing information.
+_GRAMMAR = {"a", "an", "the", "of", "is", "are", "to", "and", "or", "per", "at", "in",
+            "for", "between", "from", "approximately", "about", "around", "up",
+            "million", "billion", "thousand"}
+
+
+def _content_words(text: str) -> set[str]:
+    words = re.sub(r"[^a-z ]", " ", str(text).casefold()).split()
+    return {w[:-1] if len(w) > 3 and w.endswith("s") else w for w in words} - _GRAMMAR
+
+
+def classify_holds(fs, per_example) -> dict:
+    """Split the holds on faithful documents into three kinds.
+
+    They are not the same failure and should not be reported as one number:
+
+      gate_refused_a_fabrication -- the model produced a value carrying a word its own
+        source sentence never uses. Measured: a source reading "unit cost: ~$1.50/day"
+        answered as "$1.50 per customer query". The magnitude is right and the BASIS is
+        invented, so holding it is the gate doing its job, not a coverage cost.
+      no_claim_linked -- extraction returned nothing to adjudicate, usually a missing
+        entity alias. A gate cannot verify a claim it was never handed.
+      genuine -- the claim is faithful to the document and the gate still would not
+        confirm it. This is the only one that is a real coverage cost.
+    """
+    out = {"gate_refused_a_fabrication": 0, "no_claim_linked": 0, "genuine": 0}
+    for p in per_example:
+        if p["condition"] != "FAITHFUL" or p["status"] == VERIFIED:
+            continue
+        s, r, _ = p["fact"]
+        declared = fs.lookup(s, r)
+        target = [v for cs, cr, v in (p["claims"] or [])
+                  if cr == r and fs.resolve_entity(cs) == s]
+        if not target or declared is None:
+            out["no_claim_linked"] += 1
+            continue
+        context = _content_words(declared.source) | _content_words(r) | _content_words(s)
+        if _content_words(target[0]) - context:
+            out["gate_refused_a_fabrication"] += 1
+        else:
+            out["genuine"] += 1
+    return out
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="llama3.2:3b")
@@ -225,8 +272,22 @@ def main() -> None:
         print(f"  NOTE: {rebased} of {overblock} holds had the right magnitude with a "
               "DIFFERENT basis (the model rebased the figure); holding those is correct, "
               "so the true over-block is lower than the headline.")
+    # The raw over-block number conflates three different things, and the difference
+    # matters to anyone sizing a review queue. Classified by a decidable rule applied to
+    # every hold, blind to the verdict: does the extracted value use a content word that
+    # its own fact's source sentence, relation name and entity name do not contain?
+    #
+    # The headline rate above is NOT adjusted by this. A breakdown that moved the number it
+    # explains would be marking its own homework; this only says what the number is made of.
+    held = classify_holds(fs, per_example)
+    if any(held.values()):
+        print(f"  of {overblock} holds: {held['gate_refused_a_fabrication']} the gate "
+              f"correctly refusing an invented basis, {held['no_claim_linked']} where "
+              f"extraction produced no claim to judge, {held['genuine']} genuine.")
+
     res = {
         "domain": fs.domain, "model": a.model,
+        "held_breakdown": held,
         "n_faithful": len(faith), "n_corrupted": len(corr),
         "leak_rate": leaks / len(corr) if corr else None,
         "leak_ci95": wilson(leaks, len(corr)),
