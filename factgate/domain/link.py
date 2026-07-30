@@ -400,7 +400,18 @@ def link_targeted(text: str, fs: FactSet, model: str,
     claims = []
     for entity in sorted(mentioned_entities(text, fs)):
         for relation, spec in fs.relations.items():
-            if fs.lookup(entity, relation) is None:
+            # A slot with no declared value could only ever produce HELD, so asking would
+            # burn a model call for no verdict. A CONDITIONAL slot is not that: lookup()
+            # returns None for it without a context, and testing only lookup() meant every
+            # conditional fact in every domain was silently never extracted.
+            #
+            # Found on a freight rate sheet whose transit time differs by lane. Two
+            # consequences, and the second is the serious one: a correct answer could not
+            # be confirmed even when the caller supplied the condition, AND a WRONG value
+            # for a conditional slot never became a claim, so gate_claim's "matches none of
+            # the declared values" BLOCK was unreachable through this path.
+            if (fs.lookup(entity, relation) is None
+                    and not fs.variants(entity, relation)):
                 continue
             answer = ollama(model, SLOT_PROMPT.format(
                 text=text, question=slot_question(fs, entity, relation)), 60, **kw)

@@ -354,3 +354,114 @@ def test_the_repair_cannot_smuggle_in_an_ungrounded_value(monkeypatch):
         "facts": [{"s": "v0.5", "r": "wall_time", "o": "12-16 weeks",
                    "source": passage}]})
     assert link.link_targeted(passage, fs, "m") == []
+
+
+# --------------------------------------------------- unit aliases must be bounded
+def test_a_unit_alias_does_not_bite_into_a_longer_word():
+    """FOUND BY A FRESH DOMAIN, not by a test, which is the reason blind domains in unseen
+    genres are worth authoring at all.
+
+    A freight rate sheet declared {"mi": "miles"}. Unit aliases were applied by blind
+    substring replacement, so the claim "$2.85 per mile" became "$2.85 per miles le" --
+    the claim was CHARACTER FOR CHARACTER IDENTICAL to the declared value and was HELD,
+    because the comparison never saw the real string. The same sheet's {"hr": "hour"}
+    would have turned "threshold" into "thoursesold".
+    """
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"lane": []},
+        "relations": {"rate": {"kind": "quantity"}},
+        "unit_aliases": {"mi": "miles", "hr": "hour", "hrs": "hours", "%": "percent"},
+        "facts": [{"s": "lane", "r": "rate", "o": "$2.85 per mile",
+                   "source": "The per-mile rate is $2.85 per mile."}]})
+    assert fs.normalise_value("$2.85 per mile") == "$2.85 per mile"
+    assert fs.normalise_value("the threshold") == "the threshold"
+    assert gate_claim(fs, "lane", "rate", "$2.85 per mile").status == VERIFIED
+
+
+def test_a_unit_alias_still_applies_on_its_own():
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"lane": []},
+        "relations": {"rate": {"kind": "quantity"}},
+        "unit_aliases": {"mi": "miles", "hr": "hour", "hrs": "hours", "%": "percent"},
+        "facts": [{"s": "lane", "r": "rate", "o": "150 miles",
+                   "source": "The lane is 150 miles."}]})
+    assert fs.normalise_value("150 mi") == "150 miles"
+    assert fs.normalise_value("92%") == "92 percent"
+    assert gate_claim(fs, "lane", "rate", "150 mi").status == VERIFIED
+
+
+def test_the_longest_alias_wins():
+    """"hrs" must be consumed before "hr" can bite into it, by length ordering rather than
+    by whichever order the author happened to write them in."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"x": []},
+        "relations": {"t": {"kind": "quantity"}},
+        "unit_aliases": {"hr": "hour", "hrs": "hours"},
+        "facts": [{"s": "x", "r": "t", "o": "3 hours", "source": "It takes 3 hours."}]})
+    assert fs.normalise_value("3 hrs") == "3 hours"
+
+
+# ------------------------------------------------- conditional slots were skipped
+def test_conditional_slots_are_extracted(monkeypatch):
+    """FOUND BY A FRESH DOMAIN. lookup() returns None for a conditional slot when no
+    context is supplied, and the extractor tested only lookup(), so EVERY conditional fact
+    in every domain was silently never extracted -- an entire declared feature dead in the
+    extraction path.
+
+    The passage here states ONE variant, which is what a model answering about one lane
+    produces. A passage stating BOTH is handled separately below."""
+    import factgate.domain.link as link
+    source = "LTL service transit time on the regional lane is 2 business days."
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"LTL service": ["LTL"]},
+        "relations": {"transit_time": {"kind": "quantity"}}, "conditions": ["lane"],
+        "facts": [{"s": "LTL service", "r": "transit_time", "o": "2 business days",
+                   "source": source, "when": {"lane": "regional"}},
+                  {"s": "LTL service", "r": "transit_time", "o": "5 to 7 business days",
+                   "source": "LTL service transit time on long haul is 5 to 7 business days.",
+                   "when": {"lane": "long_haul"}}]})
+    assert fs.lookup("LTL service", "transit_time") is None      # the skip condition
+    monkeypatch.setattr(link, "ollama", lambda *a, **k: "2 business days")
+    assert link.link_targeted(source, fs, "m") == [
+        ("LTL service", "transit_time", "2 business days")]
+
+
+def test_an_answer_stating_both_variants_still_produces_no_claim(monkeypatch):
+    """The deliberate half, unchanged by the fix above: when the passage states both
+    conditional values, the extractor cannot tell which one the answer means, and
+    confirming either would be guessing. This is the ambiguity guard, and it is why
+    extracting conditional slots is safe to enable."""
+    import factgate.domain.link as link
+    both = ("Regional lane transit time is 2 business days; long haul is 5 to 7 "
+            "business days.")
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"LTL service": ["LTL"]},
+        "relations": {"transit_time": {"kind": "quantity"}}, "conditions": ["lane"],
+        "facts": [{"s": "LTL service", "r": "transit_time", "o": "2 business days",
+                   "source": both, "when": {"lane": "regional"}},
+                  {"s": "LTL service", "r": "transit_time", "o": "5 to 7 business days",
+                   "source": both, "when": {"lane": "long_haul"}}]})
+    monkeypatch.setattr(link, "ollama", lambda *a, **k: "2 business days")
+    assert link.link_targeted(both, fs, "m") == []
+
+
+def test_a_conditional_claim_reaches_every_verdict(monkeypatch):
+    """The safety half. A value matching NO declared variant is a provable contradiction,
+    and it could not previously reach the gate through this path to be called one."""
+    import factgate.domain.link as link
+    source = "LTL service transit time on the regional lane is 2 business days."
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"LTL service": ["LTL"]},
+        "relations": {"transit_time": {"kind": "quantity"}}, "conditions": ["lane"],
+        "facts": [{"s": "LTL service", "r": "transit_time", "o": "2 business days",
+                   "source": source, "when": {"lane": "regional"}},
+                  {"s": "LTL service", "r": "transit_time", "o": "5 to 7 business days",
+                   "source": "LTL service transit time on long haul is 5 to 7 business days.",
+                   "when": {"lane": "long_haul"}}]})
+    monkeypatch.setattr(link, "ollama", lambda *a, **k: "2 business days")
+    claims = link.link_targeted(source, fs, "m")
+    assert claims
+    assert gate_claim(fs, *claims[0]).status == "HELD"                       # condition unknown
+    assert gate_claim(fs, *claims[0], {"lane": "regional"}).status == VERIFIED
+    assert gate_claim(fs, "LTL service", "transit_time",
+                      "40 business days").status == "BLOCK"                  # matches no variant

@@ -154,6 +154,22 @@ class FactSet:
         # Both default to empty: a domain that declares nothing gets no normalisation,
         # so adding this feature cannot change an existing fact set's verdicts.
         self.unit_aliases = unit_aliases or {}
+        # Unit aliases were applied by blind substring replacement, which CORRUPTS values.
+        # Found by a fresh domain, not by a test: a freight rate sheet declaring
+        # {"mi": "miles"} turned the claim "$2.85 per mile" into "$2.85 per miles le",
+        # because "mile" contains "mi". The claim was character-for-character identical to
+        # the declared value and was HELD. The same sheet's {"hr": "hour"} would turn
+        # "threshold" into "thoursesold".
+        #
+        # Word-bounded, exactly as value_qualifiers already are, and longest alias first so
+        # "hrs" is consumed before "hr" can bite into it rather than by dict luck.
+        self._unit_alias_patterns = []
+        for alias in sorted(self.unit_aliases, key=len, reverse=True):
+            a = str(alias)
+            lead = r"\b" if a[:1].isalnum() else ""
+            tail = r"\b" if a[-1:].isalnum() else ""
+            self._unit_alias_patterns.append(
+                (re.compile(rf"{lead}{re.escape(a)}{tail}"), self.unit_aliases[alias]))
         self.conditions = conditions or []
         self._qualifiers = []
         self.qualifier_warnings: list[str] = []
@@ -312,8 +328,8 @@ class FactSet:
         out = value
         for pat in self._qualifiers:
             out = pat.sub(" ", out)
-        for alias, canon in self.unit_aliases.items():
-            out = out.replace(alias, f" {canon} ")
+        for pat, canon in self._unit_alias_patterns:
+            out = pat.sub(f" {canon} ", out)
         # Remove brackets this stripping just emptied: "$79(download)" -> "$79( )".
         # Tidying the strip's own residue, not inferring meaning.
         out = re.sub(r"[(\[{]\s*[)\]}]", " ", out)
