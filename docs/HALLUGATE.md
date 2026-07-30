@@ -789,3 +789,9 @@ python scripts/run_domain_bench.py --model llama3.2:3b        # ~4 min, needs Ol
 
 python -m pytest tests/ -q                                    # 214 tests, no network
 ```
+
+The harness had the same disease it was built to cure: version one installed from the
+WORKING TREE, which still contains gitignored private domains that no downloader receives,
+so a green run said nothing about whether the published tree was complete. It now exports
+`git archive HEAD` -- byte for byte what a clone gets -- and asserts no private corpus
+reached it. 9/9 checks pass against the published tree.
