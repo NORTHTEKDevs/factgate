@@ -28,7 +28,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from factgate.domain.factset import FactSet
 from factgate.domain.gate import BLOCK, HELD, VERIFIED, gate_claim
 from factgate.domain.link import link_targeted, value_is_grounded
-from factgate.domain.suggest import render_suggestions
+from factgate.domain.suggest import render_entity_suggestions, render_suggestions
 from factgate.domain.quantity import DIFFER, compare_values, parse_quantity
 from factgate.llm import ollama
 from factgate.stats import cluster_wilson, wilson
@@ -280,6 +280,15 @@ def main() -> None:
     # The headline rate above is NOT adjusted by this. A breakdown that moved the number it
     # explains would be marking its own homework; this only says what the number is made of.
     held = classify_holds(fs, per_example)
+    # The unlinked holds are an authoring gap, not a gate limitation, so the run says which
+    # alias would close each one instead of leaving it in the over-block number unexplained.
+    unlinked = [(p["fact"][0], p["fact"][1], p["text"]) for p in per_example
+                if p["condition"] == "FAITHFUL" and p["status"] != VERIFIED
+                and not [v for cs, cr, v in (p["claims"] or [])
+                         if cr == p["fact"][1] and fs.resolve_entity(cs) == p["fact"][0]]]
+    if unlinked:
+        print()
+        print(render_entity_suggestions(fs, unlinked))
     if any(held.values()):
         print(f"  of {overblock} holds: {held['gate_refused_a_fabrication']} the gate "
               f"correctly refusing an invented basis, {held['no_claim_linked']} where "

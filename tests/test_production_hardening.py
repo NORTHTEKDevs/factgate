@@ -215,3 +215,74 @@ def test_a_currency_amount_with_a_worded_unit_is_still_grounded():
     assert value_is_grounded(
         "$30 per billion tokens",
         "LLM inference costs approximately $30 per million tokens.") is False
+
+
+# ------------------------------------------------------- entity-alias suggestions
+def test_alias_suggested_when_the_value_was_stated_but_the_entity_never_matched():
+    """MEASURED, the largest remaining category of hold once trailing text was handled:
+    asked what equity an accelerator takes, the model answered "Y Combinator typically
+    takes around 7% equity" against an entity declared only as "yc". The value was stated
+    correctly and the gate never saw it. That reads as an over-block and is really a
+    one-line gap in the fact set, so the library names the missing alias."""
+    from factgate.domain.suggest import suggest_entity_aliases
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"yc": ["YC"]},
+        "relations": {"equity": {"kind": "quantity"}},
+        "facts": [{"s": "yc", "r": "equity", "o": "7%",
+                   "source": "YC takes 7% equity."}]})
+    out = suggest_entity_aliases(
+        fs, [("yc", "equity", "Y Combinator typically takes around 7% equity.")])
+    assert out and "Y Combinator" in out[0]["candidates"]
+
+
+def test_alias_suggested_for_a_morphological_near_miss():
+    from factgate.domain.suggest import suggest_entity_aliases
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"the raise": ["the round"]},
+        "relations": {"amount": {"kind": "quantity"}},
+        "facts": [{"s": "the raise", "r": "amount", "o": "$5M-$10M",
+                   "source": "The raise is $5M-$10M."}]})
+    out = suggest_entity_aliases(
+        fs, [("the raise", "amount", "We are raising $5M-$10M to fund growth.")])
+    assert out and "raising" in out[0]["candidates"]
+
+
+def test_no_alias_suggested_when_the_answer_does_not_state_the_value():
+    """The guard that keeps this from manufacturing links. If the model never stated the
+    value, inventing an alias would only make a non-answer linkable."""
+    from factgate.domain.suggest import suggest_entity_aliases
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"yc": ["YC"]},
+        "relations": {"equity": {"kind": "quantity"}},
+        "facts": [{"s": "yc", "r": "equity", "o": "7%",
+                   "source": "YC takes 7% equity."}]})
+    assert suggest_entity_aliases(
+        fs, [("yc", "equity", "Accelerators vary in what they take.")]) == []
+
+
+def test_no_alias_suggested_when_an_entity_did_match():
+    """If something was matched, the miss is downstream and an alias would not fix it --
+    the real case being a model that hedged rather than asserting."""
+    from factgate.domain.suggest import suggest_entity_aliases
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"fever": ["febrile threshold"]},
+        "relations": {"threshold": {"kind": "quantity"}},
+        "facts": [{"s": "fever", "r": "threshold", "o": "38 degrees celsius",
+                   "source": "Fever is 38 degrees celsius."}]})
+    assert suggest_entity_aliases(
+        fs, [("fever", "threshold",
+              "A recording of 38 degrees celsius is considered a fever.")]) == []
+
+
+def test_a_suggested_alias_would_not_collide_with_another_entity():
+    """An alias attaches claims to an entity; one that already belongs to a DIFFERENT
+    entity would attach them to the wrong one, and the loader refuses such a fact set
+    outright. Never propose one."""
+    from factgate.domain.suggest import suggest_entity_aliases
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"yc": ["YC"], "Y Combinator Continuity": []},
+        "relations": {"equity": {"kind": "quantity"}},
+        "facts": [{"s": "yc", "r": "equity", "o": "7%", "source": "YC takes 7% equity."}]})
+    for item in suggest_entity_aliases(
+            fs, [("yc", "equity", "Y Combinator Continuity takes around 7% equity.")]):
+        assert "Y Combinator Continuity" not in item["candidates"]
