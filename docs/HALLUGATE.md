@@ -638,7 +638,53 @@ gate + link   13,844 cases, hostile inputs        0 raises, 0 non-derivable VERI
 Absence of failures here is not proof of correctness. It is a search several orders of
 magnitude wider than the example tests, and it found a real leak the example tests missed.
 
-## 12. Production hardening
+## 12. Can a stranger actually use it?
+
+Every measurement to this point ran inside a venv that already had everything, from the
+working tree, with the maintainer's environment. That proves nothing about someone who
+clones the repo. `scripts/acceptance.py` builds a **fresh venv**, installs the package the
+way the README says, and exercises the documented surface from a directory outside the repo.
+
+It failed on the first run, and one failure was a real public-facing defect:
+
+**Four test modules hard-required `rck`, which is not on PyPI.** A stranger running
+`pytest tests/` got four collection ERRORS and zero tests executed -- a repo that looks
+broken on arrival. Optional dependencies must skip, not explode. They now use
+`pytest.importorskip`, so a fresh clone reports **292 passed, 4 skipped, 0 errors**.
+
+(The other failure was in the acceptance script itself: it invoked pytest before installing
+it. Worth recording, because a harness that reports a false failure trains you to ignore it.)
+
+```
+fresh venv builds                                PASS
+pip install -e . succeeds                        PASS
+documented API works from outside the repo       PASS
+domain gate needs no knowledge-base engine       PASS
+README quickstart test passes in the fresh env   PASS
+every shipped demo domain loads clean            PASS
+full test suite passes in the fresh env          PASS   292 passed, 4 skipped
+```
+
+## 13. Soaking the live pipeline
+
+The benchmark measures rates. The property tests check invariants on generated strings.
+Neither checks invariants on verdicts produced by a real model reading real prose, which is
+the only configuration that will run in production. `scripts/soak.py` walks every domain,
+drives live extraction, and asserts on **every live verdict**:
+
+| | invariant |
+|---|---|
+| S1 | VERIFIED is re-derivable without the gate's own comparison |
+| S2 | VERIFIED implies the value occurs in the passage it came from |
+| S3 | BLOCK implies a provable difference |
+| S4 | an out-of-domain entity is never anything but HELD |
+| S5 | no verdict is absent and no call raises |
+| S6 | every verdict carries the fact set fingerprint, for audit |
+
+Rates are reported but are deliberately **not** the pass criterion. A slow gate is a tuning
+problem; an unsound one is a defect.
+
+## 14. Production hardening
 
 Five changes aimed at business use rather than at the benchmark. None moved the measured
 numbers (0% leak, 8% over-block on clinical/qwen2.5:14b), which is the point: they close

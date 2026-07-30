@@ -16,6 +16,11 @@ from pathlib import Path
 
 import pytest
 
+# rck is an optional dependency and is not on PyPI (see pyproject). Without this,
+# a fresh clone gets 4 collection ERRORS and zero tests run -- found by
+# scripts/acceptance.py, which builds a clean venv the way a stranger would.
+pytest.importorskip("rck", reason="rck not installed; legacy KB path skipped")
+
 from factgate.bench import common, results as results_mod, runner as runner_mod
 from factgate.bench import splits as splits_mod
 from factgate.datagen.build_kb import build as build_kb_snapshot

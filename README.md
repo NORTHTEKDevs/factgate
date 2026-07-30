@@ -160,6 +160,17 @@ measured safety property, not a shippable component.
 
 New authors should start with [`docs/AUTHORING.md`](docs/AUTHORING.md).
 
+Two harnesses verify the things a test suite cannot:
+
+```bash
+python scripts/acceptance.py    # fresh venv, install, exercise the documented surface
+python scripts/soak.py          # live pipeline, safety invariants on every verdict
+```
+
+`acceptance.py` found that four test modules hard-required an optional dependency, so a
+fresh clone got four collection errors and ran zero tests. It now reports 292 passed,
+4 skipped.
+
 ### Using it
 
 Declare your facts, then adjudicate claims against them. The verdict path needs no model

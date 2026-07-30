@@ -9,6 +9,11 @@ from __future__ import annotations
 
 import pytest
 
+# rck is an optional dependency and is not on PyPI (see pyproject). Without this,
+# a fresh clone gets 4 collection ERRORS and zero tests run -- found by
+# scripts/acceptance.py, which builds a clean venv the way a stranger would.
+pytest.importorskip("rck", reason="rck not installed; legacy KB path skipped")
+
 import factgate.gate as gate_module
 from factgate.gate import GateStatus, GateVerdict, verify_claim, verify_chain_claim
 
