@@ -360,6 +360,35 @@ def ambiguous_candidates(value: str, passage: str, fs: FactSet | None = None,
     return len(candidates) > 1
 
 
+# Unicode-aware word matcher: the case this exists for is a Cyrillic word appearing in an
+# otherwise English answer, which an ASCII-only pattern would not even see.
+_ANY_WORD = re.compile(r"[^\W\d_]{2,}", re.UNICODE)
+
+REPAIR_PROMPT = """The previous answer contains words that do not appear in the passage.
+Copy the value EXACTLY as it is written in the passage, character for character. Do not
+translate, paraphrase, or add anything.
+
+Passage: {text}
+Question: {question}
+Previous answer: {bad}
+Corrected value:"""
+
+
+def foreign_words(value: str, passage: str) -> list[str]:
+    """Words in an extracted value that occur nowhere in the passage it came from.
+
+    A value is supposed to be COPIED out of the passage, so a word the passage never uses
+    can only have come from the model. Measured, deterministic on three runs: asked for a
+    wall time from an English passage reading "12-16 weeks after v0", qwen2.5:14b answers
+    "12-16 weeks после v0" -- the Russian for "after". The magnitude is right and the
+    text is not the document's.
+    """
+    if not value or not passage:
+        return []
+    low = " ".join(str(passage).casefold().split())
+    return [w for w in _ANY_WORD.findall(str(value)) if w.casefold() not in low]
+
+
 def link_targeted(text: str, fs: FactSet, model: str,
                   **kw) -> list[tuple[str, str, str]]:
     """Ask one targeted question per (mentioned entity, declared relation) pair.
@@ -378,6 +407,20 @@ def link_targeted(text: str, fs: FactSet, model: str,
             value = normalise_slot_answer(answer)
             if value is not None:
                 value = respell_from_passage(value, text)
+            # The extractor emitted a word the passage does not contain. Ask ONCE more,
+            # showing it its own answer -- the transport runs at temperature 0, so
+            # repeating the same prompt returns the same string verbatim and only a
+            # different prompt can help. If the repair is still not the document's own
+            # wording the claim is dropped, which is HELD: this repairs EXTRACTION and
+            # never relaxes adjudication, and every guard below still applies to whatever
+            # comes back.
+            if value is not None and foreign_words(value, text):
+                repaired = normalise_slot_answer(ollama(model, REPAIR_PROMPT.format(
+                    text=text, question=slot_question(fs, entity, relation),
+                    bad=value), 60, **kw))
+                if repaired is not None:
+                    repaired = respell_from_passage(repaired, text)
+                value = repaired if (repaired and not foreign_words(repaired, text)) else None
             # An extracted value that does not occur in the passage was invented by the
             # extractor, not read from the text. Dropping it sends the claim to HELD,
             # which is the fail-closed answer; trusting it produced a measured leak.

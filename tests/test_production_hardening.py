@@ -286,3 +286,71 @@ def test_a_suggested_alias_would_not_collide_with_another_entity():
     for item in suggest_entity_aliases(
             fs, [("yc", "equity", "Y Combinator Continuity takes around 7% equity.")]):
         assert "Y Combinator Continuity" not in item["candidates"]
+
+
+# --------------------------------------------------- repairing a bad extraction
+def test_foreign_words_finds_text_the_passage_never_used():
+    """MEASURED, deterministic on three runs at temperature 0: asked for a wall time from
+    an English passage reading "12-16 weeks after v0", qwen2.5:14b answers
+    "12-16 weeks после v0" -- the Russian for "after". The magnitude is right and the
+    wording is not the document's, so the claim was held over a translation artifact."""
+    from factgate.domain.link import foreign_words
+    passage = "| v0.5 (~1 month training) | ~$2,000 | 12-16 weeks after v0 | Yes |"
+    assert foreign_words("12-16 weeks после v0", passage) == ["после"]
+    assert foreign_words("12-16 weeks after v0", passage) == []
+    assert foreign_words("12-16 weeks", passage) == []
+
+
+def test_a_foreign_word_triggers_one_repair_attempt(monkeypatch):
+    """The repair asks ONCE, showing the model its own answer. Repeating the original
+    prompt cannot help: the transport runs at temperature 0, so it returns the same string
+    verbatim -- which is why the bug was reproducible three times out of three."""
+    import factgate.domain.link as link
+    passage = "The wall time for v0.5 is 12-16 weeks after v0."
+    calls = []
+
+    def fake(model, prompt, timeout, **kw):
+        calls.append(prompt)
+        return "12-16 weeks после v0" if len(calls) == 1 else "12-16 weeks after v0"
+
+    monkeypatch.setattr(link, "ollama", fake)
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"v0.5": []},
+        "relations": {"wall_time": {"kind": "quantity"}},
+        "facts": [{"s": "v0.5", "r": "wall_time", "o": "12-16 weeks",
+                   "source": passage}]})
+    assert link.link_targeted(passage, fs, "m") == [("v0.5", "wall_time",
+                                                     "12-16 weeks after v0")]
+    assert len(calls) == 2, "expected exactly one repair attempt"
+    assert "Corrected value" in calls[1]
+
+
+def test_a_repair_that_is_still_not_the_documents_wording_is_dropped(monkeypatch):
+    """Fail-closed is preserved. This repairs EXTRACTION and never relaxes adjudication:
+    if the second attempt is still not the document's own words, no claim is produced and
+    the fact is HELD."""
+    import factgate.domain.link as link
+    passage = "The wall time for v0.5 is 12-16 weeks after v0."
+    monkeypatch.setattr(link, "ollama",
+                        lambda *a, **k: "12-16 weeks после v0")
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"v0.5": []},
+        "relations": {"wall_time": {"kind": "quantity"}},
+        "facts": [{"s": "v0.5", "r": "wall_time", "o": "12-16 weeks",
+                   "source": passage}]})
+    assert link.link_targeted(passage, fs, "m") == []
+
+
+def test_the_repair_cannot_smuggle_in_an_ungrounded_value(monkeypatch):
+    """A repaired answer is still subject to every guard. A second attempt that returns a
+    plausible but absent value must not become a claim."""
+    import factgate.domain.link as link
+    passage = "The wall time for v0.5 is 12-16 weeks after v0."
+    seq = iter(["12-16 weeks после v0", "99-99 weeks after v0"])
+    monkeypatch.setattr(link, "ollama", lambda *a, **k: next(seq))
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"v0.5": []},
+        "relations": {"wall_time": {"kind": "quantity"}},
+        "facts": [{"s": "v0.5", "r": "wall_time", "o": "12-16 weeks",
+                   "source": passage}]})
+    assert link.link_targeted(passage, fs, "m") == []
