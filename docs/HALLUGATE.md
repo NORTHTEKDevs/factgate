@@ -684,6 +684,18 @@ drives live extraction, and asserts on **every live verdict**:
 Rates are reported but are deliberately **not** the pass criterion. A slow gate is a tuning
 problem; an unsound one is a defect.
 
+First full campaign, all eight domains, production extractor:
+
+```
+SOAK  model=qwen2.5:14b  claims adjudicated=142
+  verdicts: {VERIFIED: 105, BLOCK: 11, HELD: 26}
+  INVARIANTS HELD on every live verdict
+```
+
+142 verdicts from a real model reading real prose, every one of them re-derivable,
+grounded, and fingerprinted. This is the first check in the project that exercises the
+configuration production would actually run, rather than a rate on a fixed sample.
+
 ## 14. Production hardening
 
 Five changes aimed at business use rather than at the benchmark. None moved the measured
