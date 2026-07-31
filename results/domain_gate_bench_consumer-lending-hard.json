@@ -1,6 +1,11 @@
 {
   "domain": "consumer-lending-hard",
   "model": "qwen2.5:14b",
+  "held_breakdown": {
+    "gate_refused_a_fabrication": 0,
+    "no_claim_linked": 0,
+    "genuine": 0
+  },
   "n_faithful": 12,
   "n_corrupted": 24,
   "leak_rate": 0.0,
@@ -45,5 +50,5 @@
   "holds_on_basis_mismatch": 0,
   "n_distinct_facts": 12,
   "ci_caveat": "trials from one fact are correlated; effective n is closer to n_distinct_facts than to n_corrupted",
-  "seconds": 384.6
+  "seconds": 355.0
 }

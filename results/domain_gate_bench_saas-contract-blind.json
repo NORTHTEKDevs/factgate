@@ -1,0 +1,58 @@
+{
+  "domain": "saas-contract-blind",
+  "model": "qwen2.5:14b",
+  "held_breakdown": {
+    "gate_refused_a_fabrication": 0,
+    "no_claim_linked": 4,
+    "genuine": 1
+  },
+  "n_faithful": 15,
+  "n_corrupted": 30,
+  "leak_rate": 0.0,
+  "leak_ci95": [
+    0.0,
+    0.11351709139047801
+  ],
+  "over_block_rate": 0.3333333333333333,
+  "over_block_ci95": [
+    0.15176100694691236,
+    0.5828687484878702
+  ],
+  "leaks": 0,
+  "over_blocked": 5,
+  "faithful_states": {
+    "VERIFIED": 10,
+    "BLOCK": 4,
+    "HELD": 1
+  },
+  "corrupted_states": {
+    "BLOCK": 24,
+    "HELD": 6
+  },
+  "n_spontaneous": 1,
+  "excluded_invalid_trials": {
+    "corrupted_left_declared_value_intact": 3
+  },
+  "leak_rate_instructed_only": 0.0,
+  "leak_rate_spontaneous_only": 0.0,
+  "leak_by_fact": {
+    "failed": 0,
+    "n_facts": 12,
+    "ci95": [
+      0.0,
+      0.2425007574992425
+    ]
+  },
+  "over_block_by_fact": {
+    "failed": 3,
+    "n_facts": 13,
+    "ci95": [
+      0.08179379092465708,
+      0.5025687399512693
+    ]
+  },
+  "holds_on_basis_mismatch": 2,
+  "n_distinct_facts": 16,
+  "ci_caveat": "trials from one fact are correlated; effective n is closer to n_distinct_facts than to n_corrupted",
+  "seconds": 420.2
+}
