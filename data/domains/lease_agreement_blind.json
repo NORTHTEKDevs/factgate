@@ -2,63 +2,199 @@
   "domain": "lease-agreement-blind",
   "corpus": "LEASE ABSTRACT\n\nLandlord: Cascade Properties LP (\"Landlord\")\nTenant: Northgate Analytics, LLC (\"Tenant\")\nPremises: Suite 400, located at 2200 Harbor View Boulevard (\"the Premises\")\n\nArticle 1 - Premises and Rentable Area\nThe Premises consist of 18,400 rentable square feet and 15,600 usable square feet, reflecting a load factor of 1.18.\n\nArticle 2 - Base Rent\nBase Rent for the Premises during the initial Lease Year shall be $34.50 per square foot per year, payable in equal monthly installments.\n\nArticle 3 - Rent Escalation\nBase Rent shall increase by 3.00% per annum on each anniversary of the Commencement Date throughout the initial Term.\n\nArticle 4 - Operating Expense Stop\nLandlord shall be responsible for Operating Expenses up to a stop of $12.75 per square foot per year, with Tenant responsible for its pro rata share of Operating Expenses in excess of the stop.\n\nArticle 5 - Tenant Improvement Allowance\nLandlord shall provide Tenant a tenant improvement allowance of $45.00 per square foot toward the cost of Tenant's initial build-out of the Premises.\n\nArticle 6 - Security Deposit\nTenant shall deposit with Landlord a security deposit of $99,875.00 upon execution of this Lease, held as security for Tenant's performance under this Lease.\n\nArticle 7 - Term\nThe initial Term of this Lease shall be 84 months, commencing on the Commencement Date.\n\nArticle 8 - Renewal Option\nTenant shall have one option to renew the Term for an additional period of 60 months, provided Tenant delivers written notice of its election to renew not less than 270 days prior to the expiration of the initial Term.\n\nArticle 9 - Renewal Rent\nIf Tenant exercises the Renewal Option, Base Rent during the renewal term shall be adjusted to $38.00 per square foot per year, subject to further annual escalation of 3.00%.\n\nArticle 10 - Parking\nTenant shall be entitled to 46 unreserved parking spaces in the Building's parking structure at no additional charge during the initial Term.\n\nArticle 11 - Late Charges\nAny Base Rent payment not received within 5 days of its due date shall be subject to a late charge equal to 5.00% of the overdue amount.\n\nArticle 12 - Assignment and Subletting\nTenant shall not assign this Lease or sublet the Premises without Landlord's prior written consent, which consent shall not be unreasonably withheld.\n\nArticle 13 - Right of First Refusal\nTenant shall have a right of first refusal on the adjacent Suite 410, comprising 6,200 rentable square feet, should it become available for lease during the initial Term.",
   "entities": {
-    "Premises": ["the Premises", "Suite 400", "the leased space"],
-    "Landlord": ["Landlord", "Cascade Properties LP", "Cascade Properties"],
-    "Tenant": ["Tenant", "Northgate Analytics, LLC", "Northgate Analytics", "Northgate"],
-    "Renewal Option": ["the Renewal Option", "the option to renew"],
-    "Suite 410": ["the adjacent Suite 410"]
+    "Premises": [
+      "the Premises",
+      "Suite 400",
+      "the leased space"
+    ],
+    "Landlord": [
+      "Landlord",
+      "Cascade Properties LP",
+      "Cascade Properties"
+    ],
+    "Tenant": [
+      "Tenant",
+      "Northgate Analytics, LLC",
+      "Northgate Analytics",
+      "Northgate"
+    ],
+    "Renewal Option": [
+      "the Renewal Option",
+      "the option to renew"
+    ],
+    "Suite 410": [
+      "the adjacent Suite 410"
+    ]
   },
   "relations": {
-    "rentable_sf": {"kind": "quantity", "question": "what is the rentable square footage of {entity}?"},
-    "usable_sf": {"kind": "quantity", "question": "what is the usable square footage of {entity}?"},
-    "load_factor": {"kind": "quantity", "question": "what is the load factor of {entity}?"},
-    "base_rent": {"kind": "quantity", "question": "what is the base rent per square foot per year of {entity}?"},
-    "escalation_rate": {"kind": "quantity", "question": "what is the annual rent escalation rate of {entity}?"},
-    "opex_stop": {"kind": "quantity", "question": "what is the operating expense stop of {entity}?"},
-    "ti_allowance": {"kind": "quantity", "question": "what is the tenant improvement allowance of {entity}?"},
-    "security_deposit": {"kind": "quantity", "question": "what is the security deposit of {entity}?"},
-    "term_length": {"kind": "quantity", "question": "what is the initial lease term of {entity}?"},
-    "renewal_notice_window": {"kind": "quantity", "question": "what is the renewal notice window of {entity}?"},
-    "parking_spaces": {"kind": "quantity", "question": "how many parking spaces is {entity} entitled to?"},
-    "late_charge_rate": {"kind": "quantity", "question": "what is the late charge rate of {entity}?"},
-    "late_charge_grace": {"kind": "quantity", "question": "what is the late charge grace period of {entity}?"},
-    "rofr_sf": {"kind": "quantity", "question": "what is the square footage subject to {entity}'s right of first refusal?"}
+    "rentable_sf": {
+      "kind": "quantity",
+      "question": "what is the rentable square footage of {entity}?"
+    },
+    "usable_sf": {
+      "kind": "quantity",
+      "question": "what is the usable square footage of {entity}?"
+    },
+    "load_factor": {
+      "kind": "quantity",
+      "question": "what is the load factor of {entity}?"
+    },
+    "base_rent": {
+      "kind": "quantity",
+      "question": "what is the base rent per square foot per year of {entity}?"
+    },
+    "escalation_rate": {
+      "kind": "quantity",
+      "question": "what is the annual rent escalation rate of {entity}?"
+    },
+    "opex_stop": {
+      "kind": "quantity",
+      "question": "what is the operating expense stop of {entity}?"
+    },
+    "ti_allowance": {
+      "kind": "quantity",
+      "question": "what is the tenant improvement allowance of {entity}?"
+    },
+    "security_deposit": {
+      "kind": "quantity",
+      "question": "what is the security deposit of {entity}?"
+    },
+    "term_length": {
+      "kind": "quantity",
+      "question": "what is the initial lease term of {entity}?"
+    },
+    "renewal_notice_window": {
+      "kind": "quantity",
+      "question": "what is the renewal notice window of {entity}?"
+    },
+    "parking_spaces": {
+      "kind": "quantity",
+      "question": "how many parking spaces is {entity} entitled to?"
+    },
+    "late_charge_rate": {
+      "kind": "quantity",
+      "question": "what is the late charge rate of {entity}?"
+    },
+    "late_charge_grace": {
+      "kind": "quantity",
+      "question": "what is the late charge grace period of {entity}?"
+    },
+    "rofr_sf": {
+      "kind": "quantity",
+      "question": "what is the square footage subject to {entity}'s right of first refusal?"
+    }
   },
-  "conditions": ["term"],
-  "value_qualifiers": ["approximately", "up to", "not less than", "at least"],
-  "unit_aliases": {"%": "percent", "SF": "square feet", "PSF": "per square foot"},
+  "conditions": [
+    "term"
+  ],
+  "value_qualifiers": [
+    "approximately",
+    "at least",
+    "every",
+    "not less than",
+    "up to"
+  ],
+  "unit_aliases": {
+    "%": "percent",
+    "SF": "square feet",
+    "PSF": "per square foot"
+  },
   "facts": [
-    {"s": "Premises", "r": "rentable_sf", "o": "18,400 square feet",
-     "source": "The Premises consist of 18,400 rentable square feet and 15,600 usable square feet, reflecting a load factor of 1.18."},
-    {"s": "Premises", "r": "usable_sf", "o": "15,600 square feet",
-     "source": "The Premises consist of 18,400 rentable square feet and 15,600 usable square feet, reflecting a load factor of 1.18."},
-    {"s": "Premises", "r": "load_factor", "o": "1.18",
-     "source": "The Premises consist of 18,400 rentable square feet and 15,600 usable square feet, reflecting a load factor of 1.18."},
-    {"s": "Premises", "r": "base_rent", "o": "$34.50 per square foot per year",
-     "source": "Base Rent for the Premises during the initial Lease Year shall be $34.50 per square foot per year, payable in equal monthly installments.",
-     "when": {"term": "initial"}},
-    {"s": "Premises", "r": "base_rent", "o": "$38.00 per square foot per year",
-     "source": "If Tenant exercises the Renewal Option, Base Rent during the renewal term shall be adjusted to $38.00 per square foot per year, subject to further annual escalation of 3.00%.",
-     "when": {"term": "renewal"}},
-    {"s": "Premises", "r": "escalation_rate", "o": "3.00% per annum",
-     "source": "Base Rent shall increase by 3.00% per annum on each anniversary of the Commencement Date throughout the initial Term."},
-    {"s": "Premises", "r": "opex_stop", "o": "$12.75 per square foot per year",
-     "source": "Landlord shall be responsible for Operating Expenses up to a stop of $12.75 per square foot per year, with Tenant responsible for its pro rata share of Operating Expenses in excess of the stop."},
-    {"s": "Premises", "r": "ti_allowance", "o": "$45.00 per square foot",
-     "source": "Landlord shall provide Tenant a tenant improvement allowance of $45.00 per square foot toward the cost of Tenant's initial build-out of the Premises."},
-    {"s": "Tenant", "r": "security_deposit", "o": "$99,875.00",
-     "source": "Tenant shall deposit with Landlord a security deposit of $99,875.00 upon execution of this Lease, held as security for Tenant's performance under this Lease."},
-    {"s": "Premises", "r": "term_length", "o": "84 months",
-     "source": "The initial Term of this Lease shall be 84 months, commencing on the Commencement Date."},
-    {"s": "Renewal Option", "r": "renewal_notice_window", "o": "270 days",
-     "source": "Tenant shall have one option to renew the Term for an additional period of 60 months, provided Tenant delivers written notice of its election to renew not less than 270 days prior to the expiration of the initial Term."},
-    {"s": "Tenant", "r": "parking_spaces", "o": "46 spaces",
-     "source": "Tenant shall be entitled to 46 unreserved parking spaces in the Building's parking structure at no additional charge during the initial Term."},
-    {"s": "Tenant", "r": "late_charge_rate", "o": "5.00%",
-     "source": "Any Base Rent payment not received within 5 days of its due date shall be subject to a late charge equal to 5.00% of the overdue amount."},
-    {"s": "Tenant", "r": "late_charge_grace", "o": "5 days",
-     "source": "Any Base Rent payment not received within 5 days of its due date shall be subject to a late charge equal to 5.00% of the overdue amount."},
-    {"s": "Suite 410", "r": "rofr_sf", "o": "6,200 square feet",
-     "source": "Tenant shall have a right of first refusal on the adjacent Suite 410, comprising 6,200 rentable square feet, should it become available for lease during the initial Term."}
+    {
+      "s": "Premises",
+      "r": "rentable_sf",
+      "o": "18,400 square feet",
+      "source": "The Premises consist of 18,400 rentable square feet and 15,600 usable square feet, reflecting a load factor of 1.18."
+    },
+    {
+      "s": "Premises",
+      "r": "usable_sf",
+      "o": "15,600 square feet",
+      "source": "The Premises consist of 18,400 rentable square feet and 15,600 usable square feet, reflecting a load factor of 1.18."
+    },
+    {
+      "s": "Premises",
+      "r": "load_factor",
+      "o": "1.18",
+      "source": "The Premises consist of 18,400 rentable square feet and 15,600 usable square feet, reflecting a load factor of 1.18."
+    },
+    {
+      "s": "Premises",
+      "r": "base_rent",
+      "o": "$34.50 per square foot per year",
+      "source": "Base Rent for the Premises during the initial Lease Year shall be $34.50 per square foot per year, payable in equal monthly installments.",
+      "when": {
+        "term": "initial"
+      }
+    },
+    {
+      "s": "Premises",
+      "r": "base_rent",
+      "o": "$38.00 per square foot per year",
+      "source": "If Tenant exercises the Renewal Option, Base Rent during the renewal term shall be adjusted to $38.00 per square foot per year, subject to further annual escalation of 3.00%.",
+      "when": {
+        "term": "renewal"
+      }
+    },
+    {
+      "s": "Premises",
+      "r": "escalation_rate",
+      "o": "3.00% per annum",
+      "source": "Base Rent shall increase by 3.00% per annum on each anniversary of the Commencement Date throughout the initial Term."
+    },
+    {
+      "s": "Premises",
+      "r": "opex_stop",
+      "o": "$12.75 per square foot per year",
+      "source": "Landlord shall be responsible for Operating Expenses up to a stop of $12.75 per square foot per year, with Tenant responsible for its pro rata share of Operating Expenses in excess of the stop."
+    },
+    {
+      "s": "Premises",
+      "r": "ti_allowance",
+      "o": "$45.00 per square foot",
+      "source": "Landlord shall provide Tenant a tenant improvement allowance of $45.00 per square foot toward the cost of Tenant's initial build-out of the Premises."
+    },
+    {
+      "s": "Tenant",
+      "r": "security_deposit",
+      "o": "$99,875.00",
+      "source": "Tenant shall deposit with Landlord a security deposit of $99,875.00 upon execution of this Lease, held as security for Tenant's performance under this Lease."
+    },
+    {
+      "s": "Premises",
+      "r": "term_length",
+      "o": "84 months",
+      "source": "The initial Term of this Lease shall be 84 months, commencing on the Commencement Date."
+    },
+    {
+      "s": "Renewal Option",
+      "r": "renewal_notice_window",
+      "o": "270 days",
+      "source": "Tenant shall have one option to renew the Term for an additional period of 60 months, provided Tenant delivers written notice of its election to renew not less than 270 days prior to the expiration of the initial Term."
+    },
+    {
+      "s": "Tenant",
+      "r": "parking_spaces",
+      "o": "46 spaces",
+      "source": "Tenant shall be entitled to 46 unreserved parking spaces in the Building's parking structure at no additional charge during the initial Term."
+    },
+    {
+      "s": "Tenant",
+      "r": "late_charge_rate",
+      "o": "5.00%",
+      "source": "Any Base Rent payment not received within 5 days of its due date shall be subject to a late charge equal to 5.00% of the overdue amount."
+    },
+    {
+      "s": "Tenant",
+      "r": "late_charge_grace",
+      "o": "5 days",
+      "source": "Any Base Rent payment not received within 5 days of its due date shall be subject to a late charge equal to 5.00% of the overdue amount."
+    },
+    {
+      "s": "Suite 410",
+      "r": "rofr_sf",
+      "o": "6,200 square feet",
+      "source": "Tenant shall have a right of first refusal on the adjacent Suite 410, comprising 6,200 rentable square feet, should it become available for lease during the initial Term."
+    }
   ]
 }

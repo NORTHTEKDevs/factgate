@@ -2,55 +2,165 @@
   "domain": "pharma-stability-blind",
   "corpus": "Norvectra Insulin Solution for Injection (100 units/mL) must be stored under refrigeration at 2 to 8 degrees Celsius prior to first use. Do not freeze. Once a vial has been punctured, the in-use stability period is 28 days when stored at 2 to 8 degrees Celsius or at controlled room temperature not exceeding 25 degrees Celsius. The unopened vial shelf life is 24 months from the date of manufacture when stored under the labeled refrigerated conditions. Assay acceptance criteria for Norvectra Insulin Solution require the potency to fall within 95.0 to 105.0 percent of label claim throughout the shelf life.\n\nCalyxen Oral Suspension is intended for storage at controlled room temperature, defined as 25 +/- 2 degrees Celsius, with excursions permitted between 15 and 30 degrees Celsius. The recommended relative humidity range for warehouse storage of Calyxen Oral Suspension is 35 to 65 percent RH. After reconstitution by the pharmacist, Calyxen Oral Suspension is stable for 14 days when kept at 2 to 8 degrees Celsius. The unreconstituted powder has a shelf life of 36 months. Assay acceptance criteria for Calyxen Oral Suspension require the active ingredient content to remain within 90.0 to 110.0 percent of label claim.\n\nFerovax Lyophilized Powder for Injection must be stored frozen at -20 +/- 5 degrees Celsius until reconstitution. A single temperature excursion of up to 24 hours at 2 to 8 degrees Celsius is permitted during transport without requiring product disposition review. Once reconstituted with the accompanying diluent, Ferovax Lyophilized Powder for Injection must be used within 6 hours if kept at controlled room temperature, or within 24 hours if kept refrigerated at 2 to 8 degrees Celsius. The lyophilized cake carries a shelf life of 48 months from the date of manufacture. Assay acceptance criteria for Ferovax Lyophilized Powder for Injection require potency within 95.0 to 105.0 percent of label claim at release and throughout shelf life.\n\nTrenalix Transdermal Patch is stored at controlled room temperature, 20 to 25 degrees Celsius, with brief excursions permitted up to 30 degrees Celsius for no more than 72 hours cumulative. Trenalix Transdermal Patch has a shelf life of 18 months from the date of manufacture. Warehouse relative humidity for Trenalix Transdermal Patch storage must not exceed 60 percent RH. Assay acceptance criteria for Trenalix Transdermal Patch require drug content of 92.5 to 107.5 percent of label claim.",
   "entities": {
-    "Norvectra Insulin Solution for Injection": ["Norvectra", "Norvectra Insulin Solution", "Norvectra Insulin"],
-    "Calyxen Oral Suspension": ["Calyxen", "Calyxen Suspension"],
-    "Ferovax Lyophilized Powder for Injection": ["Ferovax", "Ferovax Lyophilized Powder", "Ferovax Powder"],
-    "Trenalix Transdermal Patch": ["Trenalix", "Trenalix Patch"]
+    "Norvectra Insulin Solution for Injection": [
+      "Norvectra",
+      "Norvectra Insulin Solution",
+      "Norvectra Insulin"
+    ],
+    "Calyxen Oral Suspension": [
+      "Calyxen",
+      "Calyxen Suspension"
+    ],
+    "Ferovax Lyophilized Powder for Injection": [
+      "Ferovax",
+      "Ferovax Lyophilized Powder",
+      "Ferovax Powder"
+    ],
+    "Trenalix Transdermal Patch": [
+      "Trenalix",
+      "Trenalix Patch"
+    ]
   },
   "relations": {
-    "storage_temperature": {"kind": "quantity", "question": "what is the storage temperature of {entity}?"},
-    "shelf_life": {"kind": "quantity", "question": "what is the shelf life of {entity}?"},
-    "in_use_stability": {"kind": "quantity", "question": "what is the in-use stability period of {entity}?"},
-    "assay_acceptance_criteria": {"kind": "quantity", "question": "what is the assay acceptance criteria of {entity}?"},
-    "relative_humidity": {"kind": "quantity", "question": "what is the recommended relative humidity for storage of {entity}?"}
+    "storage_temperature": {
+      "kind": "quantity",
+      "question": "what is the storage temperature of {entity}?"
+    },
+    "shelf_life": {
+      "kind": "quantity",
+      "question": "what is the shelf life of {entity}?"
+    },
+    "in_use_stability": {
+      "kind": "quantity",
+      "question": "what is the in-use stability period of {entity}?"
+    },
+    "assay_acceptance_criteria": {
+      "kind": "quantity",
+      "question": "what is the assay acceptance criteria of {entity}?"
+    },
+    "relative_humidity": {
+      "kind": "quantity",
+      "question": "what is the recommended relative humidity for storage of {entity}?"
+    }
   },
-  "conditions": ["storage"],
-  "value_qualifiers": ["approximately", "about", "nominally", "up to"],
-  "unit_aliases": {"%": "percent", "RH": "percent", "degrees C": "degrees Celsius", "°C": "degrees Celsius"},
+  "conditions": [
+    "storage"
+  ],
+  "value_qualifiers": [
+    "about",
+    "approximately",
+    "every",
+    "nominally",
+    "up to"
+  ],
+  "unit_aliases": {
+    "%": "percent",
+    "RH": "percent",
+    "degrees C": "degrees Celsius",
+    "°C": "degrees Celsius"
+  },
   "facts": [
-    {"s": "Norvectra Insulin Solution for Injection", "r": "storage_temperature", "o": "2 to 8 degrees Celsius",
-     "source": "Norvectra Insulin Solution for Injection (100 units/mL) must be stored under refrigeration at 2 to 8 degrees Celsius prior to first use."},
-    {"s": "Norvectra Insulin Solution for Injection", "r": "shelf_life", "o": "24 months",
-     "source": "The unopened vial shelf life is 24 months from the date of manufacture when stored under the labeled refrigerated conditions."},
-    {"s": "Norvectra Insulin Solution for Injection", "r": "in_use_stability", "o": "28 days",
-     "source": "Once a vial has been punctured, the in-use stability period is 28 days when stored at 2 to 8 degrees Celsius or at controlled room temperature not exceeding 25 degrees Celsius."},
-    {"s": "Norvectra Insulin Solution for Injection", "r": "assay_acceptance_criteria", "o": "95.0 to 105.0 percent",
-     "source": "Assay acceptance criteria for Norvectra Insulin Solution require the potency to fall within 95.0 to 105.0 percent of label claim throughout the shelf life."},
-    {"s": "Calyxen Oral Suspension", "r": "storage_temperature", "o": "23 to 27 degrees Celsius",
-     "source": "Calyxen Oral Suspension is intended for storage at controlled room temperature, defined as 25 +/- 2 degrees Celsius, with excursions permitted between 15 and 30 degrees Celsius."},
-    {"s": "Calyxen Oral Suspension", "r": "relative_humidity", "o": "35 to 65 percent RH",
-     "source": "The recommended relative humidity range for warehouse storage of Calyxen Oral Suspension is 35 to 65 percent RH."},
-    {"s": "Calyxen Oral Suspension", "r": "in_use_stability", "o": "14 days",
-     "source": "After reconstitution by the pharmacist, Calyxen Oral Suspension is stable for 14 days when kept at 2 to 8 degrees Celsius."},
-    {"s": "Calyxen Oral Suspension", "r": "shelf_life", "o": "36 months",
-     "source": "The unreconstituted powder has a shelf life of 36 months."},
-    {"s": "Calyxen Oral Suspension", "r": "assay_acceptance_criteria", "o": "90.0 to 110.0 percent",
-     "source": "Assay acceptance criteria for Calyxen Oral Suspension require the active ingredient content to remain within 90.0 to 110.0 percent of label claim."},
-    {"s": "Ferovax Lyophilized Powder for Injection", "r": "storage_temperature", "o": "-20 degrees Celsius",
-     "source": "Ferovax Lyophilized Powder for Injection must be stored frozen at -20 +/- 5 degrees Celsius until reconstitution."},
-    {"s": "Ferovax Lyophilized Powder for Injection", "r": "in_use_stability", "o": "6 hours",
-     "source": "Once reconstituted with the accompanying diluent, Ferovax Lyophilized Powder for Injection must be used within 6 hours if kept at controlled room temperature, or within 24 hours if kept refrigerated at 2 to 8 degrees Celsius.",
-     "when": {"storage": "room_temperature"}},
-    {"s": "Ferovax Lyophilized Powder for Injection", "r": "in_use_stability", "o": "24 hours",
-     "source": "Once reconstituted with the accompanying diluent, Ferovax Lyophilized Powder for Injection must be used within 6 hours if kept at controlled room temperature, or within 24 hours if kept refrigerated at 2 to 8 degrees Celsius.",
-     "when": {"storage": "refrigerated"}},
-    {"s": "Ferovax Lyophilized Powder for Injection", "r": "shelf_life", "o": "48 months",
-     "source": "The lyophilized cake carries a shelf life of 48 months from the date of manufacture."},
-    {"s": "Ferovax Lyophilized Powder for Injection", "r": "assay_acceptance_criteria", "o": "95.0 to 105.0 percent",
-     "source": "Assay acceptance criteria for Ferovax Lyophilized Powder for Injection require potency within 95.0 to 105.0 percent of label claim at release and throughout shelf life."},
-    {"s": "Trenalix Transdermal Patch", "r": "storage_temperature", "o": "20 to 25 degrees Celsius",
-     "source": "Trenalix Transdermal Patch is stored at controlled room temperature, 20 to 25 degrees Celsius, with brief excursions permitted up to 30 degrees Celsius for no more than 72 hours cumulative."},
-    {"s": "Trenalix Transdermal Patch", "r": "shelf_life", "o": "18 months",
-     "source": "Trenalix Transdermal Patch has a shelf life of 18 months from the date of manufacture."}
+    {
+      "s": "Norvectra Insulin Solution for Injection",
+      "r": "storage_temperature",
+      "o": "2 to 8 degrees Celsius",
+      "source": "Norvectra Insulin Solution for Injection (100 units/mL) must be stored under refrigeration at 2 to 8 degrees Celsius prior to first use."
+    },
+    {
+      "s": "Norvectra Insulin Solution for Injection",
+      "r": "shelf_life",
+      "o": "24 months",
+      "source": "The unopened vial shelf life is 24 months from the date of manufacture when stored under the labeled refrigerated conditions."
+    },
+    {
+      "s": "Norvectra Insulin Solution for Injection",
+      "r": "in_use_stability",
+      "o": "28 days",
+      "source": "Once a vial has been punctured, the in-use stability period is 28 days when stored at 2 to 8 degrees Celsius or at controlled room temperature not exceeding 25 degrees Celsius."
+    },
+    {
+      "s": "Norvectra Insulin Solution for Injection",
+      "r": "assay_acceptance_criteria",
+      "o": "95.0 to 105.0 percent",
+      "source": "Assay acceptance criteria for Norvectra Insulin Solution require the potency to fall within 95.0 to 105.0 percent of label claim throughout the shelf life."
+    },
+    {
+      "s": "Calyxen Oral Suspension",
+      "r": "storage_temperature",
+      "o": "23 to 27 degrees Celsius",
+      "source": "Calyxen Oral Suspension is intended for storage at controlled room temperature, defined as 25 +/- 2 degrees Celsius, with excursions permitted between 15 and 30 degrees Celsius."
+    },
+    {
+      "s": "Calyxen Oral Suspension",
+      "r": "relative_humidity",
+      "o": "35 to 65 percent RH",
+      "source": "The recommended relative humidity range for warehouse storage of Calyxen Oral Suspension is 35 to 65 percent RH."
+    },
+    {
+      "s": "Calyxen Oral Suspension",
+      "r": "in_use_stability",
+      "o": "14 days",
+      "source": "After reconstitution by the pharmacist, Calyxen Oral Suspension is stable for 14 days when kept at 2 to 8 degrees Celsius."
+    },
+    {
+      "s": "Calyxen Oral Suspension",
+      "r": "shelf_life",
+      "o": "36 months",
+      "source": "The unreconstituted powder has a shelf life of 36 months."
+    },
+    {
+      "s": "Calyxen Oral Suspension",
+      "r": "assay_acceptance_criteria",
+      "o": "90.0 to 110.0 percent",
+      "source": "Assay acceptance criteria for Calyxen Oral Suspension require the active ingredient content to remain within 90.0 to 110.0 percent of label claim."
+    },
+    {
+      "s": "Ferovax Lyophilized Powder for Injection",
+      "r": "storage_temperature",
+      "o": "-20 degrees Celsius",
+      "source": "Ferovax Lyophilized Powder for Injection must be stored frozen at -20 +/- 5 degrees Celsius until reconstitution."
+    },
+    {
+      "s": "Ferovax Lyophilized Powder for Injection",
+      "r": "in_use_stability",
+      "o": "6 hours",
+      "source": "Once reconstituted with the accompanying diluent, Ferovax Lyophilized Powder for Injection must be used within 6 hours if kept at controlled room temperature, or within 24 hours if kept refrigerated at 2 to 8 degrees Celsius.",
+      "when": {
+        "storage": "room_temperature"
+      }
+    },
+    {
+      "s": "Ferovax Lyophilized Powder for Injection",
+      "r": "in_use_stability",
+      "o": "24 hours",
+      "source": "Once reconstituted with the accompanying diluent, Ferovax Lyophilized Powder for Injection must be used within 6 hours if kept at controlled room temperature, or within 24 hours if kept refrigerated at 2 to 8 degrees Celsius.",
+      "when": {
+        "storage": "refrigerated"
+      }
+    },
+    {
+      "s": "Ferovax Lyophilized Powder for Injection",
+      "r": "shelf_life",
+      "o": "48 months",
+      "source": "The lyophilized cake carries a shelf life of 48 months from the date of manufacture."
+    },
+    {
+      "s": "Ferovax Lyophilized Powder for Injection",
+      "r": "assay_acceptance_criteria",
+      "o": "95.0 to 105.0 percent",
+      "source": "Assay acceptance criteria for Ferovax Lyophilized Powder for Injection require potency within 95.0 to 105.0 percent of label claim at release and throughout shelf life."
+    },
+    {
+      "s": "Trenalix Transdermal Patch",
+      "r": "storage_temperature",
+      "o": "20 to 25 degrees Celsius",
+      "source": "Trenalix Transdermal Patch is stored at controlled room temperature, 20 to 25 degrees Celsius, with brief excursions permitted up to 30 degrees Celsius for no more than 72 hours cumulative."
+    },
+    {
+      "s": "Trenalix Transdermal Patch",
+      "r": "shelf_life",
+      "o": "18 months",
+      "source": "Trenalix Transdermal Patch has a shelf life of 18 months from the date of manufacture."
+    }
   ]
 }

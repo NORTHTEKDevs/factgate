@@ -570,3 +570,44 @@ def test_normalise_value_is_idempotent(value):
     fs = FactSet.from_dict({**BASE, "value_qualifiers": ["download"]})
     once = fs.normalise_value(value)
     assert fs.normalise_value(once) == once
+
+
+def test_the_value_shape_allowance_scales_with_the_declared_value():
+    """A fixed three-word limit assumes every value is short. An aviation schedule declares
+    "4,000 flight hours or 24 months, whichever comes first" -- nine words -- and asked for
+    it the model answered that value with one leading word, "every". The filter discarded
+    it as prose before anything could adjudicate it.
+
+    Nine holds across the blind domains were this, and they were invisible: no claim
+    reached the gate, so no suggestion could be made about them either. They are now
+    claims, and `suggest_qualifiers` proposes the single word that would verify them."""
+    from factgate.domain.link import normalise_slot_answer
+    from factgate.domain.suggest import suggest_qualifiers
+    declared = "4,000 flight hours or 24 months, whichever comes first"
+    answer = "every 4,000 flight hours or 24 months, whichever comes first."
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"bearing": []},
+        "relations": {"interval": {"kind": "text"}},
+        "facts": [{"s": "bearing", "r": "interval", "o": declared,
+                   "source": f"The bearing shall be inspected every {declared}."}]})
+    assert normalise_slot_answer(answer, fs) is None                  # old behaviour
+    kept = normalise_slot_answer(answer, fs, declared)
+    assert kept == "every " + declared
+    assert [i["qualifier"] for i in
+            suggest_qualifiers(fs, [("bearing", "interval", kept)])] == ["every"]
+
+
+@pytest.mark.parametrize("prose", [
+    "I am sorry, I cannot answer that from the passage.",
+    "The passage discusses several intervals but does not give one for this component",
+    "Not provided",
+])
+def test_a_longer_allowance_does_not_let_prose_through(prose):
+    """The allowance must not become a licence: refusals and commentary are still absent,
+    however long the declared value is."""
+    from factgate.domain.link import normalise_slot_answer
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"x": []}, "relations": {"r": {"kind": "text"}},
+        "facts": [{"s": "x", "r": "r", "o": "a b c d e f g h i",
+                   "source": "It is a b c d e f g h i."}]})
+    assert normalise_slot_answer(prose, fs, "a b c d e f g h i") is None

@@ -145,7 +145,8 @@ def _surface_matches(surface: str, normalised_text: str) -> bool:
     return False
 
 
-def normalise_slot_answer(raw: str | None, fs: FactSet | None = None) -> str | None:
+def normalise_slot_answer(raw: str | None, fs: FactSet | None = None,
+                          declared: str | None = None) -> str | None:
     """Clean a slot answer, or None if the model reported the value as absent.
 
     When `fs` is supplied, the value-shape test gets a second chance against the DOMAIN's
@@ -189,7 +190,16 @@ def normalise_slot_answer(raw: str | None, fs: FactSet | None = None) -> str | N
     # with a digit, so the value-shape whitelist discarded it before the gate saw it.
     if parse_range(s) is not None:
         return s
-    if len(s.split()) > 3 or any(p in s for p in (". ", "; ", ", however")):
+    # The word allowance scales with the value the DOMAIN declared for this slot. A fixed
+    # limit of three assumes every value is short, and an aviation schedule declares
+    # "4,000 flight hours or 24 months, whichever comes first" -- nine words. Asked for it,
+    # the model answered "every 4,000 flight hours or 24 months, whichever comes first",
+    # which is the declared value with one leading word, and the filter discarded it as
+    # prose before anything could adjudicate it. Nine holds across the blind domains were
+    # this, and they were invisible: no claim reached the gate, so no suggestion could be
+    # made about them either.
+    limit = 3 if not declared else max(3, len(str(declared).split()) + 3)
+    if len(s.split()) > limit or any(p in s for p in (". ", "; ", ", however")):
         if fs is not None:
             stripped = fs.normalise_value(s) or ""
             if stripped and stripped != s and normalise_slot_answer(stripped) is not None:
@@ -431,7 +441,10 @@ def link_targeted(text: str, fs: FactSet, model: str,
                 continue
             answer = ollama(model, SLOT_PROMPT.format(
                 text=text, question=slot_question(fs, entity, relation)), 60, **kw)
-            value = normalise_slot_answer(answer, fs)
+            declared_fact = fs.lookup(entity, relation)
+            declared_o = declared_fact.o if declared_fact else next(
+                (v.o for v in fs.variants(entity, relation)), None)
+            value = normalise_slot_answer(answer, fs, declared_o)
             if value is not None:
                 value = respell_from_passage(value, text)
             # The extractor emitted a word the passage does not contain. Ask ONCE more,
