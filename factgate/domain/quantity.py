@@ -69,6 +69,8 @@ def _currency_quantity(raw: str) -> Quantity | None:
         if m.lastindex and m.lastindex >= 4 and m.group(4):
             unit += re.sub(r"\s*", "", m.group(4)).lower()
         return Quantity(value, unit)
+    if len(raw) > MAX_VALUE_CHARS:
+        return None
     m = _WORDY_RE.match(raw)
     if m and m.group(3).lower() in _CURRENCY_WORDS:
         value = float(m.group(1).replace(",", ""))
@@ -80,7 +82,7 @@ def _currency_quantity(raw: str) -> Quantity | None:
 
 def parse_quantity(raw: str | None) -> Quantity | None:
     """Parse "15 mg/kg" -> Quantity(15.0, "mg/kg"). None if not a quantity."""
-    if not raw:
+    if not raw or len(raw) > MAX_VALUE_CHARS:
         return None
     cur = _currency_quantity(raw)
     if cur is not None:
@@ -96,6 +98,17 @@ def parse_quantity(raw: str | None) -> Quantity | None:
     # NOT .lower(): "mg" and "Mg" are milligram and megagram, a factor of 10^9.
     return Quantity(value, re.sub(r"\s*", "", unit))
 
+
+# A value is a short phrase. Anything longer is not a value, and the cap is what keeps the
+# parser's cost bounded no matter what a model emits.
+#
+# MEASURED: a claim consisting of a run of digits cost O(n^2) in the quantity regex --
+# 256 chars 5 ms, 512 chars 18.5 ms, 1024 chars 76.6 ms, 2048 chars 303.8 ms, and one
+# reported 15.5 SECONDS for a single gate_claim. That is a denial of service reachable
+# from a CLAIM, which arrives from the model at runtime, rather than from a fact set the
+# operator installs once. Over-long input parses as nothing, which the gate turns into
+# HELD.
+MAX_VALUE_CHARS = 512
 
 MATCH, DIFFER, INCOMPARABLE = "MATCH", "DIFFER", "INCOMPARABLE"
 
@@ -149,7 +162,7 @@ def parse_range(raw: str | None, allow_unitless: bool = False) -> Range | None:
     a claim of "2024" as a point inside it. The declared kind is the author saying which
     reading they meant, and that is the only thing that can distinguish the two.
     """
-    if not raw:
+    if not raw or len(raw) > MAX_VALUE_CHARS:
         return None
     m = _OPEN_RANGE_RE.match(raw)
     if m:
@@ -336,6 +349,9 @@ def compare_values(declared: str, claimed: str | None, numeric: bool = False) ->
     would be worse: "10 mg/kg per day" prefixes identically and means something else.
     """
     if claimed is None:
+        return INCOMPARABLE
+    # Nothing longer than a value can be compared as one. Bounds every regex below.
+    if len(declared) > MAX_VALUE_CHARS or len(claimed) > MAX_VALUE_CHARS:
         return INCOMPARABLE
     # A currency value and a non-currency one are not competing readings of the same
     # slot, they are a category error. Measured: asked "how much is the raise?" on a

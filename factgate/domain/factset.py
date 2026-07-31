@@ -348,7 +348,15 @@ class FactSet:
             out = pat.sub(f" {canon} ", out)
         # Remove brackets this stripping just emptied: "$79(download)" -> "$79( )".
         # Tidying the strip's own residue, not inferring meaning.
-        out = re.sub(r"[(\[{]\s*[)\]}]", " ", out)
+        # Repeat until stable: one pass removes one level, so "(( ))" became "( )" and a
+        # second call changed it again. normalise_value must be idempotent -- a value's
+        # meaning cannot depend on how many times it has been normalised, and both the
+        # gate and the suggestion machinery call it more than once on the same string.
+        for _ in range(8):
+            reduced = re.sub(r"[(\[{]\s*[)\]}]", " ", out)
+            if reduced == out:
+                break
+            out = reduced
         # Same idea for separators the stripping orphaned. MEASURED: a domain declaring
         # "of the amount advanced" and "deducted at closing" turned the claim "2 percent of
         # the amount advanced, deducted at closing" into "2 percent ," -- a dangling comma

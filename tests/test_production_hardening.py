@@ -543,3 +543,30 @@ def test_legitimate_unit_aliases_are_not_flagged(aliases):
         "relations": {"r": {"kind": "quantity"}}, "unit_aliases": aliases,
         "facts": [{"s": "x", "r": "r", "o": "5 mg", "source": "It is 5 mg."}]})
     assert [p for p in fs.lint() if p["level"] == "error"] == []
+
+
+def test_a_long_claim_cannot_burn_the_cpu():
+    """MEASURED, and reachable from a CLAIM rather than from a fact set -- claims arrive
+    from the model at runtime, so this is a denial of service an operator cannot install
+    their way out of. A run of digits cost O(n^2) in the quantity regex: 256 chars 5 ms,
+    512 chars 18.5 ms, 1024 chars 76.6 ms, 2048 chars 303.8 ms, and one measurement
+    reported 15.5 SECONDS for a single gate_claim."""
+    import time
+    fs = FactSet.from_dict(BASE)
+    start = time.perf_counter()
+    for n in (2_000, 20_000, 200_000):
+        assert gate_claim(fs, "e", "p", "1" * n).status == HELD
+    assert time.perf_counter() - start < 1.0
+    # and ordinary claims are unaffected
+    assert gate_claim(fs, "e", "p", "5 mg").status == VERIFIED
+    assert gate_claim(fs, "e", "p", "9 mg").status == BLOCK
+
+
+@pytest.mark.parametrize("value", ["(( ))", "((a))", "[( )]", "((( )))", "$79(download)"])
+def test_normalise_value_is_idempotent(value):
+    """One pass removed one level of emptied brackets, so "(( ))" became "( )" and a second
+    call changed it again. A value's meaning cannot depend on how many times it has been
+    normalised, and both the gate and the suggestion machinery call it more than once."""
+    fs = FactSet.from_dict({**BASE, "value_qualifiers": ["download"]})
+    once = fs.normalise_value(value)
+    assert fs.normalise_value(once) == once
