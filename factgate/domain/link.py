@@ -145,8 +145,20 @@ def _surface_matches(surface: str, normalised_text: str) -> bool:
     return False
 
 
-def normalise_slot_answer(raw: str | None) -> str | None:
-    """Clean a slot answer, or None if the model reported the value as absent."""
+def normalise_slot_answer(raw: str | None, fs: FactSet | None = None) -> str | None:
+    """Clean a slot answer, or None if the model reported the value as absent.
+
+    When `fs` is supplied, the value-shape test gets a second chance against the DOMAIN's
+    declared qualifiers. Measured on a SaaS contract declaring "of submission": the model
+    answered "within 1 hour of submission", five words that do not lead with a digit, so
+    the shape whitelist discarded it before the gate ever saw it. The author had already
+    declared half of that phrase irrelevant.
+
+    The ORIGINAL text is returned, never the normalised form -- the gate does its own
+    normalisation, and the suggestion machinery needs the real wording to propose the
+    qualifier that is still missing. The effect is to turn an invisible extraction drop
+    into a visible, reviewable suggestion.
+    """
     if raw is None:
         return None
     # Take the first non-empty line. Models append commentary after the value -- measured
@@ -178,6 +190,10 @@ def normalise_slot_answer(raw: str | None) -> str | None:
     if parse_range(s) is not None:
         return s
     if len(s.split()) > 3 or any(p in s for p in (". ", "; ", ", however")):
+        if fs is not None:
+            stripped = fs.normalise_value(s) or ""
+            if stripped and stripped != s and normalise_slot_answer(stripped) is not None:
+                return s
         return None
     return s
 
@@ -415,7 +431,7 @@ def link_targeted(text: str, fs: FactSet, model: str,
                 continue
             answer = ollama(model, SLOT_PROMPT.format(
                 text=text, question=slot_question(fs, entity, relation)), 60, **kw)
-            value = normalise_slot_answer(answer)
+            value = normalise_slot_answer(answer, fs)
             if value is not None:
                 value = respell_from_passage(value, text)
             # The extractor emitted a word the passage does not contain. Ask ONCE more,

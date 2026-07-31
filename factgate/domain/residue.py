@@ -56,11 +56,15 @@ _SEGMENT = re.compile(r"[.;:!?]")
 # If any of these appears in the clause, the clause is not a plain assertion of the value
 # and no residue drawn from it can be trusted. Deliberately over-inclusive: the cost of a
 # false hold is a review, the cost of a false verify is the product's whole premise.
+# Only words that INVERT or EXCLUDE. The first version also listed contrast markers --
+# "other", "but", "however", "rather", "instead", "whereas" -- which cost real coverage for
+# no safety: a SaaS contract reading "upon 60 days written notice to the other party" was
+# held because of the word "other". Contrast markers are ordinary prose; clause scoping,
+# not a word list, is what keeps a residue from being harvested out of a different clause.
 _NEGATION = frozenset({
     "not", "n't", "never", "no", "nor", "none", "except", "excepting", "unless",
     "excluding", "excluded", "exclude", "without", "waived", "waive", "exempt",
-    "contraindicated", "contraindication", "instead", "rather", "other", "otherwise",
-    "but", "however", "although", "though", "whereas", "unlike", "versus", "vs",
+    "contraindicated", "contraindication",
 })
 
 _WORD = re.compile(r"[a-z']+")

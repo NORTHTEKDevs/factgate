@@ -19,16 +19,26 @@ from factgate.domain.factset import FactSet
 from factgate.domain.quantity import MATCH, compare_values
 
 
-def _residue(declared: str, claimed: str) -> str | None:
-    """The text left over once the declared value is removed from the claim."""
+def _residue(declared: str, claimed: str) -> tuple[str | None, str | None]:
+    """The text on each side of the declared value once it is removed from the claim.
+
+    Both sides matter and both may be needed at once: "within 1 hour of submission" is
+    rescued only by declaring "within" AND "of submission", so returning just the tail
+    produced no suggestion at all for a value one word away from a verdict.
+    """
     if not declared or not claimed:
-        return None
+        return None, None
     lead = re.search(r"[0-9][0-9,]*(?:\.[0-9]+)?", declared)
     if lead is None:
-        return None
+        return None, None
     idx = claimed.find(lead.group(0))
     if idx < 0:
-        return None
+        return None, None
+    # Text BEFORE the value is a qualifier too, and a common one: "within 1 hour",
+    # "up to 30 days", "at least 90 percent". Only trailing residue was proposed, so a
+    # SaaS contract answered "within 1 hour of submission" produced no suggestion at all
+    # even though "within" was the single word standing between it and a verdict.
+    head = claimed[:idx].strip(" ,.;:")
     tail = claimed[idx + len(lead.group(0)):]
     # Strip only the DECLARED value's own unit if the claim repeats it. Stripping any
     # leading letters instead ate the "per" out of "per customer query", proposing
@@ -36,7 +46,7 @@ def _residue(declared: str, claimed: str) -> str | None:
     declared_unit = declared[lead.end():].strip()
     if declared_unit and tail.lstrip().lower().startswith(declared_unit.lower()):
         tail = tail.lstrip()[len(declared_unit):]
-    return tail.strip(" ,.;:") or None
+    return (head or None, tail.strip(" ,.;:") or None)
 
 
 def suggest_qualifiers(fs: FactSet, held_claims) -> list[dict]:
@@ -56,15 +66,24 @@ def suggest_qualifiers(fs: FactSet, held_claims) -> list[dict]:
         fact = fs.lookup(entity, relation)
         if fact is None or compare_values(fact.o, fs.normalise_value(claimed)) == MATCH:
             continue
-        residue = _residue(fact.o, claimed)
-        if not residue:
-            continue
-        # Only propose it if removing the residue actually rescues the claim.
-        rescued = fs.normalise_value(claimed.replace(residue, "").strip(" ,.;:"))
-        if compare_values(fact.o, rescued) != MATCH:
-            continue
-        counts[residue] += 1
-        examples.setdefault(residue, (f"{entity}/{relation}", claimed))
+        head, tail = _residue(fact.o, claimed)
+        # Try the smallest declaration that works: the tail alone, the head alone, then
+        # both. Proposing more than is needed asks the author to declare wording
+        # irrelevant that never mattered.
+        for parts in ([tail], [head], [head, tail]):
+            parts = [x for x in parts if x]
+            if not parts:
+                continue
+            stripped = claimed
+            for x in parts:
+                stripped = stripped.replace(x, "")
+            if compare_values(fact.o,
+                              fs.normalise_value(stripped.strip(" ,.;:"))) != MATCH:
+                continue
+            for x in parts:
+                counts[x] += 1
+                examples.setdefault(x, (f"{entity}/{relation}", claimed))
+            break
 
     out = []
     for residue, n in counts.most_common():

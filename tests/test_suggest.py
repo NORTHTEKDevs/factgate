@@ -85,3 +85,41 @@ def test_renderer_says_so_when_there_is_nothing_to_suggest():
     from factgate.domain.suggest import render_suggestions
     fs = FactSet.from_dict(FACTS)
     assert "no qualifier" in render_suggestions(fs, []).lower()
+
+
+def test_suggests_a_leading_qualifier():
+    """Text BEFORE the value is a qualifier too, and a common one: "within 1 hour",
+    "up to 30 days", "at least 90 percent". Only trailing residue was proposed, so a SaaS
+    contract answered "within 1 hour of submission" produced NO suggestion at all even
+    though one word stood between it and a verdict."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"sev1": []},
+        "relations": {"response_time": {"kind": "quantity"}},
+        "value_qualifiers": ["of submission"],
+        "facts": [{"s": "sev1", "r": "response_time", "o": "1 hour",
+                   "source": "Severity 1 response time is within 1 hour of submission."}]})
+    out = suggest_qualifiers(fs, [("sev1", "response_time",
+                                   "within 1 hour of submission")])
+    assert [i["qualifier"] for i in out] == ["within"]
+
+
+def test_suggests_both_sides_when_both_are_needed():
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"sev1": []},
+        "relations": {"response_time": {"kind": "quantity"}},
+        "facts": [{"s": "sev1", "r": "response_time", "o": "1 hour",
+                   "source": "Severity 1 response time is within 1 hour of submission."}]})
+    out = {i["qualifier"] for i in suggest_qualifiers(
+        fs, [("sev1", "response_time", "within 1 hour of submission")])}
+    assert out == {"within", "of submission"}
+
+
+def test_prefers_the_smallest_declaration_that_works():
+    """Proposing more than is needed asks the author to declare wording irrelevant that
+    never mattered, and every such declaration is a chance to make a wrong value verify."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"x": []},
+        "relations": {"r": {"kind": "quantity"}},
+        "facts": [{"s": "x", "r": "r", "o": "5 mg", "source": "Give 5 mg once."}]})
+    out = [i["qualifier"] for i in suggest_qualifiers(fs, [("x", "r", "5 mg once")])]
+    assert out == ["once"]

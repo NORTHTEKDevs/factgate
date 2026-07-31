@@ -77,7 +77,7 @@ def gate_claim(fs: FactSet, entity_mention: str | None, relation: str,
         # the two comparison sites is exactly the split-path divergence that produced this
         # project's one fuzz-caught leak.
         hit = next((v for v in variants
-                    if compare_values(v.o, norm) == MATCH
+                    if compare_values(fs.normalise_value(v.o), norm) == MATCH
                     or source_grounded(v.o, norm or "", v.source, raw_claimed=claimed_value)),
                    None)
         keys = sorted({k for v in variants for k, _ in v.when})
@@ -90,8 +90,20 @@ def gate_claim(fs: FactSet, entity_mention: str | None, relation: str,
                        f"{entity!r}/{relation!r} is conditional on {keys}; that "
                        f"condition was not established, so {hit.o!r} cannot be confirmed", factset_fingerprint=fs.fingerprint)
 
-    # Normalisation is the DOMAIN's declaration, not an inference by the gate.
-    outcome = compare_values(fact.o, fs.normalise_value(claimed_value))
+    # Normalisation is the DOMAIN's declaration, not an inference by the gate, and it must
+    # be applied to BOTH sides. It was applied only to the claim, so a domain whose unit
+    # aliases matched its own declared values could not verify an exact answer:
+    #
+    #   declared "20 K/uL"  claimed "20 K/uL"  with unit_aliases {"K/uL": "thousand per
+    #   microliter"} -> the claim normalised and the declared value did not, so the gate
+    #   compared "20 K/uL" against "20 thousand per microliter" and HELD an identical
+    #   string. Three of seven holds on a fresh clinical-lab domain were this.
+    #
+    # Safe because lint() already refuses a fact set whose normalisation collapses two
+    # DISTINCT declared values onto the same string -- that check normalises declared
+    # values, so it covers unit aliases as well as qualifiers.
+    outcome = compare_values(fs.normalise_value(fact.o),
+                             fs.normalise_value(claimed_value))
     if outcome == MATCH:
         return Verdict(VERIFIED, entity, relation, claimed_value, fact.o, fact.source,
                        "claimed value matches the declared fact", factset_fingerprint=fs.fingerprint)
