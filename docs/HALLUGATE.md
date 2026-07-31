@@ -933,6 +933,21 @@ Of 123 faithful trials, ONE was the gate refusing a claim it should have confirm
 never reached the gate: mostly the model answering with several conditional values at once,
 where refusing to pick is correct, and a few missing entity aliases the library now names.
 
+The live soak over all twelve domains, including the three private ones:
+
+```
+SOAK  model=qwen2.5:14b  claims adjudicated=232
+  verdicts: {VERIFIED: 177, BLOCK: 27, HELD: 28}
+  INVARIANTS HELD on every live verdict
+```
+
+It did not pass first time. It reported three S1 violations on verdicts where declared and
+claimed were BYTE-IDENTICAL, because S1 compared the raw declared value against the
+normalised claim -- the same asymmetry that had just been fixed in the gate, in a harness
+that had not been updated with it. Worth recording rather than quietly correcting: the
+check failed loudly instead of agreeing, which is the only reason the alternative, that the
+gate had begun verifying something it should not, could be ruled out by inspection.
+
 ## Reproduce
 
 ```bash

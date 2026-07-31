@@ -173,6 +173,10 @@ Authoring five domains in unseen genres found five defects that eight domains ne
 touched, including one that reported a faithful clinical answer as contradicting its own
 protocol. Details in [`docs/HALLUGATE.md`](docs/HALLUGATE.md).
 
+Live soak over all twelve domains including the three private ones: 232 claims
+adjudicated, `{VERIFIED: 177, BLOCK: 27, HELD: 28}`, every safety invariant holding on
+every verdict a real model produced.
+
 **Still not certified for unsupervised use.** No deployment has run without a human
 reviewing the held queue, the two real documents cost a review pass each, and the private
 evaluation corpora are not in this repository so those two rows cannot be reproduced from
