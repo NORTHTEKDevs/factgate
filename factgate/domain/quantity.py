@@ -131,12 +131,23 @@ _OPEN_RANGE_RE = re.compile(
     r"([a-zA-Zµ%°][a-zA-Zµ%°/\s]*)?\+\s*$")
 
 
-def parse_range(raw: str | None) -> Range | None:
+def parse_range(raw: str | None, allow_unitless: bool = False) -> Range | None:
     """Parse a range, or None.
 
     Reversed bounds are rejected rather than swapped: "10-5" is a typo, and silently
     reinterpreting it would accept a bad declaration. A trailing "+" gives an open upper
     bound.
+
+    A range with NO unit -- "150-400", "4.6-5.2", "0.65-0.72" -- parses only when the
+    caller asks for it, and the caller only asks when the domain declared the relation
+    kind "quantity". Unitless ranges are ordinary in real documents (pH, water activity,
+    platelet counts, ratios, index scores) and a food specification could not even be
+    LOADED without this: kind=quantity rejected its own declared value.
+
+    It is opt-in rather than automatic because plenty of TEXT looks like a range. A
+    declared "2024-2025" academic year would otherwise acquire range semantics and confirm
+    a claim of "2024" as a point inside it. The declared kind is the author saying which
+    reading they meant, and that is the only thing that can distinguish the two.
     """
     if not raw:
         return None
@@ -150,7 +161,9 @@ def parse_range(raw: str | None) -> Range | None:
         if mag:
             low *= _MAGNITUDE[mag.lower()]
         unit = _CURRENCY[cur] if cur else re.sub(r"\s*", "", tail or "")
-        return Range(low, float("inf"), unit) if unit else None
+        if not unit and not allow_unitless:
+            return None
+        return Range(low, float("inf"), unit)
     m = _RANGE_RE.match(raw)
     if not m:
         return None
@@ -167,12 +180,13 @@ def parse_range(raw: str | None) -> Range | None:
         return None
     cur = cur_lo or cur_hi
     unit = _CURRENCY[cur] if cur else re.sub(r"\s*", "", tail or "")
-    if not unit:
+    if not unit and not allow_unitless:
         return None
     return Range(low, high, unit)
 
 
-def _leading_range(claimed: str, declared: Range) -> Range | None:
+def _leading_range(claimed: str, declared: Range,
+                   allow_unitless: bool = False) -> Range | None:
     """Recover a range from a claim carrying a trailing clause.
 
     Measured: declared "12-16 weeks", model answered "12-16 weeks after v0.5", which parses
@@ -189,7 +203,7 @@ def _leading_range(claimed: str, declared: Range) -> Range | None:
     tokens = claimed.split()
     for n in range(len(tokens), 0, -1):
         candidate = " ".join(tokens[:n]).rstrip(".,;:")
-        r = parse_range(candidate)
+        r = parse_range(candidate, allow_unitless)
         if r is None or r.unit != declared.unit:
             continue
         rest = " ".join(tokens[n:]).strip(" ,.;:")
@@ -200,7 +214,7 @@ def _leading_range(claimed: str, declared: Range) -> Range | None:
     return None
 
 
-def _compare_range(declared: str, claimed: str) -> str | None:
+def _compare_range(declared: str, claimed: str, numeric: bool = False) -> str | None:
     """Comparison when either side is a range. None if neither side is one.
 
     Deliberate asymmetry: a POINT inside a declared RANGE verifies (the document supports
@@ -208,7 +222,7 @@ def _compare_range(declared: str, claimed: str) -> str | None:
     confirm a specific value, and treating it as a match would let a reader infer the
     whole span is document-supported.
     """
-    dr, cr = parse_range(declared), parse_range(claimed)
+    dr, cr = (parse_range(declared, numeric), parse_range(claimed, numeric))
     # Whether the claim needed a fallback, i.e. carries text the parser did not consume.
     # FOUND BY FUZZING: without this, unexplained trailing text was ignored on the range
     # paths while the point path rejected it, so "US$5,547M+ per query" VERIFIED against a
@@ -216,7 +230,7 @@ def _compare_range(declared: str, claimed: str) -> str | None:
     # is provably other however it is dressed) but it must never support a MATCH.
     inexact = False
     if dr is not None and cr is None:
-        cr = _leading_range(claimed, dr)
+        cr = _leading_range(claimed, dr, numeric)
         inexact = cr is not None
     if dr is None and cr is None:
         return None
@@ -309,7 +323,7 @@ def _currency_mismatch(declared: str, claimed: str | None) -> bool:
     return d is not None and c is not None and d != c
 
 
-def compare_values(declared: str, claimed: str | None) -> str:
+def compare_values(declared: str, claimed: str | None, numeric: bool = False) -> str:
     """Three-valued comparison. The third value is the safety-critical one.
 
     MATCH        -- provably the declared value
@@ -329,7 +343,7 @@ def compare_values(declared: str, claimed: str | None) -> str:
     # amount is meaningless, and DIFFER would wrongly imply a contradiction.
     if _currency_mismatch(declared, claimed):
         return INCOMPARABLE
-    ranged = _compare_range(declared, claimed)
+    ranged = _compare_range(declared, claimed, numeric)
     if ranged is not None:
         return ranged
     dq, cq = parse_quantity(declared), parse_quantity(claimed)

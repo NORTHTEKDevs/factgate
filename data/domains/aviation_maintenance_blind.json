@@ -1,0 +1,135 @@
+{
+  "domain": "aviation-maintenance-blind",
+  "corpus": "AIRCRAFT MAINTENANCE INTERVAL SCHEDULE - MODEL FB-220 TURBOPROP\n\nSECTION 1: SCHEDULED INSPECTIONS\n\nThe Main Landing Gear Wheel Bearing shall be inspected and repacked every 4,000 flight hours or 24 months, whichever comes first. The Nose Gear Strut requires servicing every 2,500 flight hours or 18 months, whichever comes first. The Brake Wear Pin must be visually checked every 400 flight hours or 6 months, whichever comes first.\n\nThe Engine Oil Filter shall be replaced every 300 flight hours or 400 cycles, whichever comes first. The Cabin Air Filter is replaced every 1,200 flight hours or 12 months, whichever comes first. The Fuel Boost Pump receives an operational check every 800 flight hours or 6 months, whichever comes first.\n\nSECTION 2: TORQUE VALUES\n\nThe Cargo Door Actuator attachment bolts shall be torqued to 450 inch-pounds (50.8 newton-metres). The Engine Fan Blade root fasteners shall be torqued to 850 inch-pounds (96.0 newton-metres). The Wheel Well Fire Detection Loop mounting clamps shall be torqued to 35 inch-pounds (4.0 newton-metres).\n\nSECTION 3: FLUID CAPACITIES\n\nThe Hydraulic Reservoir holds a fluid capacity of 4.5 US gallons. The Engine Oil Filter system, including sump, holds a fluid capacity of 14 quarts.\n\nSECTION 4: MINIMUM EQUIPMENT LIST DISPATCH TIMES\n\nWith the Standby Attitude Indicator inoperative, the aircraft may be dispatched for a maximum of 10 days before repair is required. With the Weather Radar Antenna Drive Motor inoperative, the aircraft may be dispatched for a maximum of 3 days before repair is required. With the APU Fire Bottle inoperative, the aircraft may be dispatched for a maximum of 1 day before repair is required.\n\nSECTION 5: LIFE-LIMITED PARTS\n\nThe Engine Fan Blade has a life limit of 22,000 cycles. The Emergency Locator Transmitter Battery has a life limit of 60 months from the date of manufacture. The Life Raft has a life limit of 72 months from the date of manufacture, subject to inspection.",
+  "entities": {
+    "Main Landing Gear Wheel Bearing": ["main landing gear wheel bearing", "MLG wheel bearing"],
+    "Nose Gear Strut": ["nose gear strut", "NLG strut"],
+    "Brake Wear Pin": ["brake wear pin"],
+    "Engine Oil Filter": ["engine oil filter", "oil filter"],
+    "Cabin Air Filter": ["cabin air filter"],
+    "Cargo Door Actuator": ["cargo door actuator"],
+    "Engine Fan Blade": ["engine fan blade", "fan blade"],
+    "Wheel Well Fire Detection Loop": ["wheel well fire detection loop", "fire detection loop"],
+    "Hydraulic Reservoir": ["hydraulic reservoir"],
+    "Standby Attitude Indicator": ["standby attitude indicator"],
+    "Weather Radar Antenna Drive Motor": ["weather radar antenna drive motor", "radar antenna drive motor"],
+    "APU Fire Bottle": ["APU fire bottle", "APU fire extinguisher bottle"],
+    "Emergency Locator Transmitter Battery": ["emergency locator transmitter battery", "ELT battery"],
+    "Life Raft": ["life raft"]
+  },
+  "relations": {
+    "inspection_interval": {"kind": "text", "question": "what is the inspection interval for {entity}?"},
+    "torque_value": {"kind": "text", "question": "what is the torque value for {entity}?"},
+    "fluid_capacity": {"kind": "quantity", "question": "what is the fluid capacity of {entity}?"},
+    "dispatch_time": {"kind": "quantity", "question": "what is the maximum dispatch time with {entity} inoperative?"},
+    "life_limit": {"kind": "quantity", "question": "what is the life limit of {entity}?"}
+  },
+  "conditions": [],
+  "value_qualifiers": ["approximately", "about", "roughly"],
+  "unit_aliases": {
+    "in-lb": "inch-pounds",
+    "in-lbs": "inch-pounds",
+    "N·m": "newton-metres",
+    "Nm": "newton-metres",
+    "qt": "quarts",
+    "gal": "US gallons"
+  },
+  "facts": [
+    {
+      "s": "Main Landing Gear Wheel Bearing",
+      "r": "inspection_interval",
+      "o": "4,000 flight hours or 24 months, whichever comes first",
+      "source": "The Main Landing Gear Wheel Bearing shall be inspected and repacked every 4,000 flight hours or 24 months, whichever comes first."
+    },
+    {
+      "s": "Nose Gear Strut",
+      "r": "inspection_interval",
+      "o": "2,500 flight hours or 18 months, whichever comes first",
+      "source": "The Nose Gear Strut requires servicing every 2,500 flight hours or 18 months, whichever comes first."
+    },
+    {
+      "s": "Brake Wear Pin",
+      "r": "inspection_interval",
+      "o": "400 flight hours or 6 months, whichever comes first",
+      "source": "The Brake Wear Pin must be visually checked every 400 flight hours or 6 months, whichever comes first."
+    },
+    {
+      "s": "Engine Oil Filter",
+      "r": "inspection_interval",
+      "o": "300 flight hours or 400 cycles, whichever comes first",
+      "source": "The Engine Oil Filter shall be replaced every 300 flight hours or 400 cycles, whichever comes first."
+    },
+    {
+      "s": "Cabin Air Filter",
+      "r": "inspection_interval",
+      "o": "1,200 flight hours or 12 months, whichever comes first",
+      "source": "The Cabin Air Filter is replaced every 1,200 flight hours or 12 months, whichever comes first."
+    },
+    {
+      "s": "Cargo Door Actuator",
+      "r": "torque_value",
+      "o": "450 inch-pounds (50.8 newton-metres)",
+      "source": "The Cargo Door Actuator attachment bolts shall be torqued to 450 inch-pounds (50.8 newton-metres)."
+    },
+    {
+      "s": "Engine Fan Blade",
+      "r": "torque_value",
+      "o": "850 inch-pounds (96.0 newton-metres)",
+      "source": "The Engine Fan Blade root fasteners shall be torqued to 850 inch-pounds (96.0 newton-metres)."
+    },
+    {
+      "s": "Wheel Well Fire Detection Loop",
+      "r": "torque_value",
+      "o": "35 inch-pounds (4.0 newton-metres)",
+      "source": "The Wheel Well Fire Detection Loop mounting clamps shall be torqued to 35 inch-pounds (4.0 newton-metres)."
+    },
+    {
+      "s": "Hydraulic Reservoir",
+      "r": "fluid_capacity",
+      "o": "4.5 US gallons",
+      "source": "The Hydraulic Reservoir holds a fluid capacity of 4.5 US gallons."
+    },
+    {
+      "s": "Engine Oil Filter",
+      "r": "fluid_capacity",
+      "o": "14 quarts",
+      "source": "The Engine Oil Filter system, including sump, holds a fluid capacity of 14 quarts."
+    },
+    {
+      "s": "Standby Attitude Indicator",
+      "r": "dispatch_time",
+      "o": "10 days",
+      "source": "With the Standby Attitude Indicator inoperative, the aircraft may be dispatched for a maximum of 10 days before repair is required."
+    },
+    {
+      "s": "Weather Radar Antenna Drive Motor",
+      "r": "dispatch_time",
+      "o": "3 days",
+      "source": "With the Weather Radar Antenna Drive Motor inoperative, the aircraft may be dispatched for a maximum of 3 days before repair is required."
+    },
+    {
+      "s": "APU Fire Bottle",
+      "r": "dispatch_time",
+      "o": "1 day",
+      "source": "With the APU Fire Bottle inoperative, the aircraft may be dispatched for a maximum of 1 day before repair is required."
+    },
+    {
+      "s": "Engine Fan Blade",
+      "r": "life_limit",
+      "o": "22,000 cycles",
+      "source": "The Engine Fan Blade has a life limit of 22,000 cycles."
+    },
+    {
+      "s": "Emergency Locator Transmitter Battery",
+      "r": "life_limit",
+      "o": "60 months",
+      "source": "The Emergency Locator Transmitter Battery has a life limit of 60 months from the date of manufacture."
+    },
+    {
+      "s": "Life Raft",
+      "r": "life_limit",
+      "o": "72 months",
+      "source": "The Life Raft has a life limit of 72 months from the date of manufacture, subject to inspection."
+    }
+  ]
+}

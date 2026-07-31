@@ -86,16 +86,18 @@ def gate_claim(fs: FactSet, entity_mention: str | None, relation: str,
         # That tells a clinician a correct reference range contradicts the protocol, which
         # is the worst verdict this product can emit and worse than any number of holds.
         norm = fs.normalise_value(claimed_value)
+        numeric = fs.relations.get(relation, {}).get("kind") == "quantity"
         # Same helper as the primary path below. A residue rule wired into only one of
         # the two comparison sites is exactly the split-path divergence that produced this
         # project's one fuzz-caught leak.
         hit = next((v for v in variants
-                    if compare_values(fs.normalise_value(v.o), norm) == MATCH
+                    if compare_values(fs.normalise_value(v.o), norm, numeric) == MATCH
                     or source_grounded(v.o, norm or "", v.source, raw_claimed=claimed_value)),
                    None)
         keys = sorted({k for v in variants for k, _ in v.when})
         if hit is None and not all(
-                compare_values(fs.normalise_value(v.o), norm) == DIFFER for v in variants):
+                compare_values(fs.normalise_value(v.o), norm, numeric) == DIFFER
+                for v in variants):
             return Verdict(HELD, entity, relation, claimed_value,
                            " | ".join(v.o for v in variants), variants[0].source,
                            f"{entity!r}/{relation!r} is conditional on {keys}; the claim "
@@ -122,8 +124,11 @@ def gate_claim(fs: FactSet, entity_mention: str | None, relation: str,
     # Safe because lint() already refuses a fact set whose normalisation collapses two
     # DISTINCT declared values onto the same string -- that check normalises declared
     # values, so it covers unit aliases as well as qualifiers.
+    # The declared kind decides whether a unitless "150-400" is a RANGE or a piece of
+    # text. Only the author can say, so only the author's declaration is consulted.
+    numeric = fs.relations.get(relation, {}).get("kind") == "quantity"
     outcome = compare_values(fs.normalise_value(fact.o),
-                             fs.normalise_value(claimed_value))
+                             fs.normalise_value(claimed_value), numeric)
     if outcome == MATCH:
         return Verdict(VERIFIED, entity, relation, claimed_value, fact.o, fact.source,
                        "claimed value matches the declared fact", factset_fingerprint=fs.fingerprint)

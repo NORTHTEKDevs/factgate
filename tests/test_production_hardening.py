@@ -12,7 +12,7 @@ import time
 import pytest
 
 from factgate.domain.factset import FactSet, ValidationError
-from factgate.domain.gate import VERIFIED, gate_claim
+from factgate.domain.gate import BLOCK, HELD, VERIFIED, gate_claim
 from factgate.domain.link import respell_from_passage, value_is_grounded
 
 BASE = {"domain": "d", "entities": {"e": ["e"]},
@@ -465,3 +465,52 @@ def test_a_conditional_claim_reaches_every_verdict(monkeypatch):
     assert gate_claim(fs, *claims[0], {"lane": "regional"}).status == VERIFIED
     assert gate_claim(fs, "LTL service", "transit_time",
                       "40 business days").status == "BLOCK"                  # matches no variant
+
+
+# ------------------------------------------------------------- unitless ranges
+def test_a_unitless_range_can_be_declared_and_verified():
+    """FOUND BY A NEW DOMAIN, at load time: a food specification declaring water activity
+    "0.65-0.72" under kind=quantity could not be LOADED, because parse_range required a
+    unit and rejected its own declared value. pH, water activity, platelet counts, ratios
+    and index scores are all ordinary unitless ranges."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"product": []},
+        "relations": {"ph": {"kind": "quantity"}},
+        "facts": [{"s": "product", "r": "ph", "o": "4.6-5.2",
+                   "source": "The finished product pH is 4.6-5.2."}]})
+    assert gate_claim(fs, "product", "ph", "4.6-5.2").status == VERIFIED
+    assert gate_claim(fs, "product", "ph", "4.8").status == VERIFIED     # inside
+    assert gate_claim(fs, "product", "ph", "9.0").status == "BLOCK"      # outside
+
+
+def test_range_shaped_TEXT_does_not_acquire_range_semantics():
+    """Why the unitless reading is opt-in rather than automatic. Plenty of text looks like
+    a range; a declared "2024-2025" academic year must not confirm a claim of "2024" as a
+    point inside it. The declared kind is the author saying which reading they meant, and
+    nothing else can distinguish the two."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"program": []},
+        "relations": {"year": {"kind": "text"}},
+        "facts": [{"s": "program", "r": "year", "o": "2024-2025",
+                   "source": "The program runs across the 2024-2025 year."}]})
+    assert gate_claim(fs, "program", "year", "2024").status == HELD
+    assert gate_claim(fs, "program", "year", "2024-2025").status == VERIFIED
+
+
+def test_the_fingerprint_is_computed_once():
+    """Every Verdict carries it, and it recomputed a sha256 over the whole fact set on
+    EVERY adjudication. Measured at 5,000 facts: 2.809 ms per gate_claim of which 2.7 ms
+    was the fingerprint -- the gate was linear in fact count while the lookups it performs
+    are O(1)."""
+    import time
+    spec = {"domain": "s", "entities": {f"e{i}": [] for i in range(2000)},
+            "relations": {"p": {"kind": "quantity"}},
+            "facts": [{"s": f"e{i}", "r": "p", "o": f"{i} mg",
+                       "source": f"Entity {i} is {i} mg."} for i in range(2000)]}
+    fs = FactSet.from_dict(spec)
+    assert fs.fingerprint == fs.fingerprint
+    start = time.perf_counter()
+    for i in range(200):
+        gate_claim(fs, f"e{i}", "p", f"{i} mg")
+    per_call_ms = (time.perf_counter() - start) / 200 * 1000
+    assert per_call_ms < 1.0, f"{per_call_ms:.3f} ms per gate_claim at 2000 facts"
