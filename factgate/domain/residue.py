@@ -65,10 +65,20 @@ _NEGATION = frozenset({
     "not", "n't", "never", "no", "nor", "none", "except", "excepting", "unless",
     "excluding", "excluded", "exclude", "without", "waived", "waive", "exempt",
     "contraindicated", "contraindication",
+    # Exemption and reduction words, which say the value does not apply to someone.
+    # "The fee is 35 dollars, free for premium members" admitted its whole residue while
+    # the identical sentence using "waived" was correctly held -- the list had one word
+    # for the concept and not the others.
+    "free", "complimentary", "reduced", "discounted", "halved", "prorated", "refunded",
+    "forgiven", "abated", "unlimited", "gratis",
 })
 
 _WORD = re.compile(r"[a-z']+")
-_DIGIT = re.compile(r"[0-9]")
+# Unicode-aware. The parser deliberately reads ASCII [0-9] only, but this check has the
+# opposite job: it must SEE a second value in the residue, and an ASCII-only pattern is
+# blind to one written in another script. "35 dollars, up to ٥٠ dollars for expedited
+# processing" was admitted whole while the identical claim using "50" was held.
+_DIGIT = re.compile(r"[0-9]|\d", re.UNICODE)
 
 
 def _norm(s: str) -> str:
@@ -107,7 +117,7 @@ def _grounded_one(declared: str, claimed: str, source: str,
         return False
 
     residue = nc[len(nd):]
-    if _DIGIT.search(residue):
+    if _DIGIT.search(residue) or any(ch.isnumeric() for ch in residue):
         # A second number in the residue is a second VALUE being asserted, not a basis for
         # this one. It must go through range/point comparison, which is deliberately
         # stricter, rather than being waved through as scope text.

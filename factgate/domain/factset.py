@@ -70,6 +70,20 @@ def _reject_catastrophic(pattern: str) -> None:
                     f"than (\\d+)+), or declare the alternatives as separate qualifiers.")
 
 
+# SI prefixes, longest first so "mc" is tried before "m". Used only by lint(), never by a
+# verdict -- this decides what to WARN an author about, not what a value means.
+_SI_PREFIX = {"da": 1e1, "mc": 1e-6, "n": 1e-9, "u": 1e-6, "µ": 1e-6, "m": 1e-3,
+              "c": 1e-2, "d": 1e-1, "h": 1e2, "k": 1e3, "M": 1e6, "G": 1e9}
+
+
+def _scale_of(unit: str) -> tuple[str, float]:
+    """Split a unit into (base, factor) if it carries an SI prefix, else (unit, 1)."""
+    for p in sorted(_SI_PREFIX, key=len, reverse=True):
+        if unit.startswith(p) and len(unit) > len(p):
+            return unit[len(p):], _SI_PREFIX[p]
+    return unit, 1.0
+
+
 @dataclass(frozen=True)
 class Fact:
     s: str
@@ -404,6 +418,25 @@ class FactSet:
                                 f"distinct declared values {sorted(originals)} to the "
                                 f"same normalised form {norm!r}; the gate would verify "
                                 f"one against the other"),
+                })
+
+        # ERROR: a unit alias that RESCALES. An author writing {"mcg": "mg"} makes every
+        # microgram claim normalise onto a milligram fact, and the gate then VERIFIES a
+        # 1000-fold dosing error with no way to know. Measured: declared "15 mg", claimed
+        # "15 mcg", verdict VERIFIED, lint clean. Aliases exist to reconcile SPELLINGS of
+        # one unit, never to equate two.
+        for alias, canon in self.unit_aliases.items():
+            a_base, a_f = _scale_of(str(alias))
+            c_base, c_f = _scale_of(str(canon))
+            if a_base == c_base and a_f != c_f:
+                problems.append({
+                    "level": "error",
+                    "message": (f"unit_alias {alias!r} -> {canon!r} maps one scale of "
+                                f"{a_base!r} onto another (a factor of "
+                                f"{max(a_f, c_f) / min(a_f, c_f):g}). Every claim using "
+                                f"{alias!r} would verify against a fact declared in "
+                                f"{canon!r}. Aliases reconcile spellings of one unit, "
+                                f"never two different units."),
                 })
 
         # Warning: the fact's own source states a MORE SPECIFIC value than was declared.

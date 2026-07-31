@@ -316,3 +316,24 @@ def test_one_text_value_containing_the_other_is_not_a_contradiction(declared, cl
     assert gate_claim(fs, "e", "p", claimed).status == HELD
     other = text_fs("oral", "Give it by the oral route.")
     assert gate_claim(other, "e", "p", "intravenous").status == BLOCK
+
+
+# --------------------------------------------------- leaks found by adversarial hunt
+def test_an_exemption_word_the_list_missed_is_now_caught():
+    """The list had "waived" but not "free", so two sentences meaning the same thing got
+    opposite verdicts: "35 dollars, waived for premium members" was correctly HELD while
+    "35 dollars, free for premium members" was VERIFIED, confirming a fee the very same
+    clause says some customers do not pay."""
+    for word in ("free", "waived", "complimentary", "reduced", "refunded"):
+        src = f"The fee is 35 dollars, {word} for premium members."
+        assert _status("35 dollars", src, f"35 dollars, {word} for premium members") == HELD
+
+
+def test_a_second_value_written_in_another_script_is_still_seen():
+    """The residue may not contain a second value, but the check read ASCII digits only,
+    so a numeral in another script was invisible to it. The parser is deliberately
+    ASCII-only; this check has the OPPOSITE job and must see everything."""
+    for numeral in ("٥٠", "５０", "50"):
+        src = f"The fee is 35 dollars, up to {numeral} dollars for expedited processing."
+        claim = f"35 dollars, up to {numeral} dollars for expedited processing"
+        assert _status("35 dollars", src, claim) == HELD, f"leaked on {numeral!r}"

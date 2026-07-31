@@ -514,3 +514,32 @@ def test_the_fingerprint_is_computed_once():
         gate_claim(fs, f"e{i}", "p", f"{i} mg")
     per_call_ms = (time.perf_counter() - start) / 200 * 1000
     assert per_call_ms < 1.0, f"{per_call_ms:.3f} ms per gate_claim at 2000 facts"
+
+
+def test_lint_refuses_a_unit_alias_that_rescales():
+    """A 1000x dosing error that lint() passed clean. An author writing {"mcg": "mg"}
+    makes every microgram claim normalise onto a milligram fact, and the gate then VERIFIES
+    the error with no way to know: declared "15 mg", claimed "15 mcg", VERIFIED.
+
+    Aliases exist to reconcile SPELLINGS of one unit, never to equate two."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"drug": []},
+        "relations": {"dose": {"kind": "quantity"}},
+        "unit_aliases": {"mcg": "mg"},
+        "facts": [{"s": "drug", "r": "dose", "o": "15 mg", "source": "Give 15 mg."}]})
+    errors = [p for p in fs.lint() if p["level"] == "error"]
+    assert errors and "1000" in errors[0]["message"]
+
+
+@pytest.mark.parametrize("aliases", [
+    {"%": "percent"}, {"USD": "dollars"}, {"hrs": "hours", "hr": "hour"},
+    {"mi": "miles"}, {"K/uL": "thousand per microliter"}, {"mL": "milliliter"},
+])
+def test_legitimate_unit_aliases_are_not_flagged(aliases):
+    """The check must only fire on a genuine rescale. These are spelling reconciliations,
+    which is what the feature is for, and every one of them ships in a real domain."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"x": []},
+        "relations": {"r": {"kind": "quantity"}}, "unit_aliases": aliases,
+        "facts": [{"s": "x", "r": "r", "o": "5 mg", "source": "It is 5 mg."}]})
+    assert [p for p in fs.lint() if p["level"] == "error"] == []
