@@ -272,3 +272,47 @@ def test_uncomparable_conditional_claims_are_held(variants, claimed):
     line up, which is the definition of HELD."""
     fs = _cond(*variants, condition="tier")
     assert gate_claim(fs, "e", "p", claimed).status == HELD
+
+
+# ------------------------------------------- false BLOCK from the comparator itself
+def test_different_units_are_not_a_provable_contradiction():
+    """The number was tested BEFORE the unit, so two quantities in different units were
+    reported as a provable contradiction on the strength of their digits alone:
+
+        declared "5 g"  claimed "5000 mg"  ->  DIFFER, and the gate BLOCKED
+
+    5000 mg IS 5 g. The gate told the user a correct dose contradicted the protocol. The
+    same happened for "5000 zz", and nothing in the library knows what zz is.
+    """
+    assert _status("5 g", "The maximum dose is 5 g per day.", "5000 mg") == HELD
+    assert _status("5 g", "The maximum dose is 5 g per day.", "5000 zz") == HELD
+
+
+def test_a_wrong_value_with_a_route_suffix_still_blocks():
+    """The safety case the fix had to preserve, and briefly broke: a WRONG dose carrying an
+    annotation is still a provable contradiction, because the annotation sits on the
+    declared unit rather than changing it."""
+    from factgate.domain.quantity import DIFFER, INCOMPARABLE, compare_values
+    assert compare_values("10 mg/kg", "20 mg/kg PO") == DIFFER
+    assert compare_values("10 mg/kg", "20 mg/kg every 6 hours") == DIFFER
+    # ...and the same annotation on the RIGHT value still may not confirm it. Returning
+    # MATCH here reintroduced the leak this project already fixed once.
+    assert compare_values("10 mg/kg", "10 mg/kg PO") == INCOMPARABLE
+
+
+@pytest.mark.parametrize("declared,claimed", [
+    ("450 inch-pounds (51 Nm)", "450 inch-pounds"),   # omits a parenthetical conversion
+    ("Board Certified", "is Board Certified"),        # carries a leading verb
+])
+def test_one_text_value_containing_the_other_is_not_a_contradiction(declared, claimed):
+    """Both BLOCKED, and both claims are faithful. A difference in completeness is not a
+    contradiction; a genuinely competing value shares no containment and still DIFFERs."""
+    def text_fs(o, src):
+        return FactSet.from_dict({
+            "domain": "d", "entities": {"e": ["e"]},
+            "relations": {"p": {"kind": "text"}},
+            "facts": [{"s": "e", "r": "p", "o": o, "source": src}]})
+    fs = text_fs(declared, f"The record states {declared}.")
+    assert gate_claim(fs, "e", "p", claimed).status == HELD
+    other = text_fs("oral", "Give it by the oral route.")
+    assert gate_claim(other, "e", "p", "intravenous").status == BLOCK

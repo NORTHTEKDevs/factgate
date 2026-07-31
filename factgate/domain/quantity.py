@@ -348,9 +348,35 @@ def compare_values(declared: str, claimed: str | None, numeric: bool = False) ->
         return ranged
     dq, cq = parse_quantity(declared), parse_quantity(claimed)
     if dq is not None and cq is not None:
-        if dq.value != cq.value:
+        # UNIT FIRST. This tested the number before the unit, so two quantities in
+        # different units were reported as a provable contradiction on the strength of
+        # their digits alone:
+        #
+        #   declared "5 g"  claimed "5000 mg"  -> DIFFER, and the gate BLOCKED
+        #
+        # 5000 mg IS 5 g. The gate told the user that a correct dose contradicted the
+        # protocol. "5 g" against "5000 zz" went the same way, and nothing here knows what
+        # zz is. Different units cannot prove a difference; they prove nothing, which is
+        # INCOMPARABLE and a hold. No conversion is attempted deliberately -- a conversion
+        # table needs a tolerance to survive float arithmetic (0.1 g x 1000 is not exactly
+        # 100 mg), and a tolerance is precisely the tuned parameter this verdict layer
+        # exists without.
+        if dq.unit == cq.unit:
+            return MATCH if dq.value == cq.value else DIFFER
+        # Units differ. That is usually incomparable, but one case is not: the claim may
+        # be the declared unit carrying an ANNOTATION, which parse_quantity glues on
+        # ("20 mg/kg PO" parses with unit "mg/kgPO"). The token-leading quantity separates
+        # the two -- it reads "mg/kg" from "20 mg/kg PO" and nothing at all from
+        # "5000 mg" -- so a wrong dose with a route suffix still blocks while a different
+        # scale of the same base unit does not.
+        # DIFFER only, never MATCH. An unverified trailing annotation must not confirm a
+        # value: "10 mg/kg PO" and "10 mg/kg per day" both lead-match a declared
+        # "10 mg/kg" and only one of them means it. Returning MATCH here reintroduced the
+        # exact leak this project already fixed once, and the suite caught it.
+        lead = _leading(claimed)
+        if lead is not None and lead.unit == dq.unit and lead.value != dq.value:
             return DIFFER
-        return MATCH if dq.unit == cq.unit else INCOMPARABLE
+        return INCOMPARABLE
 
     if dq is not None:
         # Declared is a quantity but the claim did not parse cleanly: retry on its
@@ -389,6 +415,17 @@ def compare_values(declared: str, claimed: str | None, numeric: bool = False) ->
     # the model declining to answer. Short, value-shaped text still DIFFERs, so a real
     # conflict ("oral" vs "intravenous") is unaffected.
     if len(c_norm.split()) > max(4, len(d_norm.split()) + 2):
+        return INCOMPARABLE
+    # One text value CONTAINING the other is not a contradiction, it is a difference in
+    # completeness. Both of these BLOCKED, and both claims are faithful:
+    #
+    #   declared "450 inch-pounds (51 Nm)"  claimed "450 inch-pounds"
+    #   declared "Board Certified"          claimed "is Board Certified"
+    #
+    # The first omits a parenthetical the document supplies, the second carries a leading
+    # verb. Neither asserts anything the document denies. A genuinely competing value
+    # ("oral" against "intravenous") shares no containment and still DIFFERs.
+    if d_norm in c_norm or c_norm in d_norm:
         return INCOMPARABLE
     return DIFFER
 
