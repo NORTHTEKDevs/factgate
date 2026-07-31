@@ -203,3 +203,72 @@ def test_stripping_a_qualifier_does_not_leave_a_dangling_separator():
         "2 percent of the amount advanced, deducted at closing") == "2 percent"
     assert fs.normalise_value("5,000 mg") == "5,000 mg"
     assert fs.normalise_value("$1,250,000") == "$1,250,000"
+
+
+# ------------------------------------------- the conditional path's false BLOCK
+def _cond(*variants, condition="sex"):
+    return FactSet.from_dict({
+        "domain": "d", "entities": {"e": ["e"]},
+        "relations": {"p": {"kind": "quantity"}}, "conditions": [condition],
+        "facts": [{"s": "e", "r": "p", "o": o, "source": src,
+                   "when": {condition: w}} for o, src, w in variants]})
+
+
+def test_a_claim_stating_every_variant_is_held_not_blocked():
+    """THE WORST VERDICT THIS PRODUCT CAN EMIT, and it was reachable.
+
+    A reference-range sheet declares hemoglobin 13.5-17.5 g/dL for males and 12.0-15.5
+    g/dL for females. Asked for the range, the model answered "13.5-17.5 g/dL and
+    12.0-15.5 g/dL" -- exactly what the document says. The conditional path blocked it,
+    because it blocked whenever no variant MATCHED, folding INCOMPARABLE into DIFFER: the
+    one collapse the three-valued design exists to prevent.
+
+    It stayed hidden only because conditional slots were never extracted at all. The
+    moment they were, a faithful clinical answer started being reported as contradicting
+    the protocol."""
+    fs = _cond(("13.5-17.5 g/dL", "Hemoglobin is 13.5-17.5 g/dL in adult males.", "male"),
+               ("12.0-15.5 g/dL", "Hemoglobin is 12.0-15.5 g/dL in adult females.",
+                "female"))
+    v = gate_claim(fs, "e", "p", "13.5-17.5 g/dL and 12.0-15.5 g/dL")
+    assert v.status == HELD, "a faithful answer must never be reported as a contradiction"
+    assert "neither confirmed nor contradicted" in v.reason
+
+
+def test_a_conditional_claim_that_every_variant_contradicts_still_blocks():
+    """The other half. Softening BLOCK to HELD everywhere would be its own failure: a value
+    that provably differs from every declared variant is a contradiction and must be said
+    so."""
+    fs = _cond(("13.5-17.5 g/dL", "Hemoglobin is 13.5-17.5 g/dL in adult males.", "male"),
+               ("12.0-15.5 g/dL", "Hemoglobin is 12.0-15.5 g/dL in adult females.",
+                "female"))
+    assert gate_claim(fs, "e", "p", "99-100 g/dL").status == BLOCK
+
+
+def test_a_conditional_claim_matching_one_variant_is_held_then_verified():
+    fs = _cond(("13.5-17.5 g/dL", "Hemoglobin is 13.5-17.5 g/dL in adult males.", "male"),
+               ("12.0-15.5 g/dL", "Hemoglobin is 12.0-15.5 g/dL in adult females.",
+                "female"))
+    assert gate_claim(fs, "e", "p", "13.5-17.5 g/dL").status == HELD
+    assert gate_claim(fs, "e", "p", "13.5-17.5 g/dL", {"sex": "male"}).status == VERIFIED
+
+
+@pytest.mark.parametrize("variants,claimed", [
+    # a range spanning both declared credits -- faithful to a tiered SLA table
+    ((("10 percent", "The service credit is 10 percent.", "t1"),
+      ("50 percent", "The service credit is 50 percent.", "t2")),
+     "10% to 50% of the fees paid for a month"),
+    # residue carrying a second quantity, against the cap it actually belongs to
+    ((("12 months of fees paid", "The cap is 12 months of fees paid.", "t1"),
+      ("24 months of fees paid", "The cap is 24 months of fees paid.", "t2")),
+     "12 months of fees paid by Customer in the 12 months preceding the claim"),
+    # a percentage OF another limit, against the deductibles actually declared
+    ((("2 percent", "The inland wind and hail deductible is 2 percent.", "inland"),
+      ("5 percent", "The coastal wind and hail deductible is 5 percent.", "coastal")),
+     "2 percent of the building limit ($50,000)"),
+])
+def test_uncomparable_conditional_claims_are_held(variants, claimed):
+    """All three are real extractions from blind domains that were being BLOCKED. None is
+    a provable contradiction of its own declared values; each is text the comparator cannot
+    line up, which is the definition of HELD."""
+    fs = _cond(*variants, condition="tier")
+    assert gate_claim(fs, "e", "p", claimed).status == HELD

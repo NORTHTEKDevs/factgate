@@ -70,8 +70,21 @@ def gate_claim(fs: FactSet, entity_mention: str | None, relation: str,
             return Verdict(HELD, entity, relation, claimed_value, None, "",
                            f"no declared fact for {entity!r}/{relation!r}", factset_fingerprint=fs.fingerprint)
         # The slot IS declared but the condition did not select one value. A claim that
-        # matches none of the variants is still a provable contradiction; a claim that
-        # matches one is unconfirmable until the condition is supplied.
+        # every variant PROVABLY contradicts is still a contradiction; a claim that matches
+        # one is unconfirmable until the condition is supplied.
+        #
+        # "Provably" is load-bearing, and this path used to get it wrong: it blocked
+        # whenever no variant MATCHED, which folds INCOMPARABLE into DIFFER -- the one
+        # collapse the whole three-valued design exists to prevent. Reachable as soon as
+        # conditional slots began being extracted, and it produced FALSE BLOCKS on claims
+        # that were faithful to the document:
+        #
+        #   declared  "13.5-17.5 g/dL" (male) and "12.0-15.5 g/dL" (female)
+        #   claimed   "13.5-17.5 g/dL and 12.0-15.5 g/dL"   -- the document says both
+        #   verdict   BLOCK, "matches none of the 2 declared values"
+        #
+        # That tells a clinician a correct reference range contradicts the protocol, which
+        # is the worst verdict this product can emit and worse than any number of holds.
         norm = fs.normalise_value(claimed_value)
         # Same helper as the primary path below. A residue rule wired into only one of
         # the two comparison sites is exactly the split-path divergence that produced this
@@ -81,6 +94,13 @@ def gate_claim(fs: FactSet, entity_mention: str | None, relation: str,
                     or source_grounded(v.o, norm or "", v.source, raw_claimed=claimed_value)),
                    None)
         keys = sorted({k for v in variants for k, _ in v.when})
+        if hit is None and not all(
+                compare_values(fs.normalise_value(v.o), norm) == DIFFER for v in variants):
+            return Verdict(HELD, entity, relation, claimed_value,
+                           " | ".join(v.o for v in variants), variants[0].source,
+                           f"{entity!r}/{relation!r} is conditional on {keys}; the claim "
+                           f"cannot be compared to every declared value, so it is neither "
+                           f"confirmed nor contradicted", factset_fingerprint=fs.fingerprint)
         if hit is None:
             return Verdict(BLOCK, entity, relation, claimed_value,
                            " | ".join(v.o for v in variants), variants[0].source,
