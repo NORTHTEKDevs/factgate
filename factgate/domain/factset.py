@@ -319,9 +319,28 @@ class FactSet:
         if len(vs) == 1 and not vs[0].when:
             return vs[0]
         ctx = {k.lower(): str(v).lower() for k, v in (context or {}).items()}
-        matches = [f for f in vs
-                   if all(ctx.get(k.lower()) == str(v).lower() for k, v in f.when)]
-        return matches[0] if len(matches) == 1 else None
+        # A CONDITIONAL variant applies only when every one of its conditions is met.
+        conditional = [f for f in vs if f.when and
+                       all(ctx.get(k.lower()) == str(v).lower() for k, v in f.when)]
+        if len(conditional) == 1:
+            return conditional[0]          # most specific rule wins
+        if conditional:
+            return None                    # several apply at once: ambiguous
+        # No conditional variant applies. An UNCONDITIONAL default is not automatically
+        # the answer: `all()` over an empty condition set is True, so the default matched
+        # every query and this method returned it even when the caller had supplied no
+        # context at all -- silently picking a variant, which the docstring above says it
+        # must never do.
+        #
+        # MEASURED on a payroll sheet declaring a threshold of $200,000 unconditionally
+        # and $250,000 for married filing jointly. Queried with no filing status, the gate
+        # VERIFIED $200,000. Harmless there; in the dosing case the docstring warns about
+        # it confirms the standard dose for a patient who may qualify for the conditional
+        # one. Without context the slot is ambiguous, which is HELD.
+        if not ctx:
+            return None
+        unconditional = [f for f in vs if not f.when]
+        return unconditional[0] if len(unconditional) == 1 else None
 
     # A model-produced value is a short phrase. Anything longer is not a value, and a
     # length cap keeps qualifier matching bounded no matter what a pattern does.

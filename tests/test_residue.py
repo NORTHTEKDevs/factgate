@@ -337,3 +337,43 @@ def test_a_second_value_written_in_another_script_is_still_seen():
         src = f"The fee is 35 dollars, up to {numeral} dollars for expedited processing."
         claim = f"35 dollars, up to {numeral} dollars for expedited processing"
         assert _status("35 dollars", src, claim) == HELD, f"leaked on {numeral!r}"
+
+
+def test_an_unconditional_default_does_not_answer_a_conditional_slot():
+    """MEASURED on a payroll sheet, and the reason the benchmark's leak rate left 0% for
+    the first time. The slot declared a threshold of $200,000 unconditionally AND $250,000
+    for married filing jointly. Queried with no filing status, the gate VERIFIED $200,000.
+
+    `all()` over an empty condition set is True, so the unconditional default matched every
+    query and lookup() returned it -- silently picking a variant, which its own docstring
+    says it must never do: "a conditional slot queried without its condition can never
+    verify. Picking a variant would confirm an otitis-media dose in a standard-indication
+    context."
+
+    Harmless on a tax threshold. In the dosing case the docstring warns about, it confirms
+    the standard dose for a patient who may qualify for the conditional one."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"drug": []},
+        "relations": {"dose": {"kind": "quantity"}}, "conditions": ["severity"],
+        "facts": [
+            {"s": "drug", "r": "dose", "o": "10 mg", "source": "The dose is 10 mg."},
+            {"s": "drug", "r": "dose", "o": "20 mg", "when": {"severity": "severe"},
+             "source": "For severe cases the dose is 20 mg."}]})
+    # no context: the slot is ambiguous, whichever value is claimed
+    assert gate_claim(fs, "drug", "dose", "10 mg").status == HELD
+    assert gate_claim(fs, "drug", "dose", "20 mg").status == HELD
+    # the most specific rule wins when its condition is met
+    assert gate_claim(fs, "drug", "dose", "20 mg", {"severity": "severe"}).status == VERIFIED
+    # and the default applies once the condition is ruled out
+    assert gate_claim(fs, "drug", "dose", "10 mg", {"severity": "mild"}).status == VERIFIED
+    # a provably wrong value still blocks
+    assert gate_claim(fs, "drug", "dose", "99 mg", {"severity": "mild"}).status == BLOCK
+
+
+def test_a_single_unconditional_fact_is_unaffected():
+    """The overwhelmingly common case must not become HELD."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"drug": []},
+        "relations": {"dose": {"kind": "quantity"}},
+        "facts": [{"s": "drug", "r": "dose", "o": "10 mg", "source": "The dose is 10 mg."}]})
+    assert gate_claim(fs, "drug", "dose", "10 mg").status == VERIFIED
