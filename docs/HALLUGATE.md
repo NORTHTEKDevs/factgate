@@ -948,6 +948,89 @@ that had not been updated with it. Worth recording rather than quietly correctin
 check failed loudly instead of agreeing, which is the only reason the alternative, that the
 gate had begun verifying something it should not, could be ruled out by inspection.
 
+## 17. Fifteen domains, and the first leak this project ever measured
+
+Six more blind domains were authored in genres chosen for value shapes the earlier nine
+never exercised -- compound units (cents/kWh, $/kW-month), plus-or-minus tolerances,
+dual-unit intervals ("4,000 flight hours or 24 months, whichever comes first"), and rates
+per unit per period. Fifteen public domains now ship, all reproducible from a clone.
+
+They found nine defects, and one of them ended a streak.
+
+### A leak, on the fourteenth domain
+
+A payroll sheet declared a threshold TWICE: $200,000 unconditionally, and $250,000 when
+filing status is married filing jointly. Queried with no filing status, the gate returned
+
+```
+VERIFIED  claimed '$200,000'   "linked claim matches the declared fact"
+```
+
+`all()` over an empty condition set is True, so the unconditional default matched every
+query and `lookup()` returned it -- silently picking a variant, which its own docstring
+says it must never do:
+
+> Returning None for "ambiguous" is deliberate ... a conditional slot queried without its
+> condition can never verify. Picking a variant would confirm an otitis-media dose in a
+> standard-indication context.
+
+The code had violated that contract for every slot mixing a default with conditional
+variants. On a tax threshold the confirmed value is at least a real figure from the
+document; in the dosing case the docstring warns about, it confirms the standard dose for
+a patient who may qualify for the conditional one. Found by the benchmark's
+spontaneous-hallucination arm, which measures what a model does unprompted rather than
+what the harness told it to do.
+
+### Two false BLOCKs in the comparator
+
+```
+declared "5 g"   claimed "5000 mg"   ->  DIFFER, and the gate BLOCKED
+```
+
+5000 mg is 5 g. The number was tested before the unit, so different units were called a
+provable contradiction on the strength of their digits. `"5 g"` against `"5000 zz"` went
+the same way, and nothing here knows what zz is. No conversion table was added: it would
+need a tolerance to survive float arithmetic, and a tolerance is the tuned parameter this
+verdict layer exists without.
+
+Separately, one text value CONTAINING another was treated as a contradiction, so
+`"450 inch-pounds"` was reported as contradicting a declared
+`"450 inch-pounds (50.8 newton-metres)"`.
+
+### A decimal point was a sentence boundary
+
+Clause scoping split the source on a bare `.`, so
+
+```
+"...require the potency to fall within 95.0 to 105.0 percent of label claim..."
+became   "...within 95"  |  "0 to 105"  |  "0 percent of label claim..."
+```
+
+No clause contained the declared value, so no value carrying a decimal could ever be
+residue-matched -- most of pharmaceutical, clinical-chemistry, nutrition, utility-rate and
+tax data. Nine domains never showed it because the genres that make it visible had not
+been written yet.
+
+### And three more
+
+A **quadratic blowup reachable from a CLAIM** rather than from a fact set: a digit run cost
+303 ms at 2,048 characters and one measurement reported 15.5 seconds for a single call.
+Capped, now 0.77 ms at 200,000 characters.
+
+A **unit alias could equate two different units**: an author writing `{"mcg": "mg"}` made
+every microgram claim normalise onto a milligram fact, and the gate VERIFIED a 1000-fold
+dosing error with lint clean.
+
+The **value-shape filter rejected values longer than three words**, while an aviation
+schedule declares a nine-word interval. Nine holds were this, and they were invisible -- no
+claim reached the gate, so no suggestion could be made about them either.
+
+### What it costs
+
+Every value-shape and safety fix in this section came from genres that did not exist in the
+corpus a day earlier. The rate of finding is not falling, and that is the honest headline:
+the method works, and it is not finished.
+
 ## Reproduce
 
 ```bash
