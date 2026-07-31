@@ -126,10 +126,21 @@ def main() -> int:
                     # be VERIFIED because the fact's own source sentence states it in
                     # full. Re-derived here independently of residue.py -- plain
                     # containment in the source, not the rule's clause logic.
+                    #
+                    # BOTH sides are normalised, and this check itself is why. It compared
+                    # the RAW declared value against the NORMALISED claim and reported
+                    # three violations on a lab sheet where declared and claimed were
+                    # BYTE-IDENTICAL ("20 K/uL" against "20 K/uL"), because the domain's
+                    # unit aliases rewrote one side only. That is the same asymmetry that
+                    # was a real bug in the gate; the harness simply had not been updated
+                    # with it. A check that has to be corrected after the code is a check
+                    # that was doing its job -- it failed loudly rather than agreeing.
                     norm = fs.normalise_value(value) or ""
+                    target_norm = fs.normalise_value(target) or ""
                     src = " ".join((declared.source if declared else "").casefold().split())
-                    quoted = bool(src) and " ".join(norm.casefold().split()) in src
-                    if not equal_by_reparse(target, norm) and not quoted:
+                    quoted = bool(src) and any(
+                        " ".join(str(c).casefold().split()) in src for c in (norm, value))
+                    if not equal_by_reparse(target_norm, norm) and not quoted:
                         violations.append(                                     # S1
                             f"{f.name} {entity}/{relation}: VERIFIED neither re-derivable "
                             f"nor quoted from source declared={target!r} claimed={value!r}")
