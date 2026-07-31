@@ -611,3 +611,34 @@ def test_a_longer_allowance_does_not_let_prose_through(prose):
         "facts": [{"s": "x", "r": "r", "o": "a b c d e f g h i",
                    "source": "It is a b c d e f g h i."}]})
     assert normalise_slot_answer(prose, fs, "a b c d e f g h i") is None
+
+
+def test_lint_refuses_a_lone_conditional_value():
+    """MEASURED on a utility tariff, and the whole of that domain's 46% hold rate. Six rates
+    were declared as entities that ALREADY encode the condition -- "Summer On-Peak Energy",
+    when={season: summer, period: on-peak} -- so each slot had exactly one value carrying a
+    condition with nothing to select against.
+
+    lookup() returns None for such a slot, so it can never verify unless the caller supplies
+    the context; and a caller who already knew the context would not need the gate."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"summer on-peak": []},
+        "relations": {"rate": {"kind": "quantity"}}, "conditions": ["season"],
+        "facts": [{"s": "summer on-peak", "r": "rate", "o": "14.2 cents per kWh",
+                   "when": {"season": "summer"},
+                   "source": "The summer on-peak rate is 14.2 cents per kWh."}]})
+    errors = [p for p in fs.lint() if p["level"] == "error"]
+    assert errors and "no alternative" in errors[0]["message"]
+
+
+def test_lint_accepts_a_condition_that_actually_discriminates():
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"energy": []},
+        "relations": {"rate": {"kind": "quantity"}}, "conditions": ["season"],
+        "facts": [{"s": "energy", "r": "rate", "o": "14.2 cents per kWh",
+                   "when": {"season": "summer"},
+                   "source": "The summer rate is 14.2 cents per kWh."},
+                  {"s": "energy", "r": "rate", "o": "11.5 cents per kWh",
+                   "when": {"season": "winter"},
+                   "source": "The winter rate is 11.5 cents per kWh."}]})
+    assert [p for p in fs.lint() if p["level"] == "error"] == []

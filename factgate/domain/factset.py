@@ -466,6 +466,29 @@ class FactSet:
                                 f"never two different units."),
                 })
 
+        # ERROR: a slot with exactly ONE declared value that still carries a condition.
+        # The condition cannot select between alternatives because there are none, but it
+        # makes lookup() return None -- so the slot can never verify unless the caller
+        # supplies context, and a caller who knew the context would not need the gate.
+        #
+        # MEASURED on a utility tariff declaring six rates as entities that already encode
+        # the condition ("Summer On-Peak Energy", when={season: summer, period: on-peak}).
+        # Every one was unverifiable, which was the whole of that domain's 46% hold rate.
+        by_slot: dict[tuple[str, str], list[Fact]] = {}
+        for f in self.facts:
+            by_slot.setdefault((f.s, f.r), []).append(f)
+        for (s_, r_), group in by_slot.items():
+            if len(group) == 1 and group[0].when:
+                keys = sorted(k for k, _ in group[0].when)
+                problems.append({
+                    "level": "error",
+                    "message": (f"{s_!r}/{r_!r} declares ONE value conditional on {keys}, "
+                                f"with no alternative for the condition to select. The "
+                                f"slot can never verify unless the caller supplies "
+                                f"{keys}. Either drop `when`, or declare the alternative "
+                                f"values on the same entity so the condition discriminates."),
+                })
+
         # Warning: the fact's own source states a MORE SPECIFIC value than was declared.
         # Real, from the shipped bench data: declared "$100M" against the source "GPT-4
         # cost ~$100M+.". The document says at least $100M; the declaration says exactly

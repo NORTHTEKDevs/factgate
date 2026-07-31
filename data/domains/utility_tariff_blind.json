@@ -96,59 +96,37 @@
       "s": "Summer On-Peak Energy",
       "r": "rate",
       "o": "14.2 cents per kWh",
-      "source": "During the Summer Season, On-Peak Energy is billed at 14.2 cents per kWh.",
-      "when": {
-        "season": "summer",
-        "period": "on-peak"
-      }
+      "source": "During the Summer Season, On-Peak Energy is billed at 14.2 cents per kWh."
     },
     {
       "s": "Summer Off-Peak Energy",
       "r": "rate",
       "o": "6.8 cents per kWh",
-      "source": "Summer Off-Peak Energy is billed at 6.8 cents per kWh for all hours outside the On-Peak window.",
-      "when": {
-        "season": "summer",
-        "period": "off-peak"
-      }
+      "source": "Summer Off-Peak Energy is billed at 6.8 cents per kWh for all hours outside the On-Peak window."
     },
     {
       "s": "Winter On-Peak Energy",
       "r": "rate",
       "o": "11.5 cents per kWh",
-      "source": "During the Winter Season, On-Peak Energy is billed at 11.5 cents per kWh.",
-      "when": {
-        "season": "winter",
-        "period": "on-peak"
-      }
+      "source": "During the Winter Season, On-Peak Energy is billed at 11.5 cents per kWh."
     },
     {
       "s": "Winter Off-Peak Energy",
       "r": "rate",
       "o": "5.9 cents per kWh",
-      "source": "Winter Off-Peak Energy is billed at 5.9 cents per kWh.",
-      "when": {
-        "season": "winter",
-        "period": "off-peak"
-      }
+      "source": "Winter Off-Peak Energy is billed at 5.9 cents per kWh."
     },
     {
       "s": "Summer Demand Charge",
       "r": "rate",
       "o": "$16.75 per kW per month",
-      "source": "The Summer Demand Charge is $16.75 per kW per month.",
-      "when": {
-        "season": "summer"
-      }
+      "source": "The Summer Demand Charge is $16.75 per kW per month."
     },
     {
       "s": "Winter Demand Charge",
       "r": "rate",
       "o": "$11.40 per kW per month",
-      "source": "The Winter Demand Charge is $11.40 per kW per month.",
-      "when": {
-        "season": "winter"
-      }
+      "source": "The Winter Demand Charge is $11.40 per kW per month."
     },
     {
       "s": "Power Factor Penalty",

@@ -140,8 +140,17 @@ def _grounded_one(declared: str, claimed: str, source: str,
         if candidate and parse_range(candidate) is not None and parse_range(declared) is None:
             return False
 
-    for segment in _SEGMENT.split(source):
-        seg = _norm(segment)
+    segments = [_norm(x) for x in _SEGMENT.split(source)]
+    # If the declared value appears in MORE THAN ONE clause of its own source, there is no
+    # single clause that states it and the residue could be harvested from the wrong one:
+    #
+    #   "The base rate is 4.5 percent. Penalty rates of 4.5 percent per month apply..."
+    #
+    # would admit "4.5 percent per month" for the BASE rate. Caught by a test written to
+    # prove the decimal-point fix had not weakened clause scoping -- it had.
+    if sum(1 for seg in segments if nd in seg) != 1:
+        return False
+    for seg in segments:
         if nd not in seg or nc not in seg:
             continue
         if _NEGATION & set(_WORD.findall(seg)):
