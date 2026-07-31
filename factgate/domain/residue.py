@@ -51,7 +51,14 @@ from factgate.domain.quantity import parse_range
 # Sentence and clause terminators. Commas deliberately do NOT split: "35 dollars per
 # occurrence, assessed at end of business day" is one clause about one fee, and splitting
 # on commas would discard the very residue this exists to admit.
-_SEGMENT = re.compile(r"[.;:!?]")
+# A DECIMAL POINT is not a sentence boundary. Splitting on a bare "." shredded
+# "...within 95.0 to 105.0 percent of label claim..." into "...within 95", "0 to 105" and
+# "0 percent of label claim...", so no clause contained the declared value and NO value
+# carrying a decimal point could ever be residue-matched. That is most of pharma, clinical
+# chemistry, nutrition, utility rates and tax percentages.
+#
+# Split on sentence punctuation unless it sits between two digits.
+_SEGMENT = re.compile(r"(?<!\d)[.;:!?]|(?<=\d)[.;:!?](?!\d)")
 
 # If any of these appears in the clause, the clause is not a plain assertion of the value
 # and no residue drawn from it can be trusted. Deliberately over-inclusive: the cost of a

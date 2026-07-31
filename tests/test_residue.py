@@ -377,3 +377,32 @@ def test_a_single_unconditional_fact_is_unaffected():
         "relations": {"dose": {"kind": "quantity"}},
         "facts": [{"s": "drug", "r": "dose", "o": "10 mg", "source": "The dose is 10 mg."}]})
     assert gate_claim(fs, "drug", "dose", "10 mg").status == VERIFIED
+
+
+def test_a_decimal_point_is_not_a_sentence_boundary():
+    """Clause scoping split on a bare ".", so a decimal point shredded the source:
+
+        "...require the potency to fall within 95.0 to 105.0 percent of label claim..."
+        became  "...within 95" | "0 to 105" | "0 percent of label claim..."
+
+    No clause contained the declared value, so NO value carrying a decimal point could ever
+    be residue-matched -- which is most of pharmaceutical, clinical-chemistry, nutrition,
+    utility-rate and tax-percentage data."""
+    src = ("Assay acceptance criteria require the potency to fall within 95.0 to 105.0 "
+           "percent of label claim throughout the shelf life.")
+    assert _status("95.0 to 105.0 percent", src,
+                   "95.0 to 105.0 percent of label claim") == VERIFIED
+
+
+def test_sentence_scoping_still_holds_with_the_decimal_fix():
+    """The attack the clause scoping exists for must survive: a real sentence boundary
+    still splits, so a residue cannot be harvested from the next sentence."""
+    assert _status("35 dollars",
+                   "The setup fee is 35 dollars. Per-occurrence monitoring surcharges "
+                   "may apply for premium accounts only.",
+                   "35 dollars per occurrence") == HELD
+    # and a decimal value gets the same protection
+    assert _status("4.5 percent",
+                   "The base rate is 4.5 percent. Penalty rates of 4.5 percent per month "
+                   "apply after default.",
+                   "4.5 percent per month") == HELD
