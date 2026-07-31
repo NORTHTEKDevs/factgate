@@ -865,6 +865,74 @@ genuine -- two of those being the local model emitting a Russian word mid-answer
 headline rate is deliberately not adjusted by this breakdown; a metric that moved the
 number it explains would be marking its own homework.
 
+## 16. What five unseen genres found
+
+Every number up to this point came from eight domains, three of them private. That is a
+small sample to call a coverage cost from, and the categories it surfaced were the
+categories those eight happened to contain. Five more were authored blind -- insurance,
+freight, clinical lab, SaaS contract, construction -- by writers who were told not to read
+the gate's source, and they ship with the repository so the rows are reproducible.
+
+They found five defects in one afternoon that eight domains had never touched.
+
+**A unit alias corrupted the value it was meant to normalise.** Aliases were applied by
+blind substring replacement, so a rate sheet declaring `{"mi": "miles"}` turned the claim
+`$2.85 per mile` into `$2.85 per miles le`. The claim was character-for-character identical
+to the declared value and was HELD. The same sheet's `{"hr": "hour"}` would have made
+`threshold` into `thoursesold`.
+
+**Normalisation was applied to one side only.** The gate compared the RAW declared value
+against the NORMALISED claim, so a lab sheet declaring `{"K/uL": "thousand per microliter"}`
+compared `20 K/uL` against `20 thousand per microliter` and held an identical string. Three
+of seven holds on that domain were this. The alias corruption above was the same asymmetry
+wearing a different hat.
+
+**Every conditional fact was invisible to the extractor.** `link_targeted` skipped any slot
+where `lookup()` returned `None`, and `lookup()` returns `None` for a conditional slot
+precisely because no context was supplied. A declared, documented, tested feature was never
+exercised end to end in any domain.
+
+**And behind that gap, a false BLOCK.** With conditional slots finally being extracted, a
+hemoglobin range declared separately for males and females met the model's faithful answer
+`13.5-17.5 g/dL and 12.0-15.5 g/dL` and returned:
+
+```
+BLOCK  matches none of the 2 declared values for 'hemoglobin'/'reference_range'
+```
+
+The conditional path blocked whenever no variant MATCHED, which folds INCOMPARABLE into
+DIFFER -- the one collapse the three-valued design exists to prevent, and which the primary
+path has always been careful about. Telling a clinician that a correct reference range
+contradicts the protocol is worse than any number of holds. BLOCK now requires that every
+variant provably differs.
+
+The lesson is not that conditional extraction was risky. The coverage gap was HIDING the
+safety bug, not preventing it: for as long as those claims were silently dropped, nothing
+could observe that the verdict behind them was wrong.
+
+**My own negation list cost coverage for no safety.** It listed contrast markers --
+"other", "but", "however", "rather" -- alongside genuine negation, so a contract reading
+"upon 60 days written notice to the other party" was held because of the word "other".
+Clause scoping, not a word list, is what stops a residue being harvested from another
+clause; all five constructed leak tests still pass with the shorter list.
+
+### Result
+
+| domain | leak | over-block |
+|---|---|---|
+| consumer lending, three variants | 0/72 | 0/36 |
+| clinical dosing | 0/24 | 1/12 |
+| construction bid schedule (blind) | 0/21 | 2/15 |
+| freight rate sheet (blind) | 0/32 | 2/15 |
+| commercial property policy (blind) | 0/18 | 2/14 |
+| clinical lab reference ranges (blind) | 0/29 | 4/16 |
+| SaaS master agreement (blind) | 0/30 | 5/15 |
+| **total** | **0/226** | **16/123 = 13%** |
+
+Of 123 faithful trials, ONE was the gate refusing a claim it should have confirmed. Fifteen
+never reached the gate: mostly the model answering with several conditional values at once,
+where refusing to pick is correct, and a few missing entity aliases the library now names.
+
 ## Reproduce
 
 ```bash
