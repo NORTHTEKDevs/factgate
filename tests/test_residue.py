@@ -442,7 +442,9 @@ def test_canonicalisation_cannot_equate_two_different_values():
     ("2 1/2 inch", "2.5 inch", VERIFIED),    # mixed number, as machining drawings write it
     ("1.2e17 atoms", "120000000000000000 atoms", VERIFIED),
     ("1.2e17 atoms", "1.3e17 atoms", BLOCK),
-    ("3:1", "6:2", VERIFIED),                # same ratio
+    ("3:1", "3:1", VERIFIED),                # identical
+    ("3:1", "6:2", HELD),                    # same ratio, but a colon is
+                                             # ambiguous with a clock time
     ("3:1", "20:1", BLOCK),
     ("3:1", "3", HELD),                      # a ratio is never a bare number
     ("3:1", "3 to 1", HELD),                 # "N to M" is ambiguous with a range
@@ -457,6 +459,33 @@ def test_exact_notations(declared, claimed, want):
         "facts": [{"s": "e", "r": "p", "o": declared,
                    "source": f"The value is {declared}."}]})
     assert gate_claim(fs, "e", "p", claimed).status == want
+
+
+def test_a_colon_value_compares_only_against_the_same_denominator():
+    """A LEAK caught the same hour the ratio parser was written. Reducing a colon value to
+    a quotient made two different TIMES compare equal:
+
+        declared "14:30" (a window)   claimed "7:15"   ->  VERIFIED
+
+    14/30 and 7/15 are the same ratio and different times, and nothing local can tell which
+    a colon means -- the same ambiguity that already ruled out reading "N to M" as a ratio.
+    The denominator is part of the identity now, so "3:1" against "20:1" is still a provable
+    difference while "16:9" against "32:18" is merely unprovable."""
+    from factgate.domain.quantity import DIFFER, INCOMPARABLE, MATCH, compare_values
+    assert compare_values("14:30", "7:15") == INCOMPARABLE
+    assert compare_values("16:9", "32:18") == INCOMPARABLE
+    assert compare_values("16:9", "16:9") == MATCH
+    assert compare_values("3:1", "20:1") == DIFFER
+
+
+def test_scientific_notation_underflow_is_not_a_match():
+    """Overflow raised OverflowError and was caught; UNDERFLOW does not raise. "1e-400" and
+    "1e-500" both became 0.0 and compared MATCH -- two different values confirmed as one."""
+    from factgate.domain.quantity import INCOMPARABLE, compare_values
+    from factgate.domain.quantity import parse_quantity
+    assert parse_quantity("1e-400") is None
+    assert parse_quantity("1e400") is None
+    assert compare_values("1e-400", "1e-500") == INCOMPARABLE
 
 
 def test_a_range_is_never_read_as_a_ratio():

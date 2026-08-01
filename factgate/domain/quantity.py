@@ -126,15 +126,32 @@ def _exact_notation(raw: str) -> Quantity | None:
     if m:
         exponent = m.group(2) if m.group(2) is not None else m.group(3)
         try:
-            value = float(m.group(1)) * (10.0 ** int(exponent))
+            mantissa = float(m.group(1))
+            value = mantissa * (10.0 ** int(exponent))
         except (ValueError, OverflowError):
+            return None
+        # UNDERFLOW is as dangerous as overflow and does not raise. "1e-400" and "1e-500"
+        # both became 0.0 and compared MATCH -- two different values confirmed as one.
+        # Overflow already returned None via OverflowError; underflow has to be caught by
+        # inspecting the result.
+        if mantissa != 0 and value == 0:
+            return None
+        if value in (float("inf"), float("-inf")):
             return None
         return Quantity(value, re.sub(r"\s*", "", m.group(4) or ""))
     m = _RATIO_RE.match(raw)
     if m and float(m.group(2)) != 0:
-        # The unit records that this is a RATIO. "3:1" must never compare equal to a bare
-        # 3, and a range "3 to 1" is reversed and rejected by parse_range anyway.
-        return Quantity(float(m.group(1)) / float(m.group(2)), "ratio")
+        # The DENOMINATOR goes in the unit, so a colon value compares only against another
+        # with the same denominator. Reducing to a quotient instead was a LEAK, caught the
+        # same hour it was written:
+        #
+        #   declared "14:30" (a time)   claimed "7:15"   -> VERIFIED
+        #
+        # 14/30 and 7/15 are the same ratio and different times, and nothing local can tell
+        # which a colon means -- exactly the ambiguity that already ruled out reading
+        # "N to M" as a ratio. Same denominator, so "3:1" against "20:1" is still a
+        # provable difference; different denominator is INCOMPARABLE, which is a hold.
+        return Quantity(float(m.group(1)), f"ratio:{m.group(2)}")
     return None
 
 
@@ -216,14 +233,19 @@ class Range:
 # often omits the currency symbol, so the unit is taken from whichever side carries one.
 # A magnitude letter must not be followed by another letter, or the "m" of "mg/kg" reads
 # as "million" and "5-10 mg/kg" becomes a range topping out at ten million.
+# Bounds may be NEGATIVE. Without the sign, "-20 to -15 degrees C" did not parse at all, so
+# a cold-chain specification declaring a freezer range under kind=quantity could not be
+# LOADED -- the same class as unitless ranges, found the same way, by a genre nobody had
+# written yet. Sub-zero ranges are ordinary in cold chain, audio loudness, depth and
+# refrigeration.
 _RANGE_RE = re.compile(
-    r"^\s*(?:between\s+)?(US\$|[$£€¥])?\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*([kKmMbB](?![a-zA-Z]))?\s*"
+    r"^\s*(?:between\s+)?(US\$|[$£€¥])?\s*([-+]?[0-9][0-9,]*(?:\.[0-9]+)?)\s*([kKmMbB](?![a-zA-Z]))?\s*"
     # "and" is accepted as a separator, so "between $500K and $2M" parses -- and so does a
     # bare "5 and 10 mg/kg". That is deliberate but not free: "5 and 10" could mean two
     # separate values rather than a span. It only matters when the DECLARED value is also
     # a range, and reading the claim as a range is the reading that can be checked.
     r"(?:-|–|—|\bto\b|\band\b)\s*"
-    r"(US\$|[$£€¥])?\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*([kKmMbB](?![a-zA-Z]))?\s*"
+    r"(US\$|[$£€¥])?\s*([-+]?[0-9][0-9,]*(?:\.[0-9]+)?)\s*([kKmMbB](?![a-zA-Z]))?\s*"
     r"([a-zA-Zµ%°][a-zA-Zµ%°/\s]*)?\s*$")
 
 

@@ -681,3 +681,25 @@ def test_lint_accepts_a_spelling_variant(alias, canon):
         "relations": {"p": {"kind": "quantity"}}, "unit_aliases": {alias: canon},
         "facts": [{"s": "x", "r": "p", "o": "5 mg", "source": "It is 5 mg."}]})
     assert [p for p in fs.lint() if p["level"] == "error"] == []
+
+
+def test_a_negative_range_can_be_declared():
+    """FOUND BY A NEW GENRE, at load time again. A cold-chain specification declaring a
+    freezer range "-20 to -15 degrees C" under kind=quantity could not be LOADED: the range
+    pattern had no sign on either bound. Sub-zero ranges are ordinary in cold chain, audio
+    loudness, depth and refrigeration."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"vaccine": []},
+        "relations": {"storage": {"kind": "quantity"}},
+        "facts": [{"s": "vaccine", "r": "storage", "o": "-20 to -15 degrees C",
+                   "source": "Store frozen at -20 to -15 degrees C."}]})
+    assert gate_claim(fs, "vaccine", "storage", "-18 degrees C").status == VERIFIED
+    assert gate_claim(fs, "vaccine", "storage", "-10 degrees C").status == BLOCK
+    assert gate_claim(fs, "vaccine", "storage", "-20 to -15 degrees C").status == VERIFIED
+
+
+def test_a_reversed_range_is_still_rejected():
+    """The sign must not weaken the typo guard: bounds are rejected, never swapped."""
+    from factgate.domain.quantity import parse_range
+    assert parse_range("-15 to -20 C") is None
+    assert parse_range("10-5 mg") is None
