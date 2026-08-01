@@ -1,0 +1,39 @@
+{
+  "domain": "broadcast-spec-blind",
+  "corpus": "This Broadcast Delivery Specification governs technical requirements for program deliverables submitted to Northern Lights Broadcasting (NLB) for the 2026 broadcast season.\n\nThe Main Feature Program shall be delivered at a frame rate of 23.976 fps, with a native resolution of 3840x2160 and an aspect ratio of 16:9. The video bitrate for the Main Feature Program is 50 Mbps. Integrated loudness for the Main Feature Program must measure -23 LUFS in accordance with EBU R128.\n\nThe Theatrical Trailer is delivered separately from the feature and carries its own technical profile. The Theatrical Trailer shall be encoded at 24 fps with a resolution of 1920x1080. Integrated loudness for the Theatrical Trailer must measure -24 LUFS.\n\nThe Broadcast Promo, used for on-air scheduling, is produced at 29.97 fps with an aspect ratio of 16:9. Integrated loudness for the Broadcast Promo must measure -24 LUFS.\n\nThe Streaming Master supports adaptive delivery across two resolution tiers. When the resolution tier is UHD, the Streaming Master video bitrate is 15 Mbps. When the resolution tier is HD, the Streaming Master video bitrate is 6 Mbps. The Streaming Master frame rate is 59.94 fps.\n\nThe Archival Submaster is retained for long-term preservation and is not intended for on-air use. The Archival Submaster shall be delivered at a resolution of 3840x2160 with an aspect ratio of 2.39:1. The video bitrate for the Archival Submaster is 1 Gbps, reflecting its mezzanine-grade encoding.",
+  "entities": {
+    "main_feature": ["Main Feature Program", "Main Feature"],
+    "theatrical_trailer": ["Theatrical Trailer"],
+    "broadcast_promo": ["Broadcast Promo"],
+    "streaming_master": ["Streaming Master"],
+    "archival_submaster": ["Archival Submaster"]
+  },
+  "relations": {
+    "frame_rate": {"kind": "quantity", "question": "what is the frame rate of {entity}?"},
+    "resolution": {"kind": "text", "question": "what is the resolution of {entity}?"},
+    "aspect_ratio": {"kind": "text", "question": "what is the aspect ratio of {entity}?"},
+    "video_bitrate": {"kind": "quantity", "question": "what is the video bitrate of {entity}?"},
+    "loudness": {"kind": "quantity", "question": "what is the loudness of {entity}?"}
+  },
+  "conditions": ["resolution_tier"],
+  "value_qualifiers": ["native", "target", "nominal"],
+  "unit_aliases": {"fps": "frames per second", "Mbps": "megabits per second", "Gbps": "gigabits per second"},
+  "facts": [
+    {"s": "main_feature", "r": "frame_rate", "o": "23.976 fps", "source": "The Main Feature Program shall be delivered at a frame rate of 23.976 fps, with a native resolution of 3840x2160 and an aspect ratio of 16:9."},
+    {"s": "main_feature", "r": "resolution", "o": "3840x2160", "source": "The Main Feature Program shall be delivered at a frame rate of 23.976 fps, with a native resolution of 3840x2160 and an aspect ratio of 16:9."},
+    {"s": "main_feature", "r": "aspect_ratio", "o": "16:9", "source": "The Main Feature Program shall be delivered at a frame rate of 23.976 fps, with a native resolution of 3840x2160 and an aspect ratio of 16:9."},
+    {"s": "main_feature", "r": "video_bitrate", "o": "50 Mbps", "source": "The video bitrate for the Main Feature Program is 50 Mbps."},
+    {"s": "main_feature", "r": "loudness", "o": "-23 LUFS", "source": "Integrated loudness for the Main Feature Program must measure -23 LUFS in accordance with EBU R128."},
+    {"s": "theatrical_trailer", "r": "frame_rate", "o": "24 fps", "source": "The Theatrical Trailer shall be encoded at 24 fps with a resolution of 1920x1080."},
+    {"s": "theatrical_trailer", "r": "resolution", "o": "1920x1080", "source": "The Theatrical Trailer shall be encoded at 24 fps with a resolution of 1920x1080."},
+    {"s": "theatrical_trailer", "r": "loudness", "o": "-24 LUFS", "source": "Integrated loudness for the Theatrical Trailer must measure -24 LUFS."},
+    {"s": "broadcast_promo", "r": "frame_rate", "o": "29.97 fps", "source": "The Broadcast Promo, used for on-air scheduling, is produced at 29.97 fps with an aspect ratio of 16:9."},
+    {"s": "broadcast_promo", "r": "aspect_ratio", "o": "16:9", "source": "The Broadcast Promo, used for on-air scheduling, is produced at 29.97 fps with an aspect ratio of 16:9."},
+    {"s": "broadcast_promo", "r": "loudness", "o": "-24 LUFS", "source": "Integrated loudness for the Broadcast Promo must measure -24 LUFS."},
+    {"s": "streaming_master", "r": "video_bitrate", "o": "15 Mbps", "when": {"resolution_tier": "UHD"}, "source": "When the resolution tier is UHD, the Streaming Master video bitrate is 15 Mbps."},
+    {"s": "streaming_master", "r": "video_bitrate", "o": "6 Mbps", "when": {"resolution_tier": "HD"}, "source": "When the resolution tier is HD, the Streaming Master video bitrate is 6 Mbps."},
+    {"s": "streaming_master", "r": "frame_rate", "o": "59.94 fps", "source": "The Streaming Master frame rate is 59.94 fps."},
+    {"s": "archival_submaster", "r": "resolution", "o": "3840x2160", "source": "The Archival Submaster shall be delivered at a resolution of 3840x2160 with an aspect ratio of 2.39:1."},
+    {"s": "archival_submaster", "r": "video_bitrate", "o": "1 Gbps", "source": "The video bitrate for the Archival Submaster is 1 Gbps, reflecting its mezzanine-grade encoding."}
+  ]
+}

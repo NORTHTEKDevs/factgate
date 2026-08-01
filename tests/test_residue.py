@@ -472,10 +472,10 @@ def test_a_colon_value_compares_only_against_the_same_denominator():
     The denominator is part of the identity now, so "3:1" against "20:1" is still a provable
     difference while "16:9" against "32:18" is merely unprovable."""
     from factgate.domain.quantity import DIFFER, INCOMPARABLE, MATCH, compare_values
-    assert compare_values("14:30", "7:15") == INCOMPARABLE
-    assert compare_values("16:9", "32:18") == INCOMPARABLE
-    assert compare_values("16:9", "16:9") == MATCH
-    assert compare_values("3:1", "20:1") == DIFFER
+    assert compare_values("14:30", "7:15", True) == INCOMPARABLE
+    assert compare_values("16:9", "32:18", True) == INCOMPARABLE
+    assert compare_values("16:9", "16:9", True) == MATCH
+    assert compare_values("3:1", "20:1", True) == DIFFER
 
 
 def test_scientific_notation_underflow_is_not_a_match():
@@ -483,15 +483,18 @@ def test_scientific_notation_underflow_is_not_a_match():
     "1e-500" both became 0.0 and compared MATCH -- two different values confirmed as one."""
     from factgate.domain.quantity import INCOMPARABLE, compare_values
     from factgate.domain.quantity import parse_quantity
-    assert parse_quantity("1e-400") is None
-    assert parse_quantity("1e400") is None
-    assert compare_values("1e-400", "1e-500") == INCOMPARABLE
+    assert parse_quantity("1e-400", numeric=True) is None
+    assert parse_quantity("1e400", numeric=True) is None
+    assert compare_values("1e-400", "1e-500", True) == INCOMPARABLE
 
 
 def test_a_range_is_never_read_as_a_ratio():
     """The leak I introduced adding ratios and caught before it shipped: "5 to 10" and
     "1 to 2" are different RANGES that share a quotient, so both parsed as ratio 0.5 and
     compared MATCH. Ratios are colon-form only."""
-    from factgate.domain.quantity import INCOMPARABLE, compare_values
-    assert compare_values("5 to 10", "1 to 2") == INCOMPARABLE
+    from factgate.domain.quantity import compare_values
+    # As RANGES these are provably different, which is the reading that must win.
+    assert compare_values("5 to 10", "1 to 2", True) == "DIFFER"
     assert compare_values("5 to 10 mg", "1 to 2 mg") == "DIFFER"
+    # And the quotient they share must never make them equal.
+    assert compare_values("5 to 10", "1 to 2", True) != "MATCH"

@@ -100,15 +100,17 @@ def _scale_of(unit: str) -> tuple[str, float]:
 # listed explicitly rather than derived, because algorithmic prefix-stripping misreads
 # ordinary words ("hrs" begins with the hecto prefix, "mi" with milli).
 #
-# "pound" and "pounds" are deliberately ABSENT: they are mass or currency depending on the
-# document, and a check that cannot tell must not guess.
+# "pound"/"pounds" are listed as MASS. They are ambiguous with sterling, but leaving them
+# out made the alias {"lbs": "pounds"} -- an ordinary spelling variant -- trip the
+# known-to-unknown check below. Flagging a money domain that writes {"pounds": "gbp"} is a
+# rename; missing {"mcg": "iu"} is a dosing leak. The safe side is the one that errs.
 _KNOWN_UNITS: dict[str, tuple[str, float]] = {}
 for _dim, _entries in {
     "mass": [(1e-6, ["mcg", "ug", "µg", "microgram", "micrograms"]),
              (1e-3, ["mg", "milligram", "milligrams"]),
              (1.0, ["g", "gram", "grams", "gramme", "grammes"]),
              (1e3, ["kg", "kilogram", "kilograms", "kilo", "kilos"]),
-             (453.592, ["lb", "lbs"]),
+             (453.592, ["lb", "lbs", "pound", "pounds"]),
              (28.3495, ["oz", "ounce", "ounces"])],
     "volume": [(1e-3, ["ml", "millilitre", "millilitres", "milliliter",
                        "milliliters", "cc"]),
@@ -310,7 +312,7 @@ class FactSet:
             if r not in relations:
                 raise ValidationError(f"fact declares undeclared relation {r!r}")
             if (relations[r].get("kind") == "quantity"
-                    and parse_quantity(o) is None
+                    and parse_quantity(o, numeric=True) is None
                     and parse_range(o, allow_unitless=True) is None):
                 raise ValidationError(
                     f"relation {r!r} is kind=quantity but value {o!r} is not a quantity")
@@ -520,6 +522,38 @@ class FactSet:
                                 f"Every claim written in {alias!r} would verify against a "
                                 f"fact declared in {canon!r}, unconverted. Aliases "
                                 f"reconcile spellings of one unit, never two."),
+                })
+                continue
+            # ONE side known, the other not, and they are not the same word. The dimension
+            # check abstains on unknown units, and abstaining was itself a leak:
+            #
+            #   unit_aliases {"mcg": "iu"}   declared "15 iu"   claimed "15 mcg"
+            #   -> VERIFIED, lint clean
+            #
+            # IU is not in the table and never can be: it is a biological activity unit
+            # whose conversion depends on the SUBSTANCE (1 mcg of vitamin D is 40 IU, and
+            # vitamin E differs again). The same is true of mEq, mmol, tsp, drops and
+            # puffs. An alias joining a unit we understand to one we do not is exactly the
+            # case that cannot be checked, so it must be refused rather than waved through.
+            a_txt, c_txt = str(alias).strip().lower(), str(canon).strip().lower()
+            # A multi-word spelling of a known unit is still that unit: "US gallons" is
+            # gallons. Look inside the unknown side for a word naming the SAME unit before
+            # complaining, or every unlisted spelling becomes a false alarm.
+            known_side = a_known or c_known
+            other = c_txt if a_known else a_txt
+            names_same_unit = any(_KNOWN_UNITS.get(w) == known_side
+                                  for w in re.findall(r"[a-zµ%°]+", other))
+            if (bool(a_known) != bool(c_known) and not names_same_unit
+                    and a_txt.rstrip("s") != c_txt.rstrip("s")):
+                known, unknown = (a_txt, c_txt) if a_known else (c_txt, a_known and "" or a_txt)
+                problems.append({
+                    "level": "error",
+                    "message": (f"unit_alias {alias!r} -> {canon!r} joins {known!r}, a unit "
+                                f"with a known physical size, to one that is not a "
+                                f"recognised unit. That cannot be checked, and units like "
+                                f"IU, mEq and mmol convert differently per substance. "
+                                f"Declare both sides as spellings of the SAME unit, or "
+                                f"drop the alias and let the values compare as written."),
                 })
                 continue
             a_base, a_f = _scale_of(str(alias))

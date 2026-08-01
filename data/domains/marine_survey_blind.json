@@ -1,0 +1,44 @@
+{
+  "domain": "marine-survey-blind",
+  "corpus": "MV Nordvind is a steel-hulled fishing trawler surveyed at Tromsø Ship Repair Yard on 14 March 2026. The vessel displayed a laden draft of 3.4 m (11 ft 2 in) when fully loaded. Her light draft was 1.9 m (6 ft 3 in) when light. Gross tonnage is recorded at 498 GT. Nordvind achieved a service speed of 11.5 knots on trial. Hull plating amidships measured 6.0 mm, with a minus tolerance of 0.3 mm permitted under class rules. The anchor chain runs to 9 shackles, equivalent to roughly 82.5 metres of stud-link chain. Freeboard at the load line mark was measured at 0.85 m. The main fuel tank holds 42 cubic metres of marine diesel.\n\nMV Sealight, a coastal passenger ferry, was surveyed at Bodø on 2 April 2026. She carries a laden draft of 2.7 m (8 ft 10 in) fully loaded. Her light draft was 1.4 m (4 ft 7 in) when light. Gross tonnage is listed as 612 GT. On sea trials Sealight reached a service speed of 14.2 knots. The anchor chain measures 7 shackles in length. The day tank supplying the auxiliary generator holds 2,800 litres of marine gas oil. During the swing test the compass heading was checked against a transit bearing of 047 degrees magnetic.\n\nMV Arctic Tern is a research vessel surveyed alongside at Longyearbyen on 20 April 2026. Gross tonnage stands at 1,240 GT. Her anchor chain runs to 11 shackles. The main fuel bunkers hold 180 cubic metres of marine diesel.",
+  "entities": {
+    "mv-nordvind": ["MV Nordvind", "Nordvind"],
+    "mv-sealight": ["MV Sealight", "Sealight"],
+    "mv-arctic-tern": ["MV Arctic Tern", "Arctic Tern"]
+  },
+  "relations": {
+    "draft": {"kind": "quantity", "question": "what is the draft of {entity}?"},
+    "gross_tonnage": {"kind": "quantity", "question": "what is the gross tonnage of {entity}?"},
+    "service_speed": {"kind": "quantity", "question": "what is the service speed of {entity}?"},
+    "hull_thickness": {"kind": "quantity", "question": "what is the hull thickness of {entity}?"},
+    "anchor_chain": {"kind": "quantity", "question": "what is the anchor chain length of {entity}?"},
+    "freeboard": {"kind": "quantity", "question": "what is the freeboard of {entity}?"},
+    "fuel_capacity": {"kind": "quantity", "question": "what is the fuel capacity of {entity}?"},
+    "survey_bearing": {"kind": "quantity", "question": "what is the survey bearing of {entity}?"}
+  },
+  "conditions": ["load_state"],
+  "value_qualifiers": ["recorded at", "listed as", "stands at", "measured at", "achieved", "reached", "on trial", "on sea trials", "amidships", "surveyed at"],
+  "unit_aliases": {
+    "GT": "gross tons",
+    "mm": "millimetres",
+    "kt": "knots"
+  },
+  "facts": [
+    {"s": "mv-nordvind", "r": "draft", "o": "3.4 m", "when": {"load_state": "loaded"}, "source": "The vessel displayed a laden draft of 3.4 m (11 ft 2 in) when fully loaded."},
+    {"s": "mv-nordvind", "r": "draft", "o": "1.9 m", "when": {"load_state": "light"}, "source": "Her light draft was 1.9 m (6 ft 3 in) when light."},
+    {"s": "mv-sealight", "r": "draft", "o": "2.7 m", "when": {"load_state": "loaded"}, "source": "She carries a laden draft of 2.7 m (8 ft 10 in) fully loaded."},
+    {"s": "mv-sealight", "r": "draft", "o": "1.4 m", "when": {"load_state": "light"}, "source": "Her light draft was 1.4 m (4 ft 7 in) when light."},
+    {"s": "mv-nordvind", "r": "gross_tonnage", "o": "498 GT", "source": "Gross tonnage is recorded at 498 GT."},
+    {"s": "mv-sealight", "r": "gross_tonnage", "o": "612 GT", "source": "Gross tonnage is listed as 612 GT."},
+    {"s": "mv-arctic-tern", "r": "gross_tonnage", "o": "1,240 GT", "source": "Gross tonnage stands at 1,240 GT."},
+    {"s": "mv-nordvind", "r": "service_speed", "o": "11.5 knots", "source": "Nordvind achieved a service speed of 11.5 knots on trial."},
+    {"s": "mv-sealight", "r": "service_speed", "o": "14.2 knots", "source": "On sea trials Sealight reached a service speed of 14.2 knots."},
+    {"s": "mv-nordvind", "r": "hull_thickness", "o": "6.0 mm", "source": "Hull plating amidships measured 6.0 mm, with a minus tolerance of 0.3 mm permitted under class rules."},
+    {"s": "mv-nordvind", "r": "anchor_chain", "o": "9 shackles", "source": "The anchor chain runs to 9 shackles, equivalent to roughly 82.5 metres of stud-link chain."},
+    {"s": "mv-sealight", "r": "anchor_chain", "o": "7 shackles", "source": "The anchor chain measures 7 shackles in length."},
+    {"s": "mv-nordvind", "r": "freeboard", "o": "0.85 m", "source": "Freeboard at the load line mark was measured at 0.85 m."},
+    {"s": "mv-sealight", "r": "fuel_capacity", "o": "2,800 litres", "source": "The day tank supplying the auxiliary generator holds 2,800 litres of marine gas oil."},
+    {"s": "mv-arctic-tern", "r": "fuel_capacity", "o": "180 cubic metres", "source": "The main fuel bunkers hold 180 cubic metres of marine diesel."},
+    {"s": "mv-sealight", "r": "survey_bearing", "o": "047 degrees magnetic", "source": "During the swing test the compass heading was checked against a transit bearing of 047 degrees magnetic."}
+  ]
+}

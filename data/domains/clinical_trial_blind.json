@@ -1,0 +1,46 @@
+{
+  "domain": "clinical-trial-blind",
+  "corpus": "5.0 STUDY DESIGN AND POPULATION\n\nProtocol TX-2201 is a randomized, double-blind, placebo-controlled Phase 2 study of denvaxatinib (DNVX-100) in adult subjects at elevated risk of venous thromboembolism following major orthopedic surgery. The trial will enroll 240 subjects across approximately 18 clinical sites in North America and Europe. Subjects will be followed for 24 weeks (approximately 6 months) after the last dose of study drug for safety and efficacy assessments. The primary endpoint is time to first symptomatic venous thromboembolism confirmed by imaging.\n\n5.1 DOSING BY WEIGHT BAND\n\nDosing is stratified by baseline body weight into two cohorts. Cohort A comprises subjects weighing 40 to 59 kilograms at screening. Cohort B comprises subjects weighing 60 to 90 kilograms at screening. Subjects in the 40 to 59 kilogram band will receive denvaxatinib 5 mg administered orally twice daily. Subjects in the 60 to 90 kilogram band will receive denvaxatinib 10 mg administered orally twice daily. Denvaxatinib is supplied as an oral tablet administered twice daily with or without food.\n\n5.2 VISIT SCHEDULE\n\nScreening assessments must be completed within 28 days prior to Day 1 dosing. The Day 28 visit (+/- 3 days) will include vital signs, a physical examination, and blood sampling for pharmacokinetics. The Day 84 visit (+/- 7 days) marks the end of the primary treatment period and includes a full laboratory panel. Subjects who complete the primary treatment period and consent to the optional crossover extension will enter a washout interval before re-dosing. A washout period of 14 days is required between Period 1 and Period 2 dosing for subjects entering the crossover extension.\n\n5.3 SAFETY MONITORING AND WITHDRAWAL CRITERIA\n\nEnrollment will be paused if more than 20% of subjects in either cohort experience a treatment-related serious adverse event, pending review by the independent Data Safety Monitoring Board. Hepatic function will be monitored at every visit. Subjects will be withdrawn if total bilirubin exceeds 2.0 mg/dL on two consecutive laboratory assessments. Investigators should also monitor for signs of bleeding, rash, and injection site reactions throughout the study.",
+  "entities": {
+    "trial": ["the trial", "the study", "this protocol", "Protocol TX-2201"],
+    "study-drug": ["the study drug", "denvaxatinib", "DNVX-100"],
+    "cohort-a": ["Cohort A", "the low-weight cohort"],
+    "cohort-b": ["Cohort B", "the high-weight cohort"],
+    "day28-visit": ["the Day 28 visit", "the Week 4 visit"],
+    "day84-visit": ["the Day 84 visit", "the Week 12 visit"],
+    "screening-visit": ["the screening visit", "Visit 1"],
+    "crossover-period": ["the crossover extension", "Period 2", "the washout interval"],
+    "hepatic-monitoring": ["the hepatic monitoring rule", "the bilirubin withdrawal criterion"]
+  },
+  "relations": {
+    "enrollment_target": {"kind": "quantity", "question": "what is the enrollment target of {entity}?"},
+    "follow_up_duration": {"kind": "quantity", "question": "what is the follow-up duration of {entity}?"},
+    "primary_endpoint": {"kind": "text", "question": "what is the primary endpoint of {entity}?"},
+    "stopping_rule_percentage": {"kind": "quantity", "question": "what is the stopping rule percentage of {entity}?"},
+    "dosing_weight_band": {"kind": "quantity", "question": "what is the dosing weight band of {entity}?"},
+    "dose_by_weight": {"kind": "quantity", "question": "what is the dose of {entity}?"},
+    "visit_window": {"kind": "quantity", "question": "what is the visit window of {entity}?"},
+    "washout_period": {"kind": "quantity", "question": "what is the washout period of {entity}?"},
+    "withdrawal_threshold": {"kind": "quantity", "question": "what is the withdrawal threshold of {entity}?"},
+    "route_of_administration": {"kind": "text", "question": "what is the route of administration of {entity}?"}
+  },
+  "conditions": ["weight_band"],
+  "value_qualifiers": ["approximately", "up to", "within", "at least"],
+  "unit_aliases": {"mg": "milligrams", "kg": "kilograms", "%": "percent"},
+  "facts": [
+    {"s": "trial", "r": "enrollment_target", "o": "240 subjects", "source": "The trial will enroll 240 subjects across approximately 18 clinical sites in North America and Europe."},
+    {"s": "trial", "r": "follow_up_duration", "o": "24 weeks", "source": "Subjects will be followed for 24 weeks (approximately 6 months) after the last dose of study drug for safety and efficacy assessments."},
+    {"s": "trial", "r": "primary_endpoint", "o": "time to first symptomatic venous thromboembolism confirmed by imaging", "source": "The primary endpoint is time to first symptomatic venous thromboembolism confirmed by imaging."},
+    {"s": "trial", "r": "stopping_rule_percentage", "o": "20 %", "source": "Enrollment will be paused if more than 20% of subjects in either cohort experience a treatment-related serious adverse event, pending review by the independent Data Safety Monitoring Board."},
+    {"s": "cohort-a", "r": "dosing_weight_band", "o": "40-59 kg", "source": "Cohort A comprises subjects weighing 40 to 59 kilograms at screening."},
+    {"s": "cohort-b", "r": "dosing_weight_band", "o": "60-90 kg", "source": "Cohort B comprises subjects weighing 60 to 90 kilograms at screening."},
+    {"s": "study-drug", "r": "dose_by_weight", "o": "5 mg", "when": {"weight_band": "40-59 kg"}, "source": "Subjects in the 40 to 59 kilogram band will receive denvaxatinib 5 mg administered orally twice daily."},
+    {"s": "study-drug", "r": "dose_by_weight", "o": "10 mg", "when": {"weight_band": "60-90 kg"}, "source": "Subjects in the 60 to 90 kilogram band will receive denvaxatinib 10 mg administered orally twice daily."},
+    {"s": "study-drug", "r": "route_of_administration", "o": "oral tablet administered twice daily", "source": "Denvaxatinib is supplied as an oral tablet administered twice daily with or without food."},
+    {"s": "screening-visit", "r": "visit_window", "o": "28 days", "source": "Screening assessments must be completed within 28 days prior to Day 1 dosing."},
+    {"s": "day28-visit", "r": "visit_window", "o": "25-31 days", "source": "The Day 28 visit (+/- 3 days) will include vital signs, a physical examination, and blood sampling for pharmacokinetics."},
+    {"s": "day84-visit", "r": "visit_window", "o": "77-91 days", "source": "The Day 84 visit (+/- 7 days) marks the end of the primary treatment period and includes a full laboratory panel."},
+    {"s": "crossover-period", "r": "washout_period", "o": "14 days", "source": "A washout period of 14 days is required between Period 1 and Period 2 dosing for subjects entering the crossover extension."},
+    {"s": "hepatic-monitoring", "r": "withdrawal_threshold", "o": "2.0 mg/dL", "source": "Subjects will be withdrawn if total bilirubin exceeds 2.0 mg/dL on two consecutive laboratory assessments."}
+  ]
+}

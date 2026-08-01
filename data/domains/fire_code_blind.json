@@ -1,0 +1,42 @@
+{
+  "domain": "fire-code-blind",
+  "corpus": "Fire and Life-Safety Code Extract - Chapter 9: Means of Egress and Fire-Resistance Requirements\n\nStairwell 2, the north exit stair, connects the ground floor to the roof and is enclosed in walls with a 2 hour fire-resistance rating. The risers serving Stairwell 2 are 4 inch supply risers tied into the standpipe system. Stairwell 2 serves occupants on the 3rd storey and above, providing the primary vertical egress path for that portion of the building.\n\nCorridor A, the main east-west corridor on the second floor, is separated from adjacent spaces by construction with a 1 hour fire-resistance rating. The maximum travel distance permitted within Corridor A to the nearest exit is 250 feet. Egress components along Corridor A must provide not less than 0.2 inches per occupant of clear width.\n\nThe Assembly Hall, used for public gatherings on the ground floor, is designed to an occupancy load factor of 7 square feet per person given its concentrated seating arrangement. Automatic sprinkler protection throughout the Assembly Hall is required at a minimum design density of 0.15 gallons per minute per square foot. Walls enclosing the Assembly Hall carry a 1 hour fire-resistance rating.\n\nStorage Room 3B, located on the 3rd storey, is classified for low-density storage use and is assigned an occupancy load factor of 300 square feet per person. The room is enclosed by construction rated for a 2 hour fire-resistance rating to limit fire spread into adjoining corridors.\n\nThe Fire Pump Room, housing the building's fire protection water supply equipment, is fed by a 6 inch riser from the street main. Walls and the ceiling assembly of the Fire Pump Room carry a 2 hour fire-resistance rating consistent with its role as a critical life-safety space.\n\nThe Mechanical Penthouse is located on the 4th storey at the top of the building. The maximum travel distance to an approved exit from any point within the Mechanical Penthouse is 100 feet.",
+  "entities": {
+    "stairwell-2": ["Stairwell 2"],
+    "corridor-a": ["Corridor A"],
+    "assembly-hall": ["Assembly Hall", "the Assembly Hall"],
+    "storage-room-3b": ["Storage Room 3B"],
+    "fire-pump-room": ["Fire Pump Room", "the Fire Pump Room"],
+    "mechanical-penthouse": ["Mechanical Penthouse", "the Mechanical Penthouse"]
+  },
+  "relations": {
+    "fire_resistance_rating": {"kind": "quantity", "question": "what is the fire-resistance rating of {entity}?"},
+    "riser_size": {"kind": "quantity", "question": "what is the riser size for {entity}?"},
+    "located_on_storey": {"kind": "text", "question": "what storey is {entity} located on?"},
+    "travel_distance": {"kind": "quantity", "question": "what is the maximum travel distance for {entity}?"},
+    "egress_width": {"kind": "quantity", "question": "what is the required egress width for {entity}?"},
+    "occupancy_load_factor": {"kind": "quantity", "question": "what is the occupancy load factor for {entity}?"},
+    "sprinkler_density": {"kind": "quantity", "question": "what is the sprinkler density for {entity}?"}
+  },
+  "conditions": [],
+  "value_qualifiers": ["not less than", "a minimum of", "minimum design density of", "rated for"],
+  "unit_aliases": {"hr": "hour", "in": "inch", "ft": "feet"},
+  "facts": [
+    {"s": "stairwell-2", "r": "fire_resistance_rating", "o": "2 hour", "source": "Stairwell 2, the north exit stair, connects the ground floor to the roof and is enclosed in walls with a 2 hour fire-resistance rating."},
+    {"s": "stairwell-2", "r": "riser_size", "o": "4 inch", "source": "The risers serving Stairwell 2 are 4 inch supply risers tied into the standpipe system."},
+    {"s": "stairwell-2", "r": "located_on_storey", "o": "3rd storey", "source": "Stairwell 2 serves occupants on the 3rd storey and above, providing the primary vertical egress path for that portion of the building."},
+    {"s": "corridor-a", "r": "fire_resistance_rating", "o": "1 hour", "source": "Corridor A, the main east-west corridor on the second floor, is separated from adjacent spaces by construction with a 1 hour fire-resistance rating."},
+    {"s": "corridor-a", "r": "travel_distance", "o": "250 feet", "source": "The maximum travel distance permitted within Corridor A to the nearest exit is 250 feet."},
+    {"s": "corridor-a", "r": "egress_width", "o": "0.2 inches per occupant", "source": "Egress components along Corridor A must provide not less than 0.2 inches per occupant of clear width."},
+    {"s": "assembly-hall", "r": "occupancy_load_factor", "o": "7 square feet per person", "source": "The Assembly Hall, used for public gatherings on the ground floor, is designed to an occupancy load factor of 7 square feet per person given its concentrated seating arrangement."},
+    {"s": "assembly-hall", "r": "sprinkler_density", "o": "0.15 gallons per minute per square foot", "source": "Automatic sprinkler protection throughout the Assembly Hall is required at a minimum design density of 0.15 gallons per minute per square foot."},
+    {"s": "assembly-hall", "r": "fire_resistance_rating", "o": "1 hour", "source": "Walls enclosing the Assembly Hall carry a 1 hour fire-resistance rating."},
+    {"s": "storage-room-3b", "r": "located_on_storey", "o": "3rd storey", "source": "Storage Room 3B, located on the 3rd storey, is classified for low-density storage use and is assigned an occupancy load factor of 300 square feet per person."},
+    {"s": "storage-room-3b", "r": "occupancy_load_factor", "o": "300 square feet per person", "source": "Storage Room 3B, located on the 3rd storey, is classified for low-density storage use and is assigned an occupancy load factor of 300 square feet per person."},
+    {"s": "storage-room-3b", "r": "fire_resistance_rating", "o": "2 hour", "source": "The room is enclosed by construction rated for a 2 hour fire-resistance rating to limit fire spread into adjoining corridors."},
+    {"s": "fire-pump-room", "r": "riser_size", "o": "6 inch", "source": "The Fire Pump Room, housing the building's fire protection water supply equipment, is fed by a 6 inch riser from the street main."},
+    {"s": "fire-pump-room", "r": "fire_resistance_rating", "o": "2 hour", "source": "Walls and the ceiling assembly of the Fire Pump Room carry a 2 hour fire-resistance rating consistent with its role as a critical life-safety space."},
+    {"s": "mechanical-penthouse", "r": "located_on_storey", "o": "4th storey", "source": "The Mechanical Penthouse is located on the 4th storey at the top of the building."},
+    {"s": "mechanical-penthouse", "r": "travel_distance", "o": "100 feet", "source": "The maximum travel distance to an approved exit from any point within the Mechanical Penthouse is 100 feet."}
+  ]
+}

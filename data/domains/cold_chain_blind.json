@@ -1,0 +1,47 @@
+{
+  "domain": "cold-chain-blind",
+  "corpus": "Cold-Chain Shipping Validation Report -- Consignment Batch Q3-2091\n\nThis report documents temperature, humidity, and transit compliance for two consignments shipped under validated cold-chain protocols during the third quarter monitoring cycle.\n\nLot 7734 (Refrigerated Vaccine Shipment)\nLot 7734 must be maintained within a storage temperature limit of 2 to 8 degrees Celsius throughout transit. Equivalently, the approved storage temperature limit for Lot 7734 is 36 to 46 degrees Fahrenheit. The validated excursion allowance above the upper threshold for Lot 7734 is 4 hours before the shipment is considered non-compliant. Data-logger review recorded a mean kinetic temperature of 5.6 degrees Celsius for Lot 7734 across the full transit window. The relative humidity recorded during transit for Lot 7734 was 45 percent. Total transit duration for Lot 7734 was 18 hours from dock release to receiving-site check-in. The low alarm set-point configured on the Lot 7734 data logger is 1 degree Celsius. Lot 7734 was carried by TempGuard Logistics for the entirety of the route.\n\nLot 2201 (Frozen Biologic Shipment)\nLot 2201 requires deep-frozen handling with a maximum storage temperature limit of -15 degrees Celsius. In Fahrenheit terms, the maximum storage temperature limit for Lot 2201 is 5 degrees Fahrenheit, a figure that does not scale linearly from the Celsius figure given the offset between the two scales. The excursion allowance above threshold approved for Lot 2201 is 2 hours, tighter than the refrigerated lane because frozen biologic material degrades faster once warmed. Mean kinetic temperature analysis of the Lot 2201 logger trace yielded -17.2 degrees Celsius for the shipment. Relative humidity during transit for Lot 2201 was measured at 30 percent inside the insulated container. Lot 2201 spent 26 hours in transit from the origin freezer facility to the destination cold room. The low alarm set-point on the Lot 2201 logger is set to -25 degrees Celsius, well below the freezing point of water, to catch any dangerous downward excursion early. Lot 2201 was carried by Arctic Freight Solutions under a dedicated frozen-lane contract.\n\nBoth lots passed final validation review, though the frozen lane's tighter excursion allowance reflects the higher sensitivity of the biologic payload to any thaw event.",
+  "entities": {
+    "lot-7734": ["Lot 7734", "the Lot 7734 shipment", "the refrigerated vaccine shipment"],
+    "lot-2201": ["Lot 2201", "the Lot 2201 shipment", "the frozen biologic shipment"]
+  },
+  "relations": {
+    "storage_temp_c": {"kind": "quantity", "question": "what is the storage temperature limit of {entity} in Celsius?"},
+    "storage_temp_f": {"kind": "quantity", "question": "what is the storage temperature limit of {entity} in Fahrenheit?"},
+    "excursion_allowance": {"kind": "quantity", "question": "what is the excursion allowance above threshold for {entity}?"},
+    "mean_kinetic_temp": {"kind": "quantity", "question": "what is the mean kinetic temperature recorded for {entity}?"},
+    "humidity": {"kind": "quantity", "question": "what is the relative humidity recorded during transit for {entity}?"},
+    "transit_duration": {"kind": "quantity", "question": "what is the transit duration for {entity}?"},
+    "alarm_setpoint_low": {"kind": "quantity", "question": "what is the low alarm set-point for {entity}?"},
+    "carrier": {"kind": "text", "question": "what carrier was used to transport {entity}?"}
+  },
+  "conditions": [],
+  "value_qualifiers": ["approximately", "recorded at", "measured at", "configured at", "documented as", "roughly"],
+  "unit_aliases": {
+    "°C": "degrees Celsius",
+    "C": "Celsius",
+    "°F": "degrees Fahrenheit",
+    "F": "Fahrenheit",
+    "%": "percent",
+    "hr": "hours",
+    "hrs": "hours"
+  },
+  "facts": [
+    {"s": "lot-7734", "r": "storage_temp_c", "o": "2 to 8 degrees Celsius", "source": "Lot 7734 must be maintained within a storage temperature limit of 2 to 8 degrees Celsius throughout transit."},
+    {"s": "lot-7734", "r": "storage_temp_f", "o": "36 to 46 degrees Fahrenheit", "source": "Equivalently, the approved storage temperature limit for Lot 7734 is 36 to 46 degrees Fahrenheit."},
+    {"s": "lot-7734", "r": "excursion_allowance", "o": "4 hours", "source": "The validated excursion allowance above the upper threshold for Lot 7734 is 4 hours before the shipment is considered non-compliant."},
+    {"s": "lot-7734", "r": "mean_kinetic_temp", "o": "5.6 degrees Celsius", "source": "Data-logger review recorded a mean kinetic temperature of 5.6 degrees Celsius for Lot 7734 across the full transit window."},
+    {"s": "lot-7734", "r": "humidity", "o": "45 percent", "source": "The relative humidity recorded during transit for Lot 7734 was 45 percent."},
+    {"s": "lot-7734", "r": "transit_duration", "o": "18 hours", "source": "Total transit duration for Lot 7734 was 18 hours from dock release to receiving-site check-in."},
+    {"s": "lot-7734", "r": "alarm_setpoint_low", "o": "1 degree Celsius", "source": "The low alarm set-point configured on the Lot 7734 data logger is 1 degree Celsius."},
+    {"s": "lot-7734", "r": "carrier", "o": "TempGuard Logistics", "source": "Lot 7734 was carried by TempGuard Logistics for the entirety of the route."},
+    {"s": "lot-2201", "r": "storage_temp_c", "o": "-15 degrees Celsius", "source": "Lot 2201 requires deep-frozen handling with a maximum storage temperature limit of -15 degrees Celsius."},
+    {"s": "lot-2201", "r": "storage_temp_f", "o": "5 degrees Fahrenheit", "source": "In Fahrenheit terms, the maximum storage temperature limit for Lot 2201 is 5 degrees Fahrenheit, a figure that does not scale linearly from the Celsius figure given the offset between the two scales."},
+    {"s": "lot-2201", "r": "excursion_allowance", "o": "2 hours", "source": "The excursion allowance above threshold approved for Lot 2201 is 2 hours, tighter than the refrigerated lane because frozen biologic material degrades faster once warmed."},
+    {"s": "lot-2201", "r": "mean_kinetic_temp", "o": "-17.2 degrees Celsius", "source": "Mean kinetic temperature analysis of the Lot 2201 logger trace yielded -17.2 degrees Celsius for the shipment."},
+    {"s": "lot-2201", "r": "humidity", "o": "30 percent", "source": "Relative humidity during transit for Lot 2201 was measured at 30 percent inside the insulated container."},
+    {"s": "lot-2201", "r": "transit_duration", "o": "26 hours", "source": "Lot 2201 spent 26 hours in transit from the origin freezer facility to the destination cold room."},
+    {"s": "lot-2201", "r": "alarm_setpoint_low", "o": "-25 degrees Celsius", "source": "The low alarm set-point on the Lot 2201 logger is set to -25 degrees Celsius, well below the freezing point of water, to catch any dangerous downward excursion early."},
+    {"s": "lot-2201", "r": "carrier", "o": "Arctic Freight Solutions", "source": "Lot 2201 was carried by Arctic Freight Solutions under a dedicated frozen-lane contract."}
+  ]
+}

@@ -47,6 +47,7 @@
     "storage"
   ],
   "value_qualifiers": [
+    "RH",
     "about",
     "approximately",
     "every",
@@ -55,7 +56,6 @@
   ],
   "unit_aliases": {
     "%": "percent",
-    "RH": "percent",
     "degrees C": "degrees Celsius",
     "°C": "degrees Celsius"
   },

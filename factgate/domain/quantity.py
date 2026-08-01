@@ -115,8 +115,23 @@ _RATIO_RE = re.compile(
     r"^\s*([0-9]+(?:\.[0-9]+)?)\s*:\s*([0-9]+(?:\.[0-9]+)?)\s*(?:ratio)?\s*$")
 
 
-def _exact_notation(raw: str) -> Quantity | None:
-    """Fractions, scientific notation and ratios, or None."""
+def _exact_notation(raw: str, numeric: bool = False) -> Quantity | None:
+    """Fractions, scientific notation and ratios, or None.
+
+    Only when the relation was DECLARED numeric. These notations were read out of every
+    value regardless of kind, and that was a leak: an alphanumeric identifier shaped like
+    scientific notation was silently reinterpreted as arithmetic.
+
+        relation model_code, kind "text"
+        declared "2E2"   claimed "20E1"   -> VERIFIED
+        declared "2E2"   claimed "200E0"  -> VERIFIED
+
+    Three different part numbers, all reducing to the float 200.0. Real catalogue codes,
+    lot numbers and EIA component markings take exactly this shape. The author's declared
+    kind is the statement that a value is a NUMBER, and nothing else can supply it.
+    """
+    if not numeric:
+        return None
     m = _FRACTION_RE.match(raw)
     if m and int(m.group(3)) != 0:
         whole = int(m.group(1)) if m.group(1) else 0
@@ -155,14 +170,19 @@ def _exact_notation(raw: str) -> Quantity | None:
     return None
 
 
-def parse_quantity(raw: str | None) -> Quantity | None:
-    """Parse "15 mg/kg" -> Quantity(15.0, "mg/kg"). None if not a quantity."""
+def parse_quantity(raw: str | None, numeric: bool = False) -> Quantity | None:
+    """Parse "15 mg/kg" -> Quantity(15.0, "mg/kg"). None if not a quantity.
+
+    `numeric` says the relation was declared kind="quantity", which is what admits the
+    exact notations (fractions, scientific notation, ratios). It defaults to False so that
+    no caller reinterprets a text value arithmetically by accident.
+    """
     if not raw or len(raw) > MAX_VALUE_CHARS:
         return None
     cur = _currency_quantity(raw)
     if cur is not None:
         return cur
-    exact = _exact_notation(raw)
+    exact = _exact_notation(raw, numeric)
     if exact is not None:
         return exact
     m = _QTY_RE.match(raw)
@@ -372,7 +392,7 @@ def _compare_range(declared: str, claimed: str, numeric: bool = False) -> str | 
         return INCOMPARABLE                    # overlapping but not equal
 
     if dr is not None:
-        cq = parse_quantity(claimed)
+        cq = parse_quantity(claimed, numeric)
         clean = cq is not None
         if cq is None:
             cq = _leading(claimed)
@@ -476,7 +496,7 @@ def compare_values(declared: str, claimed: str | None, numeric: bool = False) ->
     ranged = _compare_range(declared, claimed, numeric)
     if ranged is not None:
         return ranged
-    dq, cq = parse_quantity(declared), parse_quantity(claimed)
+    dq, cq = parse_quantity(declared, numeric), parse_quantity(claimed, numeric)
     if dq is not None and cq is not None:
         # UNIT FIRST. This tested the number before the unit, so two quantities in
         # different units were reported as a provable contradiction on the strength of
@@ -522,6 +542,17 @@ def compare_values(declared: str, claimed: str | None, numeric: bool = False) ->
         # "20 mg/kg every 6 hours" has two numbers but only one candidate value, and
         # must still block.
         if any(_as_float(t) == dq.value for t in _NUMBER_RE.findall(claimed)):
+            return INCOMPARABLE
+        # The leading unit must be the DECLARED one before its number can contradict.
+        # Without this, a COMPOUND value was blocked against its own equal:
+        #
+        #   declared "90 minutes"   claimed "1 hr 30 min"   -> DIFFER, and the gate BLOCKED
+        #
+        # The claim leads with 1 hour, the declared value is 90 minutes, and comparing 1
+        # against 90 is comparing hours to minutes. The both-parse branch above already
+        # required matching units; this branch did not, so the same mistake survived in
+        # the fallback.
+        if lead.unit != dq.unit:
             return INCOMPARABLE
         if lead.value != dq.value:
             return DIFFER              # one unambiguous, different value -> blockable

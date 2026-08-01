@@ -1,0 +1,50 @@
+{
+  "domain": "fund-factsheet-blind",
+  "corpus": "FACTSHEET: NORTHSHORE FUNDS — Q2 2026\n\nNorthshore Growth Fund Class A pursues long-term capital growth through a concentrated portfolio of developed-market equities. The share class carries an ongoing charges figure of 1.85% per annum, covering management, administration, and custody costs. A performance fee of 20% of returns above the benchmark applies above a high-water mark, charged only in years of outperformance. The minimum initial investment for Class A shares is $5,000, with subsequent top-ups accepted from $500. Over the trailing twelve months the distribution yield for Class A shares was 1.20%.\n\nNorthshore Growth Fund Institutional Class invests in the same underlying strategy as Class A but is reserved for institutional and platform investors meeting higher entry thresholds. The Institutional Class carries an ongoing charges figure of 95 basis points per annum, reflecting lower servicing costs at scale. The minimum initial investment for the Institutional Class is $1,000,000. Tracking error for the Institutional Class against its reference benchmark was measured at 2.10% over the trailing three years.\n\nNorthshore Global Income Fund seeks a high level of income from a diversified portfolio of investment-grade and high-yield bonds. The distribution yield of the Income Fund reached 4.65% at the last distribution date, among the highest in the Northshore range. The minimum initial investment for the Income Fund is £2,500. A performance fee of 15% of returns above the benchmark applies to the Income Fund, subject to the same high-water mark provision used across the range. Fund size for the Income Fund stood at £280 million as at the reporting date.\n\nNorthshore Emerging Markets Equity Fund targets long-term growth by investing in companies domiciled in, or deriving significant revenue from, emerging market economies. The fund's ongoing charges figure is 2.10% per annum, the highest in the range given the additional research and custody costs of emerging markets. Tracking error for the Emerging Markets Fund against the MSCI Emerging Markets Index was 5.80% over the trailing three years, reflecting the fund's active, high-conviction approach. Fund size for the Emerging Markets Fund was $150 million at quarter end.\n\nAll figures are unaudited and subject to change. Past performance is not a reliable indicator of future results. Ongoing charges figures are calculated in accordance with the fund's most recent annual report and may vary from year to year.",
+  "entities": {
+    "northshore-growth-fund-class-a": ["Northshore Growth Fund Class A", "Growth Fund Class A", "Class A shares"],
+    "northshore-growth-fund-institutional-class": ["Northshore Growth Fund Institutional Class", "Institutional Class", "the Institutional Class"],
+    "northshore-global-income-fund": ["Northshore Global Income Fund", "Income Fund", "the Income Fund"],
+    "northshore-emerging-markets-equity-fund": ["Northshore Emerging Markets Equity Fund", "Emerging Markets Fund", "the Emerging Markets Fund"]
+  },
+  "relations": {
+    "ongoing_charges": {"kind": "quantity", "question": "what is the ongoing charges figure of {entity}?"},
+    "performance_fee": {"kind": "quantity", "question": "what is the performance fee of {entity}?"},
+    "minimum_investment": {"kind": "quantity", "question": "what is the minimum initial investment for {entity}?"},
+    "distribution_yield": {"kind": "quantity", "question": "what is the distribution yield of {entity}?"},
+    "tracking_error": {"kind": "quantity", "question": "what is the tracking error of {entity}?"},
+    "fund_size": {"kind": "quantity", "question": "what is the fund size of {entity}?"}
+  },
+  "conditions": [],
+  "value_qualifiers": [
+    "per annum",
+    "at the last distribution date",
+    "as at the reporting date",
+    "at quarter end",
+    "over the trailing three years",
+    "over the trailing twelve months",
+    "covering management, administration, and custody costs",
+    "reflecting lower servicing costs at scale",
+    "charged only in years of outperformance",
+    "subject to the same high-water mark provision used across the range"
+  ],
+  "unit_aliases": {
+    "%": "percent"
+  },
+  "facts": [
+    {"s": "northshore-growth-fund-class-a", "r": "ongoing_charges", "o": "1.85%", "source": "The share class carries an ongoing charges figure of 1.85% per annum, covering management, administration, and custody costs."},
+    {"s": "northshore-growth-fund-class-a", "r": "performance_fee", "o": "20%", "source": "A performance fee of 20% of returns above the benchmark applies above a high-water mark, charged only in years of outperformance."},
+    {"s": "northshore-growth-fund-class-a", "r": "minimum_investment", "o": "$5,000", "source": "The minimum initial investment for Class A shares is $5,000, with subsequent top-ups accepted from $500."},
+    {"s": "northshore-growth-fund-class-a", "r": "distribution_yield", "o": "1.20%", "source": "Over the trailing twelve months the distribution yield for Class A shares was 1.20%."},
+    {"s": "northshore-growth-fund-institutional-class", "r": "ongoing_charges", "o": "95 basis points", "source": "The Institutional Class carries an ongoing charges figure of 95 basis points per annum, reflecting lower servicing costs at scale."},
+    {"s": "northshore-growth-fund-institutional-class", "r": "minimum_investment", "o": "$1,000,000", "source": "The minimum initial investment for the Institutional Class is $1,000,000."},
+    {"s": "northshore-growth-fund-institutional-class", "r": "tracking_error", "o": "2.10%", "source": "Tracking error for the Institutional Class against its reference benchmark was measured at 2.10% over the trailing three years."},
+    {"s": "northshore-global-income-fund", "r": "distribution_yield", "o": "4.65%", "source": "The distribution yield of the Income Fund reached 4.65% at the last distribution date, among the highest in the Northshore range."},
+    {"s": "northshore-global-income-fund", "r": "minimum_investment", "o": "£2,500", "source": "The minimum initial investment for the Income Fund is £2,500."},
+    {"s": "northshore-global-income-fund", "r": "performance_fee", "o": "15%", "source": "A performance fee of 15% of returns above the benchmark applies to the Income Fund, subject to the same high-water mark provision used across the range."},
+    {"s": "northshore-global-income-fund", "r": "fund_size", "o": "£280 million", "source": "Fund size for the Income Fund stood at £280 million as at the reporting date."},
+    {"s": "northshore-emerging-markets-equity-fund", "r": "ongoing_charges", "o": "2.10%", "source": "The fund's ongoing charges figure is 2.10% per annum, the highest in the range given the additional research and custody costs of emerging markets."},
+    {"s": "northshore-emerging-markets-equity-fund", "r": "tracking_error", "o": "5.80%", "source": "Tracking error for the Emerging Markets Fund against the MSCI Emerging Markets Index was 5.80% over the trailing three years, reflecting the fund's active, high-conviction approach."},
+    {"s": "northshore-emerging-markets-equity-fund", "r": "fund_size", "o": "$150 million", "source": "Fund size for the Emerging Markets Fund was $150 million at quarter end."}
+  ]
+}

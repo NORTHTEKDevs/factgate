@@ -703,3 +703,85 @@ def test_a_reversed_range_is_still_rejected():
     from factgate.domain.quantity import parse_range
     assert parse_range("-15 to -20 C") is None
     assert parse_range("10-5 mg") is None
+
+
+def test_sci_notation_does_not_reinterpret_a_text_identifier():
+    """A LEAK. The exact notations were read out of every value regardless of the relation's
+    declared kind, so an alphanumeric identifier shaped like scientific notation was
+    silently reinterpreted as arithmetic:
+
+        relation model_code, kind "text"
+        declared "2E2"   claimed "20E1"   -> VERIFIED
+        declared "2E2"   claimed "200E0"  -> VERIFIED
+
+    Three different part numbers, all reducing to the float 200.0. Real catalogue codes,
+    lot numbers and EIA component markings take exactly this shape."""
+    text = FactSet.from_dict({
+        "domain": "e", "entities": {"s1": ["the sensor"]},
+        "relations": {"model_code": {"kind": "text"}},
+        "facts": [{"s": "s1", "r": "model_code", "o": "2E2",
+                   "source": "The sensor model is 2E2."}]})
+    assert gate_claim(text, "the sensor", "model_code", "20E1").status == HELD
+    assert gate_claim(text, "the sensor", "model_code", "200E0").status == HELD
+    assert gate_claim(text, "the sensor", "model_code", "2E2").status == VERIFIED
+    # ...and a relation the author DID declare numeric still gets the arithmetic
+    num = FactSet.from_dict({
+        "domain": "e", "entities": {"w": ["wafer"]},
+        "relations": {"dopant": {"kind": "quantity"}},
+        "facts": [{"s": "w", "r": "dopant", "o": "1.2e17 atoms",
+                   "source": "Dopant concentration is 1.2e17 atoms."}]})
+    assert gate_claim(num, "wafer", "dopant",
+                      "120000000000000000 atoms").status == VERIFIED
+
+
+def test_lint_refuses_an_alias_to_a_unit_it_cannot_check():
+    """A LEAK the dimension table could not reach, because it ABSTAINS on unknown units:
+
+        unit_aliases {"mcg": "iu"}   declared "15 iu"   claimed "15 mcg"
+        -> VERIFIED, lint clean
+
+    IU is not in the table and never can be: it measures biological activity, and the
+    conversion depends on the SUBSTANCE (1 mcg of vitamin D is 40 IU; vitamin E differs).
+    mEq, mmol, tsp and drops are the same. An alias joining a unit we understand to one we
+    do not is precisely the case that cannot be checked."""
+    fs = FactSet.from_dict({
+        "domain": "v", "entities": {"vitd": ["vitamin d"]},
+        "relations": {"dose": {"kind": "quantity"}}, "unit_aliases": {"mcg": "iu"},
+        "facts": [{"s": "vitd", "r": "dose", "o": "15 iu",
+                   "source": "The dose of vitamin D is 15 IU."}]})
+    assert [p for p in fs.lint() if p["level"] == "error"]
+
+
+@pytest.mark.parametrize("alias,canon", [
+    ("gal", "US gallons"), ("IU", "international units"), ("lbs", "pounds"),
+])
+def test_a_multiword_spelling_of_a_known_unit_is_not_flagged(alias, canon):
+    """"US gallons" is gallons. Without looking inside the unknown side for a word naming
+    the same unit, every unlisted spelling became a false alarm -- a real shipped domain
+    tripped on exactly this."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"x": []},
+        "relations": {"p": {"kind": "quantity"}}, "unit_aliases": {alias: canon},
+        "facts": [{"s": "x", "r": "p", "o": "5 mg", "source": "It is 5 mg."}]})
+    assert [p for p in fs.lint() if p["level"] == "error"] == []
+
+
+def test_a_compound_value_is_not_blocked_against_its_own_equal():
+    """The leading-number fallback compared a claim's first number to the declared value
+    without checking that its UNIT matched:
+
+        declared "90 minutes"   claimed "1 hr 30 min"   ->  DIFFER, and the gate BLOCKED
+
+    Comparing 1 against 90 is comparing hours to minutes. The both-parse branch already
+    required matching units; this fallback did not."""
+    fs = FactSet.from_dict({
+        "domain": "c", "entities": {"t": ["task"]},
+        "relations": {"dur": {"kind": "quantity"}},
+        "facts": [{"s": "t", "r": "dur", "o": "90 minutes",
+                   "source": "The task takes 90 minutes."}]})
+    assert gate_claim(fs, "task", "dur", "1 hr 30 min").status == HELD
+    assert gate_claim(fs, "task", "dur", "90 minutes").status == VERIFIED
+    # a wrong value in the DECLARED unit still blocks
+    assert gate_claim(fs, "task", "dur", "45 minutes").status == BLOCK
+    from factgate.domain.quantity import DIFFER, compare_values
+    assert compare_values("10 mg/kg", "20 mg/kg every 6 hours") == DIFFER
