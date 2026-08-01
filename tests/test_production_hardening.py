@@ -642,3 +642,42 @@ def test_lint_accepts_a_condition_that_actually_discriminates():
                    "when": {"season": "winter"},
                    "source": "The winter rate is 11.5 cents per kWh."}]})
     assert [p for p in fs.lint() if p["level"] == "error"] == []
+
+
+# ---------------------------------------- round 3: aliases between unrelated units
+@pytest.mark.parametrize("alias,canon", [
+    ("mL", "mg"),      # volume against mass -- not even the same kind of quantity
+    ("lbs", "kg"),     # both mass, a factor of 2.2
+    ("gal", "l"),      # both volume, a factor of 3.8
+    ("ft", "m"), ("mi", "km"), ("hrs", "min"), ("$", "£"),
+])
+def test_lint_refuses_an_alias_between_unrelated_units(alias, canon):
+    """A LEAK the earlier SI-prefix check did not reach. That check only fired when both
+    sides reduced to the SAME base string, so it caught mcg -> mg and nothing else:
+
+        unit_aliases {"mL": "mg"}   declared "15 mg"   claimed "15 mL"   -> VERIFIED
+        unit_aliases {"lbs": "kg"}  declared "150 kg"  claimed "150 lbs" -> VERIFIED
+
+    lint was silent for both. A millilitre is not a milligram under any reading, and
+    150 lbs is not 150 kg."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"x": []},
+        "relations": {"p": {"kind": "quantity"}}, "unit_aliases": {alias: canon},
+        "facts": [{"s": "x", "r": "p", "o": "5 mg", "source": "It is 5 mg."}]})
+    assert [p for p in fs.lint() if p["level"] == "error"], f"{alias} -> {canon} accepted"
+
+
+@pytest.mark.parametrize("alias,canon", [
+    ("%", "percent"), ("USD", "dollars"), ("hrs", "hours"), ("mi", "miles"),
+    ("mL", "millilitre"), ("K/uL", "thousand per microliter"), ("lbs", "pounds"),
+])
+def test_lint_accepts_a_spelling_variant(alias, canon):
+    """Reconciling spellings of ONE unit is what the feature is for, and every pair here
+    ships in a real domain. "pound" is deliberately not classified as mass, because it is
+    mass or currency depending on the document and a check that cannot tell must not
+    guess."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"x": []},
+        "relations": {"p": {"kind": "quantity"}}, "unit_aliases": {alias: canon},
+        "facts": [{"s": "x", "r": "p", "o": "5 mg", "source": "It is 5 mg."}]})
+    assert [p for p in fs.lint() if p["level"] == "error"] == []

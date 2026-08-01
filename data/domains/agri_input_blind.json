@@ -1,0 +1,195 @@
+{
+  "domain": "agri-input-blind",
+  "_disclaimer": "SYNTHETIC ILLUSTRATIVE DATA. Authored as a BLIND vocabulary declaration for the bounded-domain gate: entities, relations, value_qualifiers and question phrasings below were written from priors before any benchmark run and were not revised in response to gate behaviour. Not a real product label.",
+  "corpus": "NutriBoost 10-20-10 is a granular starter fertilizer formulated for row-crop establishment. The nitrogen-phosphorus-potassium ratio of NutriBoost is 10-20-10, delivering a balanced early-season nutrient load. For broadcast application, growers should apply NutriBoost at a rate of 280 litres per hectare. Equivalently, in imperial units, the application rate for NutriBoost is 24 pints per acre. NutriBoost carries a re-entry interval of 4 hours after application, allowing field crews to resume work the same day. Applicators may make a maximum of 3 applications of NutriBoost per season on approved row crops.\n\nClearField Glyphosate 41% is a systemic, non-selective herbicide labeled for pre-plant burndown and spot treatment. The application rate for ClearField on cropland is 1.5 litres per hectare for standard burndown coverage. In imperial terms, ClearField should be applied at 0.13 pints per acre for the same burndown target. When used ahead of soybeans, the pre-harvest interval for ClearField is 7 days. When used ahead of corn, the pre-harvest interval for ClearField extends to 14 days, reflecting the longer residual tolerance window for that crop. ClearField requires a re-entry interval of 48 hours before unprotected workers may re-enter the treated field. A buffer zone of 15 metres from surface water is mandatory when applying ClearField by ground boom. That buffer zone is equivalent to 49 feet under the imperial buffer-zone table printed on the label. No more than 2 applications of ClearField are permitted per season on any single field.\n\nGreenShield Fungicide is a broad-spectrum protectant labeled for foliar disease suppression in cereals and pulses. The tank mix concentration for GreenShield is 0.5 percent when combined with a compatible surfactant in a standard spray tank. GreenShield carries a pre-harvest interval of 21 days across all labeled crops. The buffer zone for GreenShield near sensitive aquatic habitat is 10 metres. On the imperial buffer-zone chart, that distance corresponds to 33 feet. Applicators must observe a re-entry interval of 12 hours after GreenShield application before entering the treated area without protective equipment.",
+  "entities": {
+    "NutriBoost": [
+      "NutriBoost",
+      "NutriBoost 10-20-10"
+    ],
+    "ClearField": [
+      "ClearField",
+      "ClearField Glyphosate 41%"
+    ],
+    "GreenShield": [
+      "GreenShield",
+      "GreenShield Fungicide"
+    ]
+  },
+  "relations": {
+    "npk_ratio": {
+      "kind": "text",
+      "description": "the nitrogen-phosphorus-potassium ratio printed on the label",
+      "question": "what is the NPK ratio of {entity}?"
+    },
+    "application_rate_metric": {
+      "kind": "quantity",
+      "description": "the labeled application rate in litres per hectare",
+      "question": "what is the metric application rate for {entity}?"
+    },
+    "application_rate_imperial": {
+      "kind": "quantity",
+      "description": "the labeled application rate in pints per acre",
+      "question": "what is the imperial application rate for {entity}?"
+    },
+    "re_entry_interval": {
+      "kind": "quantity",
+      "description": "the number of hours before workers may re-enter a treated field without protective equipment",
+      "question": "what is the re-entry interval for {entity}?"
+    },
+    "max_applications": {
+      "kind": "quantity",
+      "description": "the maximum number of applications permitted per season",
+      "question": "what is the maximum number of applications per season for {entity}?"
+    },
+    "pre_harvest_interval": {
+      "kind": "quantity",
+      "description": "the minimum number of days between the last application and harvest",
+      "question": "what is the pre-harvest interval for {entity}?"
+    },
+    "buffer_zone_metric": {
+      "kind": "quantity",
+      "description": "the mandatory buffer-zone distance in metres from sensitive water",
+      "question": "what is the metric buffer-zone distance for {entity}?"
+    },
+    "buffer_zone_imperial": {
+      "kind": "quantity",
+      "description": "the mandatory buffer-zone distance in feet from sensitive water",
+      "question": "what is the imperial buffer-zone distance for {entity}?"
+    },
+    "tank_mix_concentration": {
+      "kind": "quantity",
+      "description": "the labeled tank mix concentration as a percentage",
+      "question": "what is the tank mix concentration for {entity}?"
+    }
+  },
+  "conditions": [
+    "crop"
+  ],
+  "value_qualifiers": [
+    "approximately",
+    "about",
+    "roughly",
+    "up to",
+    "at least",
+    "no more than",
+    "a maximum of",
+    "a rate of",
+    "equivalent to",
+    "equivalently",
+    "in imperial units",
+    "in imperial terms",
+    "under standard conditions",
+    "per the product label",
+    "under label conditions"
+  ],
+  "unit_aliases": {
+    "%": "percent",
+    "hr": "hour",
+    "hrs": "hours"
+  },
+  "facts": [
+    {
+      "s": "NutriBoost",
+      "r": "npk_ratio",
+      "o": "10-20-10",
+      "source": "The nitrogen-phosphorus-potassium ratio of NutriBoost is 10-20-10, delivering a balanced early-season nutrient load."
+    },
+    {
+      "s": "NutriBoost",
+      "r": "application_rate_metric",
+      "o": "280 litres per hectare",
+      "source": "For broadcast application, growers should apply NutriBoost at a rate of 280 litres per hectare."
+    },
+    {
+      "s": "NutriBoost",
+      "r": "application_rate_imperial",
+      "o": "24 pints per acre",
+      "source": "Equivalently, in imperial units, the application rate for NutriBoost is 24 pints per acre."
+    },
+    {
+      "s": "NutriBoost",
+      "r": "re_entry_interval",
+      "o": "4 hours",
+      "source": "NutriBoost carries a re-entry interval of 4 hours after application, allowing field crews to resume work the same day."
+    },
+    {
+      "s": "NutriBoost",
+      "r": "max_applications",
+      "o": "3",
+      "source": "Applicators may make a maximum of 3 applications of NutriBoost per season on approved row crops."
+    },
+    {
+      "s": "ClearField",
+      "r": "application_rate_metric",
+      "o": "1.5 litres per hectare",
+      "source": "The application rate for ClearField on cropland is 1.5 litres per hectare for standard burndown coverage."
+    },
+    {
+      "s": "ClearField",
+      "r": "application_rate_imperial",
+      "o": "0.13 pints per acre",
+      "source": "In imperial terms, ClearField should be applied at 0.13 pints per acre for the same burndown target."
+    },
+    {
+      "s": "ClearField",
+      "r": "pre_harvest_interval",
+      "o": "7 days",
+      "when": {
+        "crop": "soybeans"
+      },
+      "source": "When used ahead of soybeans, the pre-harvest interval for ClearField is 7 days."
+    },
+    {
+      "s": "ClearField",
+      "r": "pre_harvest_interval",
+      "o": "14 days",
+      "when": {
+        "crop": "corn"
+      },
+      "source": "When used ahead of corn, the pre-harvest interval for ClearField extends to 14 days, reflecting the longer residual tolerance window for that crop."
+    },
+    {
+      "s": "ClearField",
+      "r": "re_entry_interval",
+      "o": "48 hours",
+      "source": "ClearField requires a re-entry interval of 48 hours before unprotected workers may re-enter the treated field."
+    },
+    {
+      "s": "ClearField",
+      "r": "buffer_zone_metric",
+      "o": "15 metres",
+      "source": "A buffer zone of 15 metres from surface water is mandatory when applying ClearField by ground boom."
+    },
+    {
+      "s": "ClearField",
+      "r": "buffer_zone_imperial",
+      "o": "49 feet",
+      "source": "That buffer zone is equivalent to 49 feet under the imperial buffer-zone table printed on the label."
+    },
+    {
+      "s": "ClearField",
+      "r": "max_applications",
+      "o": "2",
+      "source": "No more than 2 applications of ClearField are permitted per season on any single field."
+    },
+    {
+      "s": "GreenShield",
+      "r": "tank_mix_concentration",
+      "o": "0.5 percent",
+      "source": "The tank mix concentration for GreenShield is 0.5 percent when combined with a compatible surfactant in a standard spray tank."
+    },
+    {
+      "s": "GreenShield",
+      "r": "pre_harvest_interval",
+      "o": "21 days",
+      "source": "GreenShield carries a pre-harvest interval of 21 days across all labeled crops."
+    },
+    {
+      "s": "GreenShield",
+      "r": "buffer_zone_metric",
+      "o": "10 metres",
+      "source": "The buffer zone for GreenShield near sensitive aquatic habitat is 10 metres."
+    }
+  ]
+}

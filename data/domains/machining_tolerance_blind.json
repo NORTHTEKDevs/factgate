@@ -1,0 +1,127 @@
+{
+  "domain": "machining-tolerance-blind",
+  "corpus": "INSPECTION SPECIFICATION IS-4471 -- PRECISION MACHINED COMPONENT SET, REV C\n\nThis specification governs first-article inspection of five components manufactured for the outrigger hydraulic assembly: Shaft A-114, Housing Flange B-22, Drive Pin C-7, Bearing Sleeve D-9, and Locking Collar E-3. All dimensions are inspected per ASME Y14.5 unless otherwise noted.\n\nShaft A-114 is turned from 4340 alloy bar stock. The finished diameter of Shaft A-114 is 2.500 +/- 0.005 in across the bearing journal. The overall length of Shaft A-114 is 18 3/4 inches end to end. The keyway width of Shaft A-114 is 3/8 inch, cut full length along the journal. After induction hardening, the surface finish of Shaft A-114 is 16 microinches Ra on the journal diameter. The hardness of Shaft A-114 is 58-62 HRC on the hardened journal.\n\nHousing Flange B-22 is a cast and machined aluminum bracket. The bore diameter of Housing Flange B-22 is 1 3/8 inches, reamed to size after casting. The wall thickness of Housing Flange B-22 is 5/16 inch measured at the thinnest boss. The surface finish of Housing Flange B-22 is 63 microinches Ra on the mounting face, which is acceptable for a non-sealing surface.\n\nDrive Pin C-7 is supplied in two heat-treatment states depending on assembly position. When annealed for the pilot-hole fit, the hardness of Drive Pin C-7 is 20-25 HRC. When hardened for the load-bearing position, the hardness of Drive Pin C-7 is 58-62 HRC. The diameter of Drive Pin C-7 is 1/4 inch +/- 0.001 in, ground to size after heat treatment.\n\nBearing Sleeve D-9 is a bronze bushing pressed into the housing bore. The bore diameter of Bearing Sleeve D-9 is 7/8 inch, honed after pressing. The overall length of Bearing Sleeve D-9 is 1 1/4 inches. The hardness of Bearing Sleeve D-9 is 22-26 HRC, well below the shaft hardness to avoid galling.\n\nLocking Collar E-3 threads onto the shaft end to retain the bearing stack. The thread of Locking Collar E-3 is 1/4-20 UNC, class 2A fit. The diameter of Locking Collar E-3 is 7/16 inch across the flats. The surface finish of Locking Collar E-3 is 0.4 micrometres Ra on the bearing face, roughly equivalent in appearance to a ground finish.\n\nAll plus-or-minus tolerances shown above are bilateral unless a unilateral limit is called out separately on the drawing. Surface finish call-outs use Ra unless RMS is stated.",
+  "entities": {
+    "Shaft A-114": ["shaft a-114", "the shaft", "a-114"],
+    "Housing Flange B-22": ["housing flange b-22", "the flange", "flange b-22"],
+    "Drive Pin C-7": ["drive pin c-7", "the pin", "pin c-7"],
+    "Bearing Sleeve D-9": ["bearing sleeve d-9", "the sleeve", "sleeve d-9"],
+    "Locking Collar E-3": ["locking collar e-3", "the collar", "collar e-3"]
+  },
+  "relations": {
+    "diameter": {"kind": "quantity", "question": "what is the diameter of {entity}?"},
+    "overall_length": {"kind": "quantity", "question": "what is the overall length of {entity}?"},
+    "surface_finish": {"kind": "quantity", "question": "what is the surface finish of {entity}?"},
+    "hardness": {"kind": "quantity", "question": "what is the hardness of {entity}?"},
+    "bore_diameter": {"kind": "quantity", "question": "what is the bore diameter of {entity}?"},
+    "wall_thickness": {"kind": "quantity", "question": "what is the wall thickness of {entity}?"},
+    "thread": {"kind": "text", "question": "what is the thread of {entity}?"}
+  },
+  "conditions": ["heat_treatment"],
+  "value_qualifiers": ["end to end", "across the flats", "measured at the thinnest boss"],
+  "unit_aliases": {
+    "in": "inch",
+    "inches": "inch",
+    "micrometres": "micrometers"
+  },
+  "facts": [
+    {
+      "s": "Shaft A-114",
+      "r": "diameter",
+      "o": "2.495 to 2.505 in",
+      "source": "The finished diameter of Shaft A-114 is 2.500 +/- 0.005 in across the bearing journal."
+    },
+    {
+      "s": "Shaft A-114",
+      "r": "overall_length",
+      "o": "18 3/4 inches",
+      "source": "The overall length of Shaft A-114 is 18 3/4 inches end to end."
+    },
+    {
+      "s": "Shaft A-114",
+      "r": "surface_finish",
+      "o": "16 microinches Ra",
+      "source": "After induction hardening, the surface finish of Shaft A-114 is 16 microinches Ra on the journal diameter."
+    },
+    {
+      "s": "Shaft A-114",
+      "r": "hardness",
+      "o": "58-62 HRC",
+      "source": "The hardness of Shaft A-114 is 58-62 HRC on the hardened journal."
+    },
+    {
+      "s": "Housing Flange B-22",
+      "r": "bore_diameter",
+      "o": "1 3/8 inches",
+      "source": "The bore diameter of Housing Flange B-22 is 1 3/8 inches, reamed to size after casting."
+    },
+    {
+      "s": "Housing Flange B-22",
+      "r": "wall_thickness",
+      "o": "5/16 inch",
+      "source": "The wall thickness of Housing Flange B-22 is 5/16 inch measured at the thinnest boss."
+    },
+    {
+      "s": "Housing Flange B-22",
+      "r": "surface_finish",
+      "o": "63 microinches Ra",
+      "source": "The surface finish of Housing Flange B-22 is 63 microinches Ra on the mounting face, which is acceptable for a non-sealing surface."
+    },
+    {
+      "s": "Drive Pin C-7",
+      "r": "hardness",
+      "o": "20-25 HRC",
+      "source": "When annealed for the pilot-hole fit, the hardness of Drive Pin C-7 is 20-25 HRC.",
+      "when": {"heat_treatment": "annealed"}
+    },
+    {
+      "s": "Drive Pin C-7",
+      "r": "hardness",
+      "o": "58-62 HRC",
+      "source": "When hardened for the load-bearing position, the hardness of Drive Pin C-7 is 58-62 HRC.",
+      "when": {"heat_treatment": "hardened"}
+    },
+    {
+      "s": "Drive Pin C-7",
+      "r": "diameter",
+      "o": "0.249 to 0.251 in",
+      "source": "The diameter of Drive Pin C-7 is 1/4 inch +/- 0.001 in, ground to size after heat treatment."
+    },
+    {
+      "s": "Bearing Sleeve D-9",
+      "r": "bore_diameter",
+      "o": "7/8 inch",
+      "source": "The bore diameter of Bearing Sleeve D-9 is 7/8 inch, honed after pressing."
+    },
+    {
+      "s": "Bearing Sleeve D-9",
+      "r": "overall_length",
+      "o": "1 1/4 inches",
+      "source": "The overall length of Bearing Sleeve D-9 is 1 1/4 inches."
+    },
+    {
+      "s": "Bearing Sleeve D-9",
+      "r": "hardness",
+      "o": "22-26 HRC",
+      "source": "The hardness of Bearing Sleeve D-9 is 22-26 HRC, well below the shaft hardness to avoid galling."
+    },
+    {
+      "s": "Locking Collar E-3",
+      "r": "thread",
+      "o": "1/4-20 UNC",
+      "source": "The thread of Locking Collar E-3 is 1/4-20 UNC, class 2A fit."
+    },
+    {
+      "s": "Locking Collar E-3",
+      "r": "diameter",
+      "o": "7/16 inch",
+      "source": "The diameter of Locking Collar E-3 is 7/16 inch across the flats."
+    },
+    {
+      "s": "Locking Collar E-3",
+      "r": "surface_finish",
+      "o": "0.4 micrometres Ra",
+      "source": "The surface finish of Locking Collar E-3 is 0.4 micrometres Ra on the bearing face, roughly equivalent in appearance to a ground finish."
+    }
+  ]
+}

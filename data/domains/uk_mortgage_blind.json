@@ -1,0 +1,56 @@
+{
+  "domain": "uk-mortgage-blind",
+  "corpus": "Ashgrove Building Society Mortgage Product Sheet - Summer 2026\n\nThis product sheet sets out the current range of residential mortgage products available through Ashgrove Building Society, denominated in pounds sterling and available to homeowners in England, Scotland and Wales.\n\nThe Two-Year Fixed Rate Mortgage offers an initial rate of 4.79% fixed for the first two years of the mortgage term. After the fixed period ends, the Two-Year Fixed Rate Mortgage reverts to the standard variable rate of 7.49%. The Two-Year Fixed Rate Mortgage is available up to a maximum loan-to-value of 85%, meaning the minimum deposit required is 15% of the property value. The arrangement fee for the Two-Year Fixed Rate Mortgage is £999, payable on completion. The maximum loan amount under the Two-Year Fixed Rate Mortgage is £500,000. Borrowers who redeem the Two-Year Fixed Rate Mortgage early are subject to an early repayment charge of 5% of the amount repaid if redemption occurs in year one. In year two, the early repayment charge on the Two-Year Fixed Rate Mortgage falls to 3%.\n\nThe Five-Year Fixed Rate Mortgage offers an initial rate of 4.29% fixed for the first five years of the mortgage term. Once the fixed period expires, the Five-Year Fixed Rate Mortgage reverts to the standard variable rate of 7.49%. The Five-Year Fixed Rate Mortgage is available up to a maximum loan-to-value of 90%, meaning the minimum deposit required is 10% of the property value. The arrangement fee for the Five-Year Fixed Rate Mortgage is £1,499, payable on completion. The maximum loan amount under the Five-Year Fixed Rate Mortgage is £750,000. Early repayment charges on the Five-Year Fixed Rate Mortgage step down each year: the charge is 5% of the amount repaid in year one, 4% in year two, 3% in year three, 2% in year four, and 1% in year five.\n\nThe Lifetime Tracker Mortgage carries an initial rate of 5.59%, tracking the Bank of England base rate plus a fixed margin for the life of the mortgage, so the Lifetime Tracker Mortgage has no separate standard variable rate to revert to. The Lifetime Tracker Mortgage is available up to a maximum loan-to-value of 75%, meaning the minimum deposit required is 25% of the property value. The arrangement fee for the Lifetime Tracker Mortgage is £499, payable on completion. The maximum loan amount under the Lifetime Tracker Mortgage is £1,000,000. The Lifetime Tracker Mortgage carries no early repayment charge at any point during the mortgage term, reflecting its fully flexible structure.\n\nAll rates quoted are correct as of the date of this product sheet and are subject to change. Arrangement fees may be added to the loan or paid separately at the borrower's discretion.",
+  "entities": {
+    "two_year_fixed": ["Two-Year Fixed Rate Mortgage", "Two-Year Fixed"],
+    "five_year_fixed": ["Five-Year Fixed Rate Mortgage", "Five-Year Fixed"],
+    "lifetime_tracker": ["Lifetime Tracker Mortgage", "Lifetime Tracker"]
+  },
+  "relations": {
+    "initial_rate": {"kind": "quantity", "question": "what is the initial rate of {entity}?"},
+    "svr": {"kind": "quantity", "question": "what is the standard variable rate of {entity}?"},
+    "max_ltv": {"kind": "quantity", "question": "what is the maximum loan-to-value of {entity}?"},
+    "min_deposit": {"kind": "quantity", "question": "what is the minimum deposit of {entity}?"},
+    "arrangement_fee": {"kind": "quantity", "question": "what is the arrangement fee of {entity}?"},
+    "max_loan": {"kind": "quantity", "question": "what is the maximum loan amount of {entity}?"},
+    "erc": {"kind": "quantity", "question": "what is the early repayment charge of {entity}?"}
+  },
+  "conditions": ["year"],
+  "value_qualifiers": [
+    "approximately",
+    "about",
+    "roughly",
+    "up to",
+    "a maximum of",
+    "a minimum of",
+    "at least",
+    "no more than",
+    "no less than",
+    "or less",
+    "or more",
+    "payable on completion",
+    "of the amount repaid",
+    "of the property value"
+  ],
+  "unit_aliases": {
+    "%": "percent"
+  },
+  "facts": [
+    {"s": "two_year_fixed", "r": "initial_rate", "o": "4.79%", "source": "The Two-Year Fixed Rate Mortgage offers an initial rate of 4.79% fixed for the first two years of the mortgage term."},
+    {"s": "two_year_fixed", "r": "svr", "o": "7.49%", "source": "After the fixed period ends, the Two-Year Fixed Rate Mortgage reverts to the standard variable rate of 7.49%."},
+    {"s": "two_year_fixed", "r": "max_ltv", "o": "85%", "source": "The Two-Year Fixed Rate Mortgage is available up to a maximum loan-to-value of 85%, meaning the minimum deposit required is 15% of the property value."},
+    {"s": "two_year_fixed", "r": "min_deposit", "o": "15%", "source": "The Two-Year Fixed Rate Mortgage is available up to a maximum loan-to-value of 85%, meaning the minimum deposit required is 15% of the property value."},
+    {"s": "two_year_fixed", "r": "arrangement_fee", "o": "£999", "source": "The arrangement fee for the Two-Year Fixed Rate Mortgage is £999, payable on completion."},
+    {"s": "two_year_fixed", "r": "max_loan", "o": "£500,000", "source": "The maximum loan amount under the Two-Year Fixed Rate Mortgage is £500,000."},
+    {"s": "two_year_fixed", "r": "erc", "o": "5%", "when": {"year": "one"}, "source": "Borrowers who redeem the Two-Year Fixed Rate Mortgage early are subject to an early repayment charge of 5% of the amount repaid if redemption occurs in year one."},
+    {"s": "two_year_fixed", "r": "erc", "o": "3%", "when": {"year": "two"}, "source": "In year two, the early repayment charge on the Two-Year Fixed Rate Mortgage falls to 3%."},
+    {"s": "five_year_fixed", "r": "initial_rate", "o": "4.29%", "source": "The Five-Year Fixed Rate Mortgage offers an initial rate of 4.29% fixed for the first five years of the mortgage term."},
+    {"s": "five_year_fixed", "r": "max_ltv", "o": "90%", "source": "The Five-Year Fixed Rate Mortgage is available up to a maximum loan-to-value of 90%, meaning the minimum deposit required is 10% of the property value."},
+    {"s": "five_year_fixed", "r": "arrangement_fee", "o": "£1,499", "source": "The arrangement fee for the Five-Year Fixed Rate Mortgage is £1,499, payable on completion."},
+    {"s": "five_year_fixed", "r": "max_loan", "o": "£750,000", "source": "The maximum loan amount under the Five-Year Fixed Rate Mortgage is £750,000."},
+    {"s": "five_year_fixed", "r": "erc", "o": "5%", "when": {"year": "one"}, "source": "Early repayment charges on the Five-Year Fixed Rate Mortgage step down each year: the charge is 5% of the amount repaid in year one, 4% in year two, 3% in year three, 2% in year four, and 1% in year five."},
+    {"s": "five_year_fixed", "r": "erc", "o": "3%", "when": {"year": "three"}, "source": "Early repayment charges on the Five-Year Fixed Rate Mortgage step down each year: the charge is 5% of the amount repaid in year one, 4% in year two, 3% in year three, 2% in year four, and 1% in year five."},
+    {"s": "lifetime_tracker", "r": "initial_rate", "o": "5.59%", "source": "The Lifetime Tracker Mortgage carries an initial rate of 5.59%, tracking the Bank of England base rate plus a fixed margin for the life of the mortgage, so the Lifetime Tracker Mortgage has no separate standard variable rate to revert to."},
+    {"s": "lifetime_tracker", "r": "max_loan", "o": "£1,000,000", "source": "The maximum loan amount under the Lifetime Tracker Mortgage is £1,000,000."}
+  ]
+}

@@ -406,3 +406,63 @@ def test_sentence_scoping_still_holds_with_the_decimal_fix():
                    "The base rate is 4.5 percent. Penalty rates of 4.5 percent per month "
                    "apply after default.",
                    "4.5 percent per month") == HELD
+
+
+# ------------------------------- round 3: typography is not a contradiction
+def _text(o, src):
+    return FactSet.from_dict({
+        "domain": "d", "entities": {"e": ["e"]}, "relations": {"p": {"kind": "text"}},
+        "facts": [{"s": "e", "r": "p", "o": o, "source": src}]})
+
+
+@pytest.mark.parametrize("declared,claimed,note", [
+    ("Café Ristretto", "Café Ristretto", "NFC against NFD"),
+    ("Tenant's option", "Tenant’s option", "straight against curly apostrophe"),
+    ("2-year term", "2–year term", "hyphen against en-dash"),
+    ('a "firm" quote', "a “firm” quote", "straight against curly quotes"),
+])
+def test_typography_does_not_make_two_values_contradict(declared, claimed, note):
+    """Text comparison had NO canonicalisation, so values that render identically were
+    reported as contradicting each other. A document copied out of a word processor carries
+    curly quotes and en-dashes; a model retyping it produces the ASCII forms."""
+    assert gate_claim(_text(declared, f"The value is {declared}."),
+                      "e", "p", claimed).status == VERIFIED
+
+
+def test_canonicalisation_cannot_equate_two_different_values():
+    """It folds typography, never content: no character is dropped except zero-width marks,
+    which render as nothing."""
+    assert gate_claim(_text("oral", "Give it by the oral route."),
+                      "e", "p", "intravenous").status == BLOCK
+
+
+@pytest.mark.parametrize("declared,claimed,want", [
+    ("1/2 inch", "0.5 inch", VERIFIED),      # exact rational arithmetic
+    ("1/2 inch", "3/4 inch", BLOCK),
+    ("2 1/2 inch", "2.5 inch", VERIFIED),    # mixed number, as machining drawings write it
+    ("1.2e17 atoms", "120000000000000000 atoms", VERIFIED),
+    ("1.2e17 atoms", "1.3e17 atoms", BLOCK),
+    ("3:1", "6:2", VERIFIED),                # same ratio
+    ("3:1", "20:1", BLOCK),
+    ("3:1", "3", HELD),                      # a ratio is never a bare number
+    ("3:1", "3 to 1", HELD),                 # "N to M" is ambiguous with a range
+])
+def test_exact_notations(declared, claimed, want):
+    """Fractions, scientific notation and ratios are exact arithmetic, not interpretation.
+    Before they parsed, each pair above fell to raw text equality and the DIFFERING ones
+    were BLOCKED even when equal."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"e": ["e"]},
+        "relations": {"p": {"kind": "quantity" if want != HELD else "text"}},
+        "facts": [{"s": "e", "r": "p", "o": declared,
+                   "source": f"The value is {declared}."}]})
+    assert gate_claim(fs, "e", "p", claimed).status == want
+
+
+def test_a_range_is_never_read_as_a_ratio():
+    """The leak I introduced adding ratios and caught before it shipped: "5 to 10" and
+    "1 to 2" are different RANGES that share a quotient, so both parsed as ratio 0.5 and
+    compared MATCH. Ratios are colon-form only."""
+    from factgate.domain.quantity import INCOMPARABLE, compare_values
+    assert compare_values("5 to 10", "1 to 2") == INCOMPARABLE
+    assert compare_values("5 to 10 mg", "1 to 2 mg") == "DIFFER"

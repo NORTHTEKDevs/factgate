@@ -84,6 +84,58 @@ def _scale_of(unit: str) -> tuple[str, float]:
     return unit, 1.0
 
 
+# Units whose PHYSICAL DIMENSION is known, for lint only -- never for a verdict, so the
+# comparison layer stays parameter-free. Spelling variants of one unit share an entry;
+# anything absent is simply unknown and draws no opinion.
+#
+# The SI-prefix check above only fires when both sides reduce to the SAME base string, so
+# it caught mcg -> mg and nothing else. An alias between two UNRELATED units skipped it
+# entirely and lint stayed silent while the gate VERIFIED:
+#
+#   unit_aliases {"mL": "mg"}   declared "15 mg"   claimed "15 mL"   -> VERIFIED
+#   unit_aliases {"lbs": "kg"}  declared "150 kg"  claimed "150 lbs" -> VERIFIED
+#
+# A millilitre is not a milligram under any reading, and 150 lbs is not 150 kg.
+# unit spelling -> (dimension, size relative to the dimension's base). Prefixed forms are
+# listed explicitly rather than derived, because algorithmic prefix-stripping misreads
+# ordinary words ("hrs" begins with the hecto prefix, "mi" with milli).
+#
+# "pound" and "pounds" are deliberately ABSENT: they are mass or currency depending on the
+# document, and a check that cannot tell must not guess.
+_KNOWN_UNITS: dict[str, tuple[str, float]] = {}
+for _dim, _entries in {
+    "mass": [(1e-6, ["mcg", "ug", "µg", "microgram", "micrograms"]),
+             (1e-3, ["mg", "milligram", "milligrams"]),
+             (1.0, ["g", "gram", "grams", "gramme", "grammes"]),
+             (1e3, ["kg", "kilogram", "kilograms", "kilo", "kilos"]),
+             (453.592, ["lb", "lbs"]),
+             (28.3495, ["oz", "ounce", "ounces"])],
+    "volume": [(1e-3, ["ml", "millilitre", "millilitres", "milliliter",
+                       "milliliters", "cc"]),
+               (1.0, ["l", "litre", "litres", "liter", "liters"]),
+               (3.78541, ["gal", "gallon", "gallons"])],
+    "length": [(1e-3, ["mm", "millimetre", "millimetres", "millimeter", "millimeters"]),
+               (1e-2, ["cm", "centimetre", "centimetres", "centimeter", "centimeters"]),
+               (1.0, ["m", "metre", "metres", "meter", "meters"]),
+               (1e3, ["km", "kilometre", "kilometres", "kilometer", "kilometers"]),
+               (0.0254, ["in", "inch", "inches"]),
+               (0.3048, ["ft", "foot", "feet"]),
+               (1609.34, ["mi", "mile", "miles"])],
+    "time": [(1.0, ["s", "sec", "secs", "second", "seconds"]),
+             (60.0, ["min", "mins", "minute", "minutes"]),
+             (3600.0, ["h", "hr", "hrs", "hour", "hours"]),
+             (86400.0, ["d", "day", "days"]),
+             (604800.0, ["wk", "week", "weeks"])],
+    "currency": [(1.0, ["usd", "dollar", "dollars", "$"]),
+                 (2.0, ["gbp", "sterling", "£"]),
+                 (3.0, ["eur", "euro", "euros", "€"])],
+    "ratio": [(1.0, ["%", "percent", "pct", "percentage"])],
+}.items():
+    for _factor, _names in _entries:
+        for _n in _names:
+            _KNOWN_UNITS[_n] = (_dim, _factor)
+
+
 @dataclass(frozen=True)
 class Fact:
     s: str
@@ -453,6 +505,23 @@ class FactSet:
         # "15 mcg", verdict VERIFIED, lint clean. Aliases exist to reconcile SPELLINGS of
         # one unit, never to equate two.
         for alias, canon in self.unit_aliases.items():
+            a_known = _KNOWN_UNITS.get(str(alias).strip().lower())
+            c_known = _KNOWN_UNITS.get(str(canon).strip().lower())
+            if a_known and c_known and a_known != c_known:
+                same_dim = a_known[0] == c_known[0]
+                detail = (f"the same {a_known[0]} in different units, a factor of "
+                          f"{max(a_known[1], c_known[1]) / min(a_known[1], c_known[1]):g}"
+                          if same_dim else
+                          f"{a_known[0]} and {c_known[0]}, which are not even the same "
+                          f"kind of quantity")
+                problems.append({
+                    "level": "error",
+                    "message": (f"unit_alias {alias!r} -> {canon!r} equates {detail}. "
+                                f"Every claim written in {alias!r} would verify against a "
+                                f"fact declared in {canon!r}, unconverted. Aliases "
+                                f"reconcile spellings of one unit, never two."),
+                })
+                continue
             a_base, a_f = _scale_of(str(alias))
             c_base, c_f = _scale_of(str(canon))
             if a_base == c_base and a_f != c_f:

@@ -7,6 +7,7 @@ has NO rounding tolerance: 15.4 does not match 15. A near-miss is a miss.
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import dataclass
 
 # A number, then an optional unit of one or more words joined by spaces or slashes.
@@ -80,6 +81,63 @@ def _currency_quantity(raw: str) -> Quantity | None:
     return None
 
 
+# Notations that are EXACT arithmetic, not interpretation. Each was measured producing a
+# false BLOCK, because a value the parser cannot read is a value whose difference from
+# another it cannot prove -- and the text fallback called that a contradiction:
+#
+#   declared "3:1"                claimed "3 to 1"                        -> BLOCK
+#   declared "1.2e17 atoms/cm3"   claimed "120000000000000000 atoms/cm3"  -> BLOCK
+#
+# Both pairs are the same value. Fractions are exact rational arithmetic, scientific
+# notation is exact float, and a ratio is a pair of integers -- no tolerance, no threshold,
+# nothing learned, so the verdict layer stays parameter-free.
+#
+# A mixed number ("2 1/2 inch") is a whole part plus a fraction, which is how machining
+# drawings write it.
+_FRACTION_RE = re.compile(
+    r"^\s*(?:([0-9]+)\s+)?([0-9]+)\s*/\s*([0-9]+)\s*"
+    r"([a-zA-Zµ%°][a-zA-Zµ%°/\s]*)?\s*$")
+# "1.2e17", "5 x 10^15", "5 * 10^15". The exponent form a document actually uses.
+_SCI_RE = re.compile(
+    r"^\s*([-+]?[0-9]*\.?[0-9]+)\s*(?:[eE]\s*([-+]?[0-9]+)|"
+    r"[x*×]\s*10\s*\^?\s*([-+]?[0-9]+))\s*"
+    r"([a-zA-Z0-9µ%°][a-zA-Z0-9µ%°/\s]*)?\s*$")
+# COLON FORM ONLY. "3 to 1" was accepted here too, and that was a LEAK I introduced and
+# caught before it shipped: "5 to 10" and "1 to 2" are different RANGES that share a
+# quotient, so both parsed as ratio 0.5 and compared MATCH. "N to M" is genuinely ambiguous
+# between a range and a ratio and nothing local can tell which the author meant; a colon is
+# not. "3:1" against "3 to 1" is therefore HELD rather than confirmed -- safe, and no longer
+# the false BLOCK it used to be.
+#
+# A ratio's unit is the shape itself, so two ratios compare only with each other and never
+# with a plain number.
+_RATIO_RE = re.compile(
+    r"^\s*([0-9]+(?:\.[0-9]+)?)\s*:\s*([0-9]+(?:\.[0-9]+)?)\s*(?:ratio)?\s*$")
+
+
+def _exact_notation(raw: str) -> Quantity | None:
+    """Fractions, scientific notation and ratios, or None."""
+    m = _FRACTION_RE.match(raw)
+    if m and int(m.group(3)) != 0:
+        whole = int(m.group(1)) if m.group(1) else 0
+        value = whole + int(m.group(2)) / int(m.group(3))
+        return Quantity(value, re.sub(r"\s*", "", m.group(4) or ""))
+    m = _SCI_RE.match(raw)
+    if m:
+        exponent = m.group(2) if m.group(2) is not None else m.group(3)
+        try:
+            value = float(m.group(1)) * (10.0 ** int(exponent))
+        except (ValueError, OverflowError):
+            return None
+        return Quantity(value, re.sub(r"\s*", "", m.group(4) or ""))
+    m = _RATIO_RE.match(raw)
+    if m and float(m.group(2)) != 0:
+        # The unit records that this is a RATIO. "3:1" must never compare equal to a bare
+        # 3, and a range "3 to 1" is reversed and rejected by parse_range anyway.
+        return Quantity(float(m.group(1)) / float(m.group(2)), "ratio")
+    return None
+
+
 def parse_quantity(raw: str | None) -> Quantity | None:
     """Parse "15 mg/kg" -> Quantity(15.0, "mg/kg"). None if not a quantity."""
     if not raw or len(raw) > MAX_VALUE_CHARS:
@@ -87,6 +145,9 @@ def parse_quantity(raw: str | None) -> Quantity | None:
     cur = _currency_quantity(raw)
     if cur is not None:
         return cur
+    exact = _exact_notation(raw)
+    if exact is not None:
+        return exact
     m = _QTY_RE.match(raw)
     if not m:
         return None
@@ -109,6 +170,37 @@ def parse_quantity(raw: str | None) -> Quantity | None:
 # operator installs once. Over-long input parses as nothing, which the gate turns into
 # HELD.
 MAX_VALUE_CHARS = 512
+
+_DIGIT_ANY = re.compile(r"[0-9]|\d", re.UNICODE)
+
+# Characters that render identically, or near enough that no reader distinguishes them, but
+# compare unequal byte for byte. Text comparison had no canonicalisation at all, so values a
+# human would call the same string were reported as CONTRADICTING each other:
+#
+#   "Café Ristretto" (NFC) against "Café Ristretto" (NFD)   -> BLOCK
+#   "Tenant's option" against "Tenant’s option"             -> BLOCK
+#
+# A document copied out of a word processor carries curly quotes and en-dashes; a model
+# retyping it produces the ASCII forms. Neither is asserting anything the other denies.
+_PUNCT_FOLD = str.maketrans({
+    "‘": "'", "’": "'", "‚": "'", "‛": "'",
+    "“": '"', "”": '"', "„": '"', "‟": '"',
+    "‐": "-", "‑": "-", "‒": "-", "–": "-", "—": "-",
+    "―": "-", "−": "-", " ": " ", " ": " ", " ": " ",
+    "​": "", "‌": "", "‍": "", "﻿": "",
+})
+
+
+def _text_key(s: str) -> str:
+    """Canonical form for comparing two TEXT values.
+
+    Unicode composition, quote style and dash style are typography, not meaning. Applied to
+    both sides symmetrically, so it can make two spellings of one value equal but can never
+    make two different values equal: no character is dropped except zero-width marks, which
+    render as nothing.
+    """
+    return " ".join(unicodedata.normalize("NFC", str(s))
+                    .translate(_PUNCT_FOLD).lower().split())
 
 MATCH, DIFFER, INCOMPARABLE = "MATCH", "DIFFER", "INCOMPARABLE"
 
@@ -416,8 +508,8 @@ def compare_values(declared: str, claimed: str | None, numeric: bool = False) ->
     if cq is not None:
         return INCOMPARABLE            # declared is text, claim is a quantity
 
-    d_norm = " ".join(declared.lower().split())
-    c_norm = " ".join(claimed.lower().split())
+    d_norm = _text_key(declared)
+    c_norm = _text_key(claimed)
     if d_norm == c_norm:
         return MATCH
     # Defence in depth: this is public API, so a caller may pass raw model text that
@@ -442,6 +534,18 @@ def compare_values(declared: str, claimed: str | None, numeric: bool = False) ->
     # verb. Neither asserts anything the document denies. A genuinely competing value
     # ("oral" against "intravenous") shares no containment and still DIFFERs.
     if d_norm in c_norm or c_norm in d_norm:
+        return INCOMPARABLE
+    # Neither side parsed, and at least one carries a NUMBER. The gate cannot do arithmetic
+    # on notation it could not read, so it cannot prove these differ -- and asserting a
+    # contradiction it cannot prove is the failure this whole three-valued design exists to
+    # avoid. Measured on shapes the parser does not cover, before fractions, scientific
+    # notation and ratios were added:
+    #
+    #   declared "3:1"  claimed "3 to 1"  -> DIFFER, and the gate BLOCKED two equal values
+    #
+    # Purely alphabetic values are unaffected: "oral" against "intravenous" is still a
+    # provable difference, because there is no unread arithmetic hiding in either.
+    if _DIGIT_ANY.search(d_norm) or _DIGIT_ANY.search(c_norm):
         return INCOMPARABLE
     return DIFFER
 

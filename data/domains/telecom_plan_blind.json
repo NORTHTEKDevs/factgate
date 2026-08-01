@@ -1,0 +1,40 @@
+{
+  "domain": "telecom-plan-blind",
+  "corpus": "This Service Schedule sets out the connectivity specifications, usage limits, and remedies applicable to each business broadband tier offered under this Agreement.\n\nThe Starter Business Broadband service delivers a downstream speed of up to 100 Mbps and an upstream speed of up to 20 Mbps over a shared access network. Starter Business Broadband is provisioned on a 20:1 contention ratio, meaning up to twenty business subscribers may share the same access circuit at peak times. The monthly data allowance for Starter Business Broadband is 2000 GB, after which throughput may be shaped during peak hours. Typical round-trip latency on Starter Business Broadband is approximately 25 ms across the core network. New Starter Business Broadband connections are typically installed within 5 business days of order acceptance.\n\nThe Growth Business Broadband service delivers a downstream speed of up to 500 Mbps and an upstream speed of up to 100 Mbps over a shared access network. Growth Business Broadband is provisioned on a 10:1 contention ratio. The monthly data allowance for Growth Business Broadband is 10 TB, after which throughput may be shaped during peak hours.\n\nThe Enterprise Business Broadband service delivers a downstream speed of up to 1 Gbps over a dedicated fiber circuit. The upstream speed of Enterprise Business Broadband is also up to 1 Gbps, providing a symmetric circuit for latency-sensitive workloads. Typical round-trip latency on Enterprise Business Broadband is approximately 8 ms across the core network. Packet loss on Enterprise Business Broadband is maintained at or below 0.01% under normal operating conditions.\n\nEnterprise Business Broadband carries a service level agreement with defined service credits for qualifying outages. For an outage lasting between four and eight hours, the customer is credited 10% of the monthly recurring charge. For an outage exceeding eight hours, the customer is credited 25% of the monthly recurring charge.",
+  "entities": {
+    "starter": ["Starter Business Broadband", "Starter"],
+    "growth": ["Growth Business Broadband", "Growth"],
+    "enterprise": ["Enterprise Business Broadband", "Enterprise"]
+  },
+  "relations": {
+    "downstream_speed": {"kind": "quantity", "question": "what is the downstream speed of {entity}?"},
+    "upstream_speed": {"kind": "quantity", "question": "what is the upstream speed of {entity}?"},
+    "contention_ratio": {"kind": "text", "question": "what is the contention ratio of {entity}?"},
+    "data_allowance": {"kind": "quantity", "question": "what is the monthly data allowance of {entity}?"},
+    "latency": {"kind": "quantity", "question": "what is the typical round-trip latency of {entity}?"},
+    "packet_loss": {"kind": "quantity", "question": "what is the maximum packet loss of {entity}?"},
+    "installation_window": {"kind": "quantity", "question": "what is the installation window for {entity}?"},
+    "service_credit": {"kind": "quantity", "question": "what is the service credit for {entity}?"}
+  },
+  "conditions": ["outage_duration_band"],
+  "value_qualifiers": ["up to", "approximately", "typically", "at or below"],
+  "unit_aliases": {"%": "percent"},
+  "facts": [
+    {"s": "starter", "r": "downstream_speed", "o": "100 Mbps", "source": "The Starter Business Broadband service delivers a downstream speed of up to 100 Mbps and an upstream speed of up to 20 Mbps over a shared access network."},
+    {"s": "starter", "r": "upstream_speed", "o": "20 Mbps", "source": "The Starter Business Broadband service delivers a downstream speed of up to 100 Mbps and an upstream speed of up to 20 Mbps over a shared access network."},
+    {"s": "starter", "r": "contention_ratio", "o": "20:1", "source": "Starter Business Broadband is provisioned on a 20:1 contention ratio, meaning up to twenty business subscribers may share the same access circuit at peak times."},
+    {"s": "starter", "r": "data_allowance", "o": "2000 GB", "source": "The monthly data allowance for Starter Business Broadband is 2000 GB, after which throughput may be shaped during peak hours."},
+    {"s": "starter", "r": "latency", "o": "25 ms", "source": "Typical round-trip latency on Starter Business Broadband is approximately 25 ms across the core network."},
+    {"s": "starter", "r": "installation_window", "o": "5 business days", "source": "New Starter Business Broadband connections are typically installed within 5 business days of order acceptance."},
+    {"s": "growth", "r": "downstream_speed", "o": "500 Mbps", "source": "The Growth Business Broadband service delivers a downstream speed of up to 500 Mbps and an upstream speed of up to 100 Mbps over a shared access network."},
+    {"s": "growth", "r": "upstream_speed", "o": "100 Mbps", "source": "The Growth Business Broadband service delivers a downstream speed of up to 500 Mbps and an upstream speed of up to 100 Mbps over a shared access network."},
+    {"s": "growth", "r": "contention_ratio", "o": "10:1", "source": "Growth Business Broadband is provisioned on a 10:1 contention ratio."},
+    {"s": "growth", "r": "data_allowance", "o": "10 TB", "source": "The monthly data allowance for Growth Business Broadband is 10 TB, after which throughput may be shaped during peak hours."},
+    {"s": "enterprise", "r": "downstream_speed", "o": "1 Gbps", "source": "The Enterprise Business Broadband service delivers a downstream speed of up to 1 Gbps over a dedicated fiber circuit."},
+    {"s": "enterprise", "r": "upstream_speed", "o": "1 Gbps", "source": "The upstream speed of Enterprise Business Broadband is also up to 1 Gbps, providing a symmetric circuit for latency-sensitive workloads."},
+    {"s": "enterprise", "r": "latency", "o": "8 ms", "source": "Typical round-trip latency on Enterprise Business Broadband is approximately 8 ms across the core network."},
+    {"s": "enterprise", "r": "packet_loss", "o": "0.01%", "source": "Packet loss on Enterprise Business Broadband is maintained at or below 0.01% under normal operating conditions."},
+    {"s": "enterprise", "r": "service_credit", "o": "10%", "when": {"outage_duration_band": "four to eight hour outage"}, "source": "For an outage lasting between four and eight hours, the customer is credited 10% of the monthly recurring charge."},
+    {"s": "enterprise", "r": "service_credit", "o": "25%", "when": {"outage_duration_band": "outage exceeding eight hours"}, "source": "For an outage exceeding eight hours, the customer is credited 25% of the monthly recurring charge."}
+  ]
+}

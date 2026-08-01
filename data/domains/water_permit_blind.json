@@ -1,0 +1,45 @@
+{
+  "domain": "water-permit-blind",
+  "corpus": "NPDES PERMIT NO. AK-0034521\n\nSECTION 3. EFFLUENT LIMITATIONS FOR OUTFALL 001\n\nFor five-day biochemical oxygen demand (BOD5), the monthly average limit shall not exceed 25 mg/L. The daily maximum limit for BOD5 shall not exceed 40 mg/L. For total suspended solids (TSS), the monthly average limit shall not exceed 30 mg/L. The daily maximum limit for TSS shall not exceed 45 mg/L.\n\nThe pH of the effluent shall be maintained within the range of 6.5 to 8.5 standard units at all times. Dissolved oxygen in the effluent shall not be less than 5.0 mg/L at any time.\n\nEffluent temperature is subject to seasonal limits. During the winter monitoring period, the discharge temperature shall not exceed 4.0 degrees Celsius. During the summer monitoring period, the discharge temperature shall not exceed 20.0 degrees Celsius. The discharge temperature shall not fall below -1.5 degrees Celsius at any time during the winter monitoring period.\n\nFecal coliform bacteria shall not exceed a monthly geometric mean of 200 colony-forming units per 100 mL. The daily maximum for fecal coliform bacteria shall not exceed 400 CFU/100 mL.\n\nTotal residual chlorine shall not exceed a daily maximum of 0.5 mg/L. The monthly average limit for total residual chlorine shall not exceed 0.2 mg/L.\n\nDischarge flow from Outfall 001 shall not exceed a monthly average of 2.1 MGD. The daily maximum discharge flow shall not exceed 3.0 MGD. Measured in metric units, the monthly average discharge flow shall not exceed 7949 cubic metres per day.",
+  "entities": {
+    "biochemical oxygen demand": ["BOD", "BOD5", "five-day biochemical oxygen demand"],
+    "total suspended solids": ["TSS", "suspended solids"],
+    "effluent pH": ["pH", "effluent pH level"],
+    "dissolved oxygen": ["DO", "dissolved oxygen level"],
+    "effluent temperature": ["discharge temperature", "temperature"],
+    "fecal coliform": ["fecal coliform bacteria", "coliform"],
+    "total residual chlorine": ["TRC", "chlorine", "residual chlorine"],
+    "discharge flow": ["flow", "effluent flow"]
+  },
+  "relations": {
+    "monthly_avg": {"kind": "quantity", "question": "what is the monthly average limit for {entity}?"},
+    "daily_max": {"kind": "quantity", "question": "what is the daily maximum limit for {entity}?"},
+    "range": {"kind": "quantity", "question": "what is the permitted range for {entity}?"},
+    "min_limit": {"kind": "quantity", "question": "what is the minimum limit for {entity}?"},
+    "seasonal_max": {"kind": "quantity", "question": "what is the seasonal maximum limit for {entity}?"},
+    "metric_monthly_avg": {"kind": "quantity", "question": "what is the monthly average limit in metric units for {entity}?"},
+    "count_monthly_avg": {"kind": "text", "question": "what is the monthly average bacterial count limit for {entity}?"},
+    "count_daily_max": {"kind": "text", "question": "what is the daily maximum bacterial count limit for {entity}?"}
+  },
+  "conditions": ["season"],
+  "value_qualifiers": ["at any time", "at all times"],
+  "unit_aliases": {},
+  "facts": [
+    {"s": "biochemical oxygen demand", "r": "monthly_avg", "o": "25 mg/L", "source": "For five-day biochemical oxygen demand (BOD5), the monthly average limit shall not exceed 25 mg/L."},
+    {"s": "biochemical oxygen demand", "r": "daily_max", "o": "40 mg/L", "source": "The daily maximum limit for BOD5 shall not exceed 40 mg/L."},
+    {"s": "total suspended solids", "r": "monthly_avg", "o": "30 mg/L", "source": "For total suspended solids (TSS), the monthly average limit shall not exceed 30 mg/L."},
+    {"s": "total suspended solids", "r": "daily_max", "o": "45 mg/L", "source": "The daily maximum limit for TSS shall not exceed 45 mg/L."},
+    {"s": "effluent pH", "r": "range", "o": "6.5 to 8.5", "source": "The pH of the effluent shall be maintained within the range of 6.5 to 8.5 standard units at all times."},
+    {"s": "dissolved oxygen", "r": "min_limit", "o": "5.0 mg/L", "source": "Dissolved oxygen in the effluent shall not be less than 5.0 mg/L at any time."},
+    {"s": "effluent temperature", "r": "seasonal_max", "o": "4.0 degrees Celsius", "when": {"season": "winter"}, "source": "During the winter monitoring period, the discharge temperature shall not exceed 4.0 degrees Celsius."},
+    {"s": "effluent temperature", "r": "seasonal_max", "o": "20.0 degrees Celsius", "when": {"season": "summer"}, "source": "During the summer monitoring period, the discharge temperature shall not exceed 20.0 degrees Celsius."},
+    {"s": "effluent temperature", "r": "min_limit", "o": "-1.5 degrees Celsius", "source": "The discharge temperature shall not fall below -1.5 degrees Celsius at any time during the winter monitoring period."},
+    {"s": "fecal coliform", "r": "count_monthly_avg", "o": "200 colony-forming units per 100 mL", "source": "Fecal coliform bacteria shall not exceed a monthly geometric mean of 200 colony-forming units per 100 mL."},
+    {"s": "fecal coliform", "r": "count_daily_max", "o": "400 CFU/100 mL", "source": "The daily maximum for fecal coliform bacteria shall not exceed 400 CFU/100 mL."},
+    {"s": "total residual chlorine", "r": "daily_max", "o": "0.5 mg/L", "source": "Total residual chlorine shall not exceed a daily maximum of 0.5 mg/L."},
+    {"s": "total residual chlorine", "r": "monthly_avg", "o": "0.2 mg/L", "source": "The monthly average limit for total residual chlorine shall not exceed 0.2 mg/L."},
+    {"s": "discharge flow", "r": "monthly_avg", "o": "2.1 MGD", "source": "Discharge flow from Outfall 001 shall not exceed a monthly average of 2.1 MGD."},
+    {"s": "discharge flow", "r": "daily_max", "o": "3.0 MGD", "source": "The daily maximum discharge flow shall not exceed 3.0 MGD."},
+    {"s": "discharge flow", "r": "metric_monthly_avg", "o": "7949 cubic metres per day", "source": "Measured in metric units, the monthly average discharge flow shall not exceed 7949 cubic metres per day."}
+  ]
+}

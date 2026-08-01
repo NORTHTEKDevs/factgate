@@ -1,0 +1,46 @@
+{
+  "domain": "semiconductor-process-blind",
+  "corpus": "PROCESS CONTROL SHEET - FAB LINE 2, WEEK 31\n\nGate Oxide Growth\n\nThe gate oxide growth step targets a feature size of 12 nm for this technology node. Chamber pressure during oxidation is held at 150 mTorr to control film uniformity across the wafer. First-pass yield for the gate oxide growth step was measured at 98.72% over the current run.\n\nPolysilicon Deposition\n\nThe polysilicon deposition step is specified for a feature size of 45 nm at the gate stack. Chamber pressure for polysilicon deposition is maintained at 240 Pa throughout the deposition cycle. The silane-to-nitrogen gas flow ratio for polysilicon deposition is set to 3:1. Yield for the polysilicon deposition step came in at 97.05% for this lot.\n\nBoron Implant\n\nPost-anneal dopant concentration for the boron implant is 1.2e17 atoms/cm3, measured by SIMS at mid-depth. The iron impurity limit for the boron implant is 5 ppb, per the incoming wafer specification.\n\nPhosphorus Implant\n\nPost-anneal dopant concentration for the phosphorus implant is 5 x 10^15 atoms/cm3, per the SIMS profile. The carbon impurity limit for the phosphorus implant is 10 ppm under the current recipe. The arsine-to-hydrogen gas flow ratio for the phosphorus implant is 1:4.\n\nMetal Etch\n\nUnder the standard recipe, chamber pressure for the metal etch step is held at 80 mTorr. Under the high-density recipe, chamber pressure for the metal etch step is reduced to 25 mTorr for improved anisotropy. Yield for the metal etch step was 99.10% across the batch.\n\nWafer Lot 7742\n\nWafer lot 7742 is processed on 300 mm (12-inch) substrates per the standard flow for this line.",
+  "entities": {
+    "Gate Oxide Growth": ["gate oxide growth", "gate oxide growth step", "gate oxidation"],
+    "Polysilicon Deposition": ["polysilicon deposition", "polysilicon deposition step", "poly deposition"],
+    "Boron Implant": ["boron implant", "boron implantation"],
+    "Phosphorus Implant": ["phosphorus implant", "phosphorus implantation"],
+    "Metal Etch": ["metal etch", "metal etch step"],
+    "Wafer Lot 7742": ["wafer lot 7742", "lot 7742"]
+  },
+  "relations": {
+    "feature_size": {"kind": "quantity", "question": "what is the feature size of {entity}?"},
+    "chamber_pressure": {"kind": "quantity", "question": "what is the chamber pressure of {entity}?"},
+    "yield": {"kind": "quantity", "question": "what is the yield of {entity}?"},
+    "gas_flow_ratio": {"kind": "text", "question": "what is the gas flow ratio of {entity}?"},
+    "dopant_concentration": {"kind": "quantity", "question": "what is the dopant concentration of {entity}?"},
+    "impurity_limit": {"kind": "quantity", "question": "what is the impurity limit of {entity}?"},
+    "wafer_diameter": {"kind": "quantity", "question": "what is the wafer diameter of {entity}?"}
+  },
+  "conditions": ["recipe"],
+  "value_qualifiers": ["approximately", "nominally", "typical", "per the current run", "measured at", "target"],
+  "unit_aliases": {
+    "%": "percent",
+    "mtorr": "mTorr",
+    "in": "inches"
+  },
+  "facts": [
+    {"s": "Gate Oxide Growth", "r": "feature_size", "o": "12 nm", "source": "The gate oxide growth step targets a feature size of 12 nm for this technology node."},
+    {"s": "Gate Oxide Growth", "r": "chamber_pressure", "o": "150 mTorr", "source": "Chamber pressure during oxidation is held at 150 mTorr to control film uniformity across the wafer."},
+    {"s": "Gate Oxide Growth", "r": "yield", "o": "98.72%", "source": "First-pass yield for the gate oxide growth step was measured at 98.72% over the current run."},
+    {"s": "Polysilicon Deposition", "r": "feature_size", "o": "45 nm", "source": "The polysilicon deposition step is specified for a feature size of 45 nm at the gate stack."},
+    {"s": "Polysilicon Deposition", "r": "chamber_pressure", "o": "240 Pa", "source": "Chamber pressure for polysilicon deposition is maintained at 240 Pa throughout the deposition cycle."},
+    {"s": "Polysilicon Deposition", "r": "gas_flow_ratio", "o": "3:1", "source": "The silane-to-nitrogen gas flow ratio for polysilicon deposition is set to 3:1."},
+    {"s": "Polysilicon Deposition", "r": "yield", "o": "97.05%", "source": "Yield for the polysilicon deposition step came in at 97.05% for this lot."},
+    {"s": "Boron Implant", "r": "dopant_concentration", "o": "1.2e17 cm3", "source": "Post-anneal dopant concentration for the boron implant is 1.2e17 atoms/cm3, measured by SIMS at mid-depth."},
+    {"s": "Boron Implant", "r": "impurity_limit", "o": "5 ppb", "source": "The iron impurity limit for the boron implant is 5 ppb, per the incoming wafer specification."},
+    {"s": "Phosphorus Implant", "r": "dopant_concentration", "o": "5 x 10^15 cm3", "source": "Post-anneal dopant concentration for the phosphorus implant is 5 x 10^15 atoms/cm3, per the SIMS profile."},
+    {"s": "Phosphorus Implant", "r": "impurity_limit", "o": "10 ppm", "source": "The carbon impurity limit for the phosphorus implant is 10 ppm under the current recipe."},
+    {"s": "Phosphorus Implant", "r": "gas_flow_ratio", "o": "1:4", "source": "The arsine-to-hydrogen gas flow ratio for the phosphorus implant is 1:4."},
+    {"s": "Metal Etch", "r": "chamber_pressure", "o": "80 mTorr", "when": {"recipe": "standard"}, "source": "Under the standard recipe, chamber pressure for the metal etch step is held at 80 mTorr."},
+    {"s": "Metal Etch", "r": "chamber_pressure", "o": "25 mTorr", "when": {"recipe": "high_density"}, "source": "Under the high-density recipe, chamber pressure for the metal etch step is reduced to 25 mTorr for improved anisotropy."},
+    {"s": "Metal Etch", "r": "yield", "o": "99.10%", "source": "Yield for the metal etch step was 99.10% across the batch."},
+    {"s": "Wafer Lot 7742", "r": "wafer_diameter", "o": "300 mm", "source": "Wafer lot 7742 is processed on 300 mm (12-inch) substrates per the standard flow for this line."}
+  ]
+}
