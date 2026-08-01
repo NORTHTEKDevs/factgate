@@ -785,3 +785,25 @@ def test_a_compound_value_is_not_blocked_against_its_own_equal():
     assert gate_claim(fs, "task", "dur", "45 minutes").status == BLOCK
     from factgate.domain.quantity import DIFFER, compare_values
     assert compare_values("10 mg/kg", "20 mg/kg every 6 hours") == DIFFER
+
+
+@pytest.mark.parametrize("alias,canon,why", [
+    ("fl oz", "oz", "a fluid ounce is VOLUME; an ounce is MASS"),
+    ("%", "percent of label claim", "a potency metric, not a spelling of percent"),
+    ("gal", "imperial gallons", "an imperial gallon is a different volume from a US one"),
+    ("mg", "mg elemental", "elemental mass is not the salt mass"),
+])
+def test_a_phrase_containing_a_known_unit_is_not_a_spelling_of_it(alias, canon, why):
+    """A LEAK created by the fix that stopped "US gallons" false-alarming, and found the
+    same day. That bypass accepted ANY phrase merely CONTAINING the known unit's name:
+
+        unit_aliases {"fl oz": "oz"}   declared "12 oz" (MASS)
+        claimed "12 fl oz" (VOLUME)    -> VERIFIED, lint clean
+
+    Every other word must now be a pure locale marker. "imperial" is deliberately not one:
+    an imperial gallon really is a different volume."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"x": []},
+        "relations": {"p": {"kind": "quantity"}}, "unit_aliases": {alias: canon},
+        "facts": [{"s": "x", "r": "p", "o": "5 mg", "source": "It is 5 mg."}]})
+    assert [p for p in fs.lint() if p["level"] == "error"], f"{alias} -> {canon}: {why}"

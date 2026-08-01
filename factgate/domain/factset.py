@@ -138,6 +138,13 @@ for _dim, _entries in {
             _KNOWN_UNITS[_n] = (_dim, _factor)
 
 
+# Words that mark a REGION or SPELLING and never change the quantity itself. Deliberately
+# short: "imperial" is absent because an imperial gallon is a different volume from a US
+# one, and "fluid" is absent because a fluid ounce is a different dimension from an ounce.
+_LOCALE_WORDS = frozenset({"us", "u", "s", "usa", "american", "uk", "gb", "british",
+                           "international", "standard", "spelt", "spelled"})
+
+
 @dataclass(frozen=True)
 class Fact:
     s: str
@@ -541,8 +548,24 @@ class FactSet:
             # complaining, or every unlisted spelling becomes a false alarm.
             known_side = a_known or c_known
             other = c_txt if a_known else a_txt
-            names_same_unit = any(_KNOWN_UNITS.get(w) == known_side
-                                  for w in re.findall(r"[a-zµ%°]+", other))
+            words = re.findall(r"[a-zµ%°]+", other)
+            # EVERY other word must be a pure locale marker. Accepting any phrase that
+            # merely CONTAINS the known unit's name was itself a leak, found the same day
+            # the bypass was written to stop "US gallons" false-alarming:
+            #
+            #   unit_aliases {"fl oz": "oz"}   declared "12 oz" (MASS)
+            #   claimed "12 fl oz" (VOLUME)    -> VERIFIED, lint clean
+            #
+            #   unit_aliases {"%": "percent of label claim"}
+            #   declared "45%"                 -> VERIFIED against a potency metric
+            #
+            # A fluid ounce is not a spelling of an ounce, and "percent of label claim" is
+            # not a spelling of percent. "imperial" is deliberately NOT a locale marker
+            # here: an imperial gallon really is a different volume from a US one.
+            names_same_unit = (
+                any(_KNOWN_UNITS.get(w) == known_side for w in words)
+                and all(_KNOWN_UNITS.get(w) == known_side or w in _LOCALE_WORDS
+                        for w in words))
             if (bool(a_known) != bool(c_known) and not names_same_unit
                     and a_txt.rstrip("s") != c_txt.rstrip("s")):
                 known, unknown = (a_txt, c_txt) if a_known else (c_txt, a_known and "" or a_txt)
