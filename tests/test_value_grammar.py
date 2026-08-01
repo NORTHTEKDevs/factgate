@@ -71,8 +71,12 @@ def _exact(text):
             return None                            # the implementation refuses these
         v = Fraction(m.group(1)) * (Fraction(10) ** exp)
         return v, (cur + re.sub(r"\s+", "", m.group(3))).lower()
+    # A magnitude letter must be followed by a boundary. Without the lookahead the oracle
+    # read "5 mg" as magnitude "m" plus unit "g" and then gave up, so it could not decide
+    # even "5 mg" against itself -- a bug in the ORACLE that made the config proof hollow.
     m = re.match(r"^([-+]?[0-9][0-9,]*(?:\.[0-9]+)?)\s*"
-                 r"([kKmMbB]|thousand|million|billion)?\s*([A-Za-zµ%°/ ]*)$", s)
+                 r"(?:([kKmMbB]|thousand|million|billion)(?=\s|$))?\s*"
+                 r"([A-Za-zµ%°/ ]*)$", s)
     if m:
         v = Fraction(m.group(1).replace(",", ""))
         unit = re.sub(r"\s+", "", m.group(3) or "").lower()
@@ -107,6 +111,40 @@ def _exact_range(text):
     return (lo_v, hi_v), unit
 
 
+# The oracle's OWN unit knowledge, written independently of factset._KNOWN_UNITS: exact
+# Fractions rather than floats, a flat mapping rather than a nested build, and only the
+# units needed to decide the pairs this file generates.
+#
+# Without it the oracle answered DONT_KNOW whenever two units differed, which made the
+# config proof below HOLLOW for the very class it exists to cover -- it could never prove
+# "15 mg" and "15 mcg" unequal. Discovered by neutering lint() and observing the proof
+# catch nothing, which is what a mutation check is for.
+_ORACLE_UNITS = {
+    "mcg": ("mass", Fraction(1, 10 ** 6)), "ug": ("mass", Fraction(1, 10 ** 6)),
+    "mg": ("mass", Fraction(1, 1000)), "g": ("mass", Fraction(1)),
+    "kg": ("mass", Fraction(1000)), "lbs": ("mass", Fraction(45359237, 100000)),
+    "lb": ("mass", Fraction(45359237, 100000)), "oz": ("mass", Fraction(283495, 10000)),
+    "ml": ("volume", Fraction(1, 1000)), "l": ("volume", Fraction(1)),
+    "gal": ("volume", Fraction(378541, 100000)),
+    "floz": ("volume", Fraction(2957, 100000)),
+    "min": ("time", Fraction(60)), "hrs": ("time", Fraction(3600)),
+    "hr": ("time", Fraction(3600)), "hours": ("time", Fraction(3600)),
+    "iu": ("activity", Fraction(1)),
+}
+
+
+def _dimensioned(parsed):
+    """(dimension, exact size) if the oracle knows the unit, else None."""
+    if parsed is None:
+        return None
+    value, unit = parsed
+    known = _ORACLE_UNITS.get(unit.lower())
+    if known is None:
+        return None
+    dim, factor = known
+    return dim, value * factor
+
+
 def oracle(declared, claimed):
     """EQUAL / UNEQUAL / DONT_KNOW, computed with exact arithmetic."""
     dr, cr = _exact_range(declared), _exact_range(claimed)
@@ -122,9 +160,17 @@ def oracle(declared, claimed):
     if cr and dq:
         return DONT_KNOW          # a range never confirms a point; deliberately asymmetric
     if dq and cq:
-        if dq[1] != cq[1]:
-            return DONT_KNOW      # different units prove nothing without conversion
-        return EQUAL if dq[0] == cq[0] else UNEQUAL
+        if dq[1] == cq[1]:
+            return EQUAL if dq[0] == cq[0] else UNEQUAL
+        # Different units. Decide it when the oracle knows BOTH, which is what lets it
+        # prove a unit_alias wrong: a different dimension can never be equal, and the same
+        # dimension compares by exact size.
+        da, ca = _dimensioned(dq), _dimensioned(cq)
+        if da and ca:
+            if da[0] != ca[0]:
+                return UNEQUAL
+            return EQUAL if da[1] == ca[1] else UNEQUAL
+        return DONT_KNOW
     return DONT_KNOW
 
 
@@ -235,3 +281,140 @@ def test_the_oracle_disagrees_with_a_deliberately_broken_comparison():
     caught = [(a, b) for a, b in itertools.product(vals, repeat=2)
               if oracle(a, b) == UNEQUAL]
     assert caught, "oracle cannot prove any pair unequal, so the leak proof is hollow"
+
+
+# ------------------------------------------------------- the gate over AUTHOR CONFIG
+#
+# The value-grammar proof above covers compare_values. It does NOT cover what an author can
+# declare -- value_qualifiers and unit_aliases rewrite BOTH sides before comparison, and
+# three of the last four leaks lived exactly there:
+#
+#   {"mcg": "mg"}    a 1000x dosing error, VERIFIED
+#   {"mL": "mg"}     volume equated to mass, VERIFIED
+#   {"fl oz": "oz"}  volume equated to mass again, through the fix for the one before
+#
+# The contract that covers all of them, and that no future alias can evade:
+#
+#   FOR EVERY fact set an author can write, EITHER lint() refuses it, OR every VERIFIED
+#   verdict is confirmed EQUAL by the independent oracle.
+#
+# lint is the designed defence against a dangerous declaration, so "lint refuses it" is a
+# pass. A fact set that lint accepts and that then verifies something the oracle proves
+# unequal is a leak, whoever wrote the declaration.
+from factgate.domain.factset import FactSet, ValidationError
+from factgate.domain.gate import VERIFIED, gate_claim
+
+_ALIAS_POOL = [
+    {}, {"%": "percent"}, {"USD": "dollars"}, {"hrs": "hours"}, {"mi": "miles"},
+    {"mcg": "mg"}, {"mL": "mg"}, {"lbs": "kg"}, {"fl oz": "oz"}, {"gal": "l"},
+    {"mcg": "iu"}, {"%": "percent of label claim"}, {"gal": "US gallons"},
+    {"ft": "m"}, {"hrs": "min"}, {"mL": "millilitre"}, {"lbs": "pounds"},
+]
+_QUALIFIER_POOL = [
+    [], ["approximately"], ["per day"], ["PO"], ["or more"], ["monthly"],
+    ["approximately", "per day"], ["of label claim"], ["every"],
+]
+_PAIRS = [
+    ("15 mg", "15 mcg"), ("15 mg", "15 mL"), ("150 kg", "150 lbs"),
+    ("12 oz", "12 fl oz"), ("5 l", "5 gal"), ("15 iu", "15 mcg"),
+    ("45%", "45 percent of label claim"), ("5 mg", "5 mg"), ("5 mg", "9 mg"),
+    ("92 percent", "92%"), ("5 mg", "5 mg approximately"), ("10 mg", "10 mg per day"),
+    ("$5", "5 dollars"), ("3 hrs", "3 hours"), ("3 hrs", "3 min"),
+]
+
+
+def test_no_author_declaration_can_make_the_gate_verify_an_unequal_value():
+    """THE CONFIG PROOF. Either lint refuses the fact set, or every VERIFIED it produces is
+    confirmed EQUAL by exact arithmetic. This is the property that would have caught the
+    mcg/mg, mL/mg and fl-oz/oz leaks the moment each alias was writable -- rather than one
+    adversarial round each, three rounds apart."""
+    leaks = []
+    checked = 0
+    for aliases in _ALIAS_POOL:
+        for quals in _QUALIFIER_POOL:
+            for declared, claimed in _PAIRS:
+                spec = {"domain": "p", "entities": {"e": ["e"]},
+                        "relations": {"r": {"kind": "quantity"}},
+                        "unit_aliases": aliases, "value_qualifiers": quals,
+                        "facts": [{"s": "e", "r": "r", "o": declared,
+                                   "source": f"The value is {declared}."}]}
+                try:
+                    fs = FactSet.from_dict(spec)
+                except ValidationError:
+                    continue                      # refused at load: the defence worked
+                if [p for p in fs.lint() if p["level"] == "error"]:
+                    continue                      # refused by lint: the defence worked
+                checked += 1
+                if gate_claim(fs, "e", "r", claimed).status != VERIFIED:
+                    continue
+                if oracle(declared, claimed) == UNEQUAL:
+                    leaks.append((aliases, quals, declared, claimed))
+    assert checked > 200, f"only {checked} configurations survived lint; proof too narrow"
+    assert not leaks, f"VERIFIED on oracle-unequal values: {leaks[:6]}"
+
+
+def test_the_config_proof_would_catch_a_dangerous_alias():
+    """The proof must be capable of failing. Every alias below is one the library refuses;
+    if any were accepted, the test above would see a VERIFIED the oracle calls unequal."""
+    for aliases, declared, claimed in [({"mcg": "mg"}, "15 mg", "15 mcg"),
+                                       ({"mL": "mg"}, "15 mg", "15 mL"),
+                                       ({"fl oz": "oz"}, "12 oz", "12 fl oz")]:
+        spec = {"domain": "p", "entities": {"e": ["e"]},
+                "relations": {"r": {"kind": "quantity"}}, "unit_aliases": aliases,
+                "facts": [{"s": "e", "r": "r", "o": declared,
+                           "source": f"The value is {declared}."}]}
+        fs = FactSet.from_dict(spec)
+        refused = [p for p in fs.lint() if p["level"] == "error"]
+        assert refused, f"{aliases} accepted"
+        # ...and the oracle independently agrees the pair is not equal, which is what makes
+        # the refusal meaningful rather than arbitrary.
+        assert oracle(declared, claimed) in (UNEQUAL, DONT_KNOW)
+
+
+def test_the_config_proof_fails_when_the_defence_is_removed():
+    """MUTATION CHECK, and the reason the proof above means anything.
+
+    A proof that passes because it cannot see failures is worse than no proof: it
+    manufactures confidence. This neuters lint() -- the defence the proof relies on -- and
+    asserts the proof then CATCHES the historical leaks, every one of which took a separate
+    adversarial round to find by hand:
+
+        {"mcg": "mg"}    a 1000x dosing error
+        {"mL": "mg"}     volume equated to mass
+        {"lbs": "kg"}    a factor of 2.2
+        {"fl oz": "oz"}  volume equated to mass, through the fix for the one before
+        {"gal": "l"}     a factor of 3.8
+        {"mcg": "iu"}    a substance-dependent conversion
+
+    Writing this check is also what exposed the oracle's OWN two defects: it answered
+    DONT_KNOW for every differing unit, and it read "5 mg" as magnitude "m" plus unit "g".
+    Both made the config proof hollow while it appeared to pass.
+    """
+    import factgate.domain.factset as factset_module
+
+    real_lint = factset_module.FactSet.lint
+    factset_module.FactSet.lint = lambda self: []
+    try:
+        caught = []
+        for aliases in _ALIAS_POOL:
+            for declared, claimed in _PAIRS:
+                try:
+                    fs = factset_module.FactSet.from_dict({
+                        "domain": "p", "entities": {"e": ["e"]},
+                        "relations": {"r": {"kind": "quantity"}}, "unit_aliases": aliases,
+                        "facts": [{"s": "e", "r": "r", "o": declared,
+                                   "source": f"The value is {declared}."}]})
+                except ValidationError:
+                    continue
+                if (gate_claim(fs, "e", "r", claimed).status == VERIFIED
+                        and oracle(declared, claimed) == UNEQUAL):
+                    caught.append((tuple(aliases.items()), declared, claimed))
+    finally:
+        factset_module.FactSet.lint = real_lint
+
+    assert len(caught) >= 6, (
+        f"the config proof caught only {len(caught)} leaks with the defence removed, so "
+        f"passing it with the defence in place proves little")
+    found = {a for a, _, _ in caught}
+    for expected in (("mcg", "mg"), ("mL", "mg"), ("fl oz", "oz")):
+        assert (expected,) in found, f"{expected} not caught; the proof has a blind spot"
