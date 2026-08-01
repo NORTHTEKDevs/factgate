@@ -1,40 +1,40 @@
 {
-  "domain": "construction-blind",
+  "domain": "lease-agreement-blind",
   "model": "qwen2.5:14b",
   "held_breakdown": {
     "gate_refused_a_fabrication": 0,
-    "no_claim_linked": 2,
-    "genuine": 0
+    "no_claim_linked": 4,
+    "genuine": 2
   },
-  "n_faithful": 15,
-  "n_corrupted": 21,
+  "n_faithful": 14,
+  "n_corrupted": 18,
   "leak_rate": 0.0,
   "leak_ci95": [
     0.0,
-    0.15464382326420195
+    0.1758845505823749
   ],
-  "over_block_rate": 0.13333333333333333,
+  "over_block_rate": 0.42857142857142855,
   "over_block_ci95": [
-    0.037360469891359285,
-    0.3788249920651624
+    0.21380509930400526,
+    0.6740973309713064
   ],
   "leaks": 0,
-  "over_blocked": 2,
+  "over_blocked": 6,
   "faithful_states": {
-    "VERIFIED": 13,
-    "HELD": 2
+    "VERIFIED": 8,
+    "HELD": 6
   },
   "corrupted_states": {
-    "BLOCK": 18,
-    "HELD": 3
+    "HELD": 12,
+    "BLOCK": 6
   },
-  "n_spontaneous": 0,
+  "n_spontaneous": 1,
   "excluded_invalid_trials": {
-    "corrupted_never_stated_wrong_value": 8,
-    "corrupted_left_declared_value_intact": 1
+    "corrupted_never_stated_wrong_value": 10,
+    "corrupted_left_declared_value_intact": 3
   },
   "leak_rate_instructed_only": 0.0,
-  "leak_rate_spontaneous_only": null,
+  "leak_rate_spontaneous_only": 0.0,
   "leak_by_fact": {
     "failed": 0,
     "n_facts": 11,
@@ -44,15 +44,15 @@
     ]
   },
   "over_block_by_fact": {
-    "failed": 1,
+    "failed": 6,
     "n_facts": 14,
     "ci95": [
-      0.012721886112291648,
-      0.3146926955395781
+      0.21380509930400526,
+      0.6740973309713064
     ]
   },
-  "holds_on_basis_mismatch": 0,
+  "holds_on_basis_mismatch": 2,
   "n_distinct_facts": 15,
   "ci_caveat": "trials from one fact are correlated; effective n is closer to n_distinct_facts than to n_corrupted",
-  "seconds": 522.0
+  "seconds": 1059.5
 }

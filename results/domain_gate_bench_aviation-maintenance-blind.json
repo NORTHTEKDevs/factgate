@@ -1,53 +1,56 @@
 {
-  "domain": "consumer-lending-hard-tuned",
+  "domain": "aviation-maintenance-blind",
   "model": "qwen2.5:14b",
   "held_breakdown": {
     "gate_refused_a_fabrication": 0,
     "no_claim_linked": 0,
     "genuine": 0
   },
-  "n_faithful": 12,
-  "n_corrupted": 24,
+  "n_faithful": 16,
+  "n_corrupted": 30,
   "leak_rate": 0.0,
   "leak_ci95": [
     0.0,
-    0.13798057582897535
+    0.11351709139047801
   ],
   "over_block_rate": 0.0,
   "over_block_ci95": [
     0.0,
-    0.2425007574992425
+    0.19361341827271994
   ],
   "leaks": 0,
   "over_blocked": 0,
   "faithful_states": {
-    "VERIFIED": 12
+    "VERIFIED": 16
   },
   "corrupted_states": {
-    "BLOCK": 24
+    "BLOCK": 29,
+    "HELD": 1
   },
   "n_spontaneous": 0,
-  "excluded_invalid_trials": {},
+  "excluded_invalid_trials": {
+    "corrupted_never_stated_wrong_value": 2
+  },
   "leak_rate_instructed_only": 0.0,
   "leak_rate_spontaneous_only": null,
   "leak_by_fact": {
     "failed": 0,
-    "n_facts": 12,
+    "n_facts": 16,
     "ci95": [
       0.0,
-      0.2425007574992425
+      0.19361341827271994
     ]
   },
   "over_block_by_fact": {
     "failed": 0,
-    "n_facts": 12,
+    "n_facts": 16,
     "ci95": [
       0.0,
-      0.2425007574992425
+      0.19361341827271994
     ]
   },
   "holds_on_basis_mismatch": 0,
-  "n_distinct_facts": 12,
+  "n_distinct_facts": 16,
   "ci_caveat": "trials from one fact are correlated; effective n is closer to n_distinct_facts than to n_corrupted",
-  "seconds": 436.7
+  "seconds": 472.6
 }

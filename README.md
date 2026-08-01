@@ -8,7 +8,7 @@ verdict. The guarantee is scoped to claims that reach the gate; see
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-547%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-579%20passing-brightgreen)
 
 ## The idea, in 3 sentences
 
@@ -40,7 +40,7 @@ gate's own false-accept rate, not an observed hallucination rate of any model.
 | False-VERIFIED rate, absent facts (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | False-VERIFIED rate, corrupted claims (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | True-fact verify coverage (N=1500) | **34%** | [31.6%, 36.4%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| Test suite | **547 passed** | — | `pytest tests/ -q` |
+| Test suite | **579 passed** | — | `pytest tests/ -q` |
 
 **LLM-in-the-loop results.** Only these involved a running model. Note the sample size.
 
@@ -133,49 +133,50 @@ Full write-up, including a live false-BLOCK bug and its fix, is in
 
 ### Status
 
-Last full run, nine domains, `qwen2.5:14b`, every number executed rather than projected.
-All nine ship with the repository, so every row is reproducible from a clone:
+Last full run, **fifteen domains**, `qwen2.5:14b`, every number executed rather than
+projected. All fifteen ship with the repository, so every row is reproducible from a clone:
 
-| domain | leak | over-block | holds that are the gate being strict |
+| domain | leak | over-block | of the holds, the gate being strict |
 |---|---|---|---|
 | consumer lending | 0/24 | 0/12 | 0 |
 | consumer lending, hard | 0/24 | 0/12 | 0 |
 | consumer lending, hard + tuned | 0/24 | 0/12 | 0 |
+| electric utility tariff *(blind)* | 0/24 | 0/13 | 0 |
+| aircraft maintenance intervals *(blind)* | 0/30 | 0/16 | 0 |
+| commercial property policy *(blind)* | 0/18 | 1/14 | 0 |
 | clinical dosing | 0/24 | 1/12 | 0 |
-| construction bid schedule *(blind)* | 0/21 | 2/15 | 0 |
 | freight rate sheet *(blind)* | 0/32 | 2/15 | 0 |
-| commercial property policy *(blind)* | 0/18 | 2/14 | 0 |
+| construction bid schedule *(blind)* | 0/21 | 2/15 | 0 |
+| payroll tax reference *(blind)* | 0/21 | 3/13 | 0 |
 | clinical lab reference ranges *(blind)* | 0/29 | 4/16 | 0 |
+| pharmaceutical stability spec *(blind)* | 0/17 | 4/15 | 1 |
 | SaaS master agreement *(blind)* | 0/30 | 5/15 | 1 |
-| **total** | **0/226 = 0%** | **16/123 = 13%** | **1** |
+| food nutrition spec *(blind)* | 0/30 | 5/15 | 3 |
+| commercial lease abstract *(blind)* | 0/18 | 6/14 | 2 |
+| **total** | **0/366 = 0%** | **33/209 = 16%** | **7** |
 
-The five marked *blind* are genres the gate had never been measured on, with vocabularies
+The eleven marked *blind* are genres the gate had never been measured on, with vocabularies
 declared from the document before any run and never tuned against gate behaviour.
 
-**The leak rate is 0% and has been in every configuration ever measured.**
+**The leak rate is 0% across 366 adversarial trials.** It has been 0% in every
+configuration ever measured except one, and that exception is the most useful result this
+project has produced: a payroll sheet declaring a threshold both unconditionally and
+conditionally made the gate confirm the default without knowing the condition. It is fixed,
+tested, and described in [`docs/HALLUGATE.md`](docs/HALLUGATE.md) §17.
 
-**Of 123 faithful trials, exactly one was the gate refusing a claim it should have
-confirmed.** Every run classifies its own holds by a rule applied blind to the verdict, and
-of the 16:
+**Of 209 faithful trials, 7 were the gate refusing a claim it should have confirmed.**
+Every run classifies its own holds by a rule applied blind to the verdict. Of the 33:
 
-- **15** never reached the gate at all. Most are the model answering with *several*
-  conditional values at once ("13.5-17.5 g/dL and 12.0-15.5 g/dL" for a range declared
-  separately by sex), where refusing to pick one is correct. The rest are missing entity
+- **26** never reached the gate. Most are the model answering with *several* conditional
+  values at once, where refusing to pick one is correct; the rest are missing entity
   aliases, which `suggest_entity_aliases` names for you.
-- **1** is the gate being strict: `within 1 hour of submission` against a declared
-  `1 hour`, where the author declared `of submission` irrelevant but not `within`.
-  `suggest_qualifiers` now proposes exactly that word.
+- **7** are the gate being strict: a claim that omits a unit the declaration carries
+  (`46` against `46 spaces`), or carries a word the author has not declared irrelevant
+  (`within 1 hour of submission` against `1 hour`). `suggest_qualifiers` proposes the
+  missing word; declaring it is a one-line change.
 
 The headline rate is deliberately **not** adjusted by that breakdown. A metric that moved
 the number it explains would be marking its own homework.
-
-Authoring five domains in unseen genres found five defects that eight domains never
-touched, including one that reported a faithful clinical answer as contradicting its own
-protocol. Details in [`docs/HALLUGATE.md`](docs/HALLUGATE.md).
-
-Live soak over all twelve domains including the three private ones: 232 claims
-adjudicated, `{VERIFIED: 177, BLOCK: 27, HELD: 28}`, every safety invariant holding on
-every verdict a real model produced.
 
 **Still not certified for unsupervised use.** No deployment has run without a human
 reviewing the held queue, the two real documents cost a review pass each, and the private
@@ -327,7 +328,7 @@ python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -e .
 ./.venv/Scripts/python.exe -m pip install -e ../rck   # path to your local RCK checkout
 
-# run the test suite (547 tests, no network, <10s)
+# run the test suite (579 tests, no network, <10s)
 ./.venv/Scripts/python.exe -m pytest tests/ -q
 
 # reproduce the headline guarantee measurement (N=1500/class against the live KB)
