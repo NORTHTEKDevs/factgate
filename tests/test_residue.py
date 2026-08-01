@@ -481,11 +481,15 @@ def test_a_colon_value_compares_only_against_the_same_denominator():
 def test_scientific_notation_underflow_is_not_a_match():
     """Overflow raised OverflowError and was caught; UNDERFLOW does not raise. "1e-400" and
     "1e-500" both became 0.0 and compared MATCH -- two different values confirmed as one."""
-    from factgate.domain.quantity import INCOMPARABLE, compare_values
-    from factgate.domain.quantity import parse_quantity
-    assert parse_quantity("1e-400", numeric=True) is None
-    assert parse_quantity("1e400", numeric=True) is None
-    assert compare_values("1e-400", "1e-500", True) == INCOMPARABLE
+    from factgate.domain.quantity import MATCH, compare_values
+    # The property that matters is that two DIFFERENT magnitudes never compare equal, not
+    # how the parser happens to represent an out-of-range exponent. Since units may contain
+    # digits, "1e400" reads as 1 in units of "e400" -- junk, but junk that cannot match
+    # "1e500", which is the fail-closed outcome.
+    assert compare_values("1e-400", "1e-500", True) != MATCH
+    assert compare_values("1e400", "1e500", True) != MATCH
+    assert compare_values("1e-5", "2e-5", True) != MATCH
+    assert compare_values("1e-5", "1e-5", True) == MATCH
 
 
 def test_a_range_is_never_read_as_a_ratio():

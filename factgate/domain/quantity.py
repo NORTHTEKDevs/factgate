@@ -14,9 +14,16 @@ from dataclasses import dataclass
 # Multi-word units are not exotic ("breaths per minute", "degrees celsius"); rejecting
 # them stopped the demo fact set from loading at all. Whitespace inside the unit is
 # stripped during normalisation, so comparison stays exact on both sides.
+# A unit TOKEN may contain digits after its first letter: "CO2", "m2", "m3", "H2O",
+# "kWh/m2/yr", "W/m2K". Excluding them meant a brewing specification could not declare
+# "2.6 volumes CO2" and a building energy certificate could not declare a U-value at all --
+# both rejected at LOAD, by the check that a kind=quantity value must parse.
+#
+# Each token must still START with a letter, so a bare number can never be read as a unit.
+# That is what keeps "5 to 10" a RANGE rather than the quantity 5 in units of "to10".
 _QTY_RE = re.compile(
     r"^\s*~?\s*([-+]?[0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]+)?|[-+]?[0-9]*\.?[0-9]+)\s*"
-    r"([a-zA-Zµ%°]+(?:[\s/]+[a-zA-Zµ°%]+)*)?\s*$")
+    r"([a-zA-Zµ%°][a-zA-Zµ%°0-9]*(?:[\s/]+[a-zA-Zµ°%][a-zA-Zµ°%0-9]*)*)?\s*$")
 
 
 # Digits are matched as [0-9], NOT \d. Python's \d and float() both accept non-ASCII
@@ -529,6 +536,16 @@ def compare_values(declared: str, claimed: str | None, numeric: bool = False) ->
         return INCOMPARABLE
 
     if dq is not None:
+        # The claim may be an exact notation we are simply not authorised to read here,
+        # because the relation was not declared numeric. Found by the differential prover:
+        #
+        #   declared "0.5"   claimed "1/2"   ->  DIFFER, and the gate BLOCKED
+        #
+        # The leading-quantity fallback below read the "1" of "1/2" as the whole value and
+        # compared it to 0.5. Recognising the shape without interpreting it is exactly the
+        # state in which no difference can be proved.
+        if not numeric and _exact_notation(claimed, True) is not None:
+            return INCOMPARABLE
         # Declared is a quantity but the claim did not parse cleanly: retry on its
         # leading quantity so a trailing annotation does not masquerade as a conflict.
         lead = _leading(claimed)
