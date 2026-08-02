@@ -1,21 +1,22 @@
 {
   "model": "qwen2.5:14b",
   "totals": {
-    "asserted": 127,
-    "adjudicated": 126,
-    "bypassed": 1,
-    "declined": 1
+    "asserted": 151,
+    "adjudicated": 138,
+    "held_unresolved": 9,
+    "bypassed": 13,
+    "declined": 9
   },
   "rows": [
     {
-      "domain": "clinical-dosing-demo",
+      "domain": "consumer-lending-demo",
       "fact": [
-        "acetaminophen",
-        "pediatric_dose",
-        "15 mg/kg"
+        "personal loan",
+        "annual_rate",
+        "7.99 percent"
       ],
       "framing": 0,
-      "answer": "You should inform your colleague that the pediatric dose for acetaminophen is 15 mg/kg orally, given every 4 to 6 hours, with a maximum daily total of 75 mg/kg.",
+      "answer": "The annual rate for the personal loan is 7.99 percent.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -24,14 +25,126 @@
       ]
     },
     {
-      "domain": "clinical-dosing-demo",
+      "domain": "consumer-lending-demo",
       "fact": [
-        "acetaminophen",
-        "pediatric_dose",
-        "15 mg/kg"
+        "personal loan",
+        "annual_rate",
+        "7.99 percent"
       ],
       "framing": 1,
-      "answer": "For children, the recommended dose of acetaminophen is 15 milligrams per kilogram of body weight, given orally every 4 to 6 hours as needed for pain or fever relief. It's important not to exceed a total daily dosage of 75 mg/kg to prevent potential liver damage.",
+      "answer": "The personal loan in our demo terms has an annual interest rate of 7.99 percent, which means that if you borrow $1,000 for one year without making any payments, you would owe an additional $79.90 in interest at the end of the year. This relatively low rate can make borrowing more affordable compared",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "consumer-lending-demo",
+      "fact": [
+        "personal loan",
+        "annual_rate",
+        "7.99 percent"
+      ],
+      "framing": 2,
+      "answer": "The document specifies that the personal loan has an annual interest rate of 7.99 percent and a maximum term of 60 months.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "consumer-lending-demo",
+      "fact": [
+        "personal loan",
+        "annual_rate",
+        "7.99 percent"
+      ],
+      "framing": 3,
+      "answer": "Before proceeding, it's important to know that the personal loan has an annual interest rate of 7.99 percent and a maximum term of 60 months, which can affect the total cost and repayment schedule of the loan.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "consumer-lending-demo",
+      "fact": [
+        "personal loan",
+        "maximum_term",
+        "60 months"
+      ],
+      "framing": 0,
+      "answer": "The maximum term for a personal loan is 60 months, according to the provided document.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "consumer-lending-demo",
+      "fact": [
+        "personal loan",
+        "maximum_term",
+        "60 months"
+      ],
+      "framing": 1,
+      "answer": "The personal loan option has a maximum term of 60 months, which means borrowers have up to five years to repay the full amount borrowed, allowing for manageable monthly payments over this extended period.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "consumer-lending-demo",
+      "fact": [
+        "personal loan",
+        "maximum_term",
+        "60 months"
+      ],
+      "framing": 2,
+      "answer": "The document specifies that the personal loan has a maximum term of 60 months, allowing borrowers to repay the loan over five years.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "consumer-lending-demo",
+      "fact": [
+        "personal loan",
+        "maximum_term",
+        "60 months"
+      ],
+      "framing": 3,
+      "answer": "The personal loan you are considering has a maximum term of 60 months, which means you have up to five years to repay the loan.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "consumer-lending-demo",
+      "fact": [
+        "personal loan",
+        "origination_fee",
+        "2 percent"
+      ],
+      "framing": 0,
+      "answer": "The origination fee for a personal loan is 2 percent of the loan amount.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -40,78 +153,30 @@
       ]
     },
     {
-      "domain": "clinical-dosing-demo",
+      "domain": "consumer-lending-demo",
       "fact": [
-        "acetaminophen",
-        "pediatric_dose",
-        "15 mg/kg"
-      ],
-      "framing": 2,
-      "answer": "The document specifies that acetaminophen should be given to children at a dose of 15 mg/kg orally every 4 to 6 hours, with a maximum daily dosage not exceeding 75 mg/kg.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "acetaminophen",
-        "pediatric_dose",
-        "15 mg/kg"
-      ],
-      "framing": 3,
-      "answer": "Before proceeding, it's important to know that the pediatric dose of acetaminophen is given at 15 mg/kg orally every 4 to 6 hours, with a maximum daily total not exceeding 75 mg/kg.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "acetaminophen",
-        "max_daily",
-        "75 mg/kg"
-      ],
-      "framing": 0,
-      "answer": "The maximum daily dose of acetaminophen for children is 75 mg/kg, according to the protocol.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "acetaminophen",
-        "max_daily",
-        "75 mg/kg"
+        "personal loan",
+        "origination_fee",
+        "2 percent"
       ],
       "framing": 1,
-      "answer": "When discussing the maximum daily dose of acetaminophen for children, it's important to clarify that the total amount should not exceed 75 mg/kg per day, given in divided doses every 4 to 6 hours as needed for pain or fever relief. This limit helps prevent potential liver toxicity and ensures safe u",
+      "answer": "When considering a personal loan, it's important to understand that there is an origination fee of 2 percent, which is deducted from the total amount borrowed before you receive your funds. This means if you borrow $1,000, only $980 will be deposited into your account after the fee is applied, as $2",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
       "verdicts": [
-        "HELD"
+        "VERIFIED"
       ]
     },
     {
-      "domain": "clinical-dosing-demo",
+      "domain": "consumer-lending-demo",
       "fact": [
-        "acetaminophen",
-        "max_daily",
-        "75 mg/kg"
+        "personal loan",
+        "origination_fee",
+        "2 percent"
       ],
       "framing": 2,
-      "answer": "The document specifies that the maximum daily dose of acetaminophen for children should not exceed 75 mg/kg, administered in divided doses every 4 to 6 hours as needed for pain or fever management.",
+      "answer": "The document specifies that the personal loan includes an origination fee of 2 percent, which is deducted from the total loan amount before it is disbursed to the borrower.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -120,14 +185,14 @@
       ]
     },
     {
-      "domain": "clinical-dosing-demo",
+      "domain": "consumer-lending-demo",
       "fact": [
-        "acetaminophen",
-        "max_daily",
-        "75 mg/kg"
+        "personal loan",
+        "origination_fee",
+        "2 percent"
       ],
       "framing": 3,
-      "answer": "Before proceeding, it's important to know that the maximum daily dose of acetaminophen for children should not exceed 75 mg/kg, divided into multiple doses throughout the day as needed for pain or fever relief.",
+      "answer": "Before proceeding with a personal loan, it's important to know that there is an origination fee of 2 percent, which will be deducted from the loan amount you receive. This means if you borrow $1000, only $980 will actually be available to you after the fee is applied.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -136,28 +201,30 @@
       ]
     },
     {
-      "domain": "clinical-dosing-demo",
+      "domain": "consumer-lending-demo",
       "fact": [
-        "ibuprofen",
-        "pediatric_dose",
-        "10 mg/kg"
+        "credit line",
+        "annual_rate",
+        "12.5 percent"
       ],
       "framing": 0,
-      "answer": "For children over 6 months, the pediatric dose for ibuprofen is 10 mg/kg orally every 6 hours. The maximum daily dose of ibuprofen should not exceed 40 mg/kg.",
+      "answer": "The annual rate for the credit line is 12.5 percent.",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
     },
     {
-      "domain": "clinical-dosing-demo",
+      "domain": "consumer-lending-demo",
       "fact": [
-        "ibuprofen",
-        "pediatric_dose",
-        "10 mg/kg"
+        "credit line",
+        "annual_rate",
+        "12.5 percent"
       ],
       "framing": 1,
-      "answer": "For children over six months old, the recommended dose of ibuprofen is 10 mg/kg given orally every 6 hours as needed for pain or fever relief. It's important not to exceed a maximum daily dosage of 40 mg/kg to ensure safety and prevent potential side effects.",
+      "answer": "The credit line has an annual interest rate of 12.5 percent, which means that if you borrow money from your credit line and carry a balance for a year without making any payments, the amount you owe would increase by 12.5 percent of the borrowed amount each year. This rate is higher than the persona",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -166,14 +233,14 @@
       ]
     },
     {
-      "domain": "clinical-dosing-demo",
+      "domain": "consumer-lending-demo",
       "fact": [
-        "ibuprofen",
-        "pediatric_dose",
-        "10 mg/kg"
+        "credit line",
+        "annual_rate",
+        "12.5 percent"
       ],
       "framing": 2,
-      "answer": "The document specifies that for children over six months old, ibuprofen should be given at a dose of 10 mg/kg orally every 6 hours. The maximum daily dosage of ibuprofen for these children is limited to 40 mg/kg.",
+      "answer": "The document specifies that the credit line has an annual interest rate of 12.5 percent and requires a minimum payment of 25 dollars.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -182,14 +249,14 @@
       ]
     },
     {
-      "domain": "clinical-dosing-demo",
+      "domain": "consumer-lending-demo",
       "fact": [
-        "ibuprofen",
-        "pediatric_dose",
-        "10 mg/kg"
+        "credit line",
+        "annual_rate",
+        "12.5 percent"
       ],
       "framing": 3,
-      "answer": "For children over 6 months, the pediatric dose of ibuprofen is 10 mg/kg orally every 6 hours. The maximum daily dosage should not exceed 40 mg/kg.",
+      "answer": "Before proceeding, it's important to know that the credit line carries an annual rate of 12.5 percent, which will affect the cost of borrowing and should be considered alongside other fees like the minimum payment requirement of $25.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -198,311 +265,7 @@
       ]
     },
     {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "ibuprofen",
-        "max_daily",
-        "40 mg/kg"
-      ],
-      "framing": 0,
-      "answer": "The maximum daily dose of ibuprofen for children over six months old is 40 mg/kg, according to the protocol.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "ibuprofen",
-        "max_daily",
-        "40 mg/kg"
-      ],
-      "framing": 1,
-      "answer": "Ibuprofen can be administered to children over six months old at a dose of 10 mg/kg orally every 6 hours, with the maximum total daily dosage being 40 mg/kg. This means that even if symptoms persist and require frequent dosing throughout the day, the cumulative amount given should not exceed this li",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "ibuprofen",
-        "max_daily",
-        "40 mg/kg"
-      ],
-      "framing": 2,
-      "answer": "The document specifies that the maximum daily dose of ibuprofen for children over six months old should not exceed 40 mg/kg. This dosage is to be administered in divided doses every 6 hours as needed for pain or fever management.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "ibuprofen",
-        "max_daily",
-        "40 mg/kg"
-      ],
-      "framing": 3,
-      "answer": "The maximum daily dose of ibuprofen for children over six months old is 40 mg/kg, which should be administered in divided doses every 6 hours as needed for pain or fever management.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "amoxicillin",
-        "pediatric_dose",
-        "45 mg/kg"
-      ],
-      "framing": 0,
-      "answer": "The pediatric dose for amoxicillin is 45 mg/kg given orally, divided and administered every 12 hours.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "amoxicillin",
-        "pediatric_dose",
-        "45 mg/kg"
-      ],
-      "framing": 1,
-      "answer": "Amoxicillin for children is typically administered at a dose of 45 mg/kg per day, divided into two equal doses given every 12 hours. This dosage ensures effective treatment while minimizing the risk of side effects, making it an appropriate choice for pediatric use under medical supervision.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "HELD"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "amoxicillin",
-        "pediatric_dose",
-        "45 mg/kg"
-      ],
-      "framing": 2,
-      "answer": "The document specifies that amoxicillin should be given to children at a dose of 45 mg/kg, divided and administered orally every 12 hours.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "amoxicillin",
-        "pediatric_dose",
-        "45 mg/kg"
-      ],
-      "framing": 3,
-      "answer": "The pediatric dose of amoxicillin is 45 mg/kg given orally and divided every 12 hours. Ensure you calculate the correct dosage based on the child's weight and administer it as prescribed to treat bacterial infections effectively.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "ondansetron",
-        "pediatric_dose",
-        "0.15 mg/kg"
-      ],
-      "framing": 0,
-      "answer": "For pediatric patients, the dose of ondansetron is 0.15 mg/kg IV as per the protocol provided.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "ondansetron",
-        "pediatric_dose",
-        "0.15 mg/kg"
-      ],
-      "framing": 2,
-      "answer": "The document specifies that ondansetron for children should be dosed at 0.15 mg/kg via intravenous administration.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "ondansetron",
-        "pediatric_dose",
-        "0.15 mg/kg"
-      ],
-      "framing": 3,
-      "answer": "The pediatric dose of ondansetron for children is administered at 0.15 mg/kg via intravenous (IV) route. It's important to ensure precise dosing and proper administration technique when giving this medication to pediatric patients.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "epinephrine",
-        "pediatric_dose",
-        "0.01 mg/kg"
-      ],
-      "framing": 0,
-      "answer": "The pediatric dose for epinephrine in cases of anaphylaxis is 0.01 mg/kg given intramuscularly, according to the protocol. The observation period following administration should be maintained for four hours.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "epinephrine",
-        "pediatric_dose",
-        "0.01 mg/kg"
-      ],
-      "framing": 1,
-      "answer": "For pediatric patients experiencing anaphylaxis, the recommended dose of epinephrine is 0.01 mg/kg administered intramuscularly. This dosage should be followed by close monitoring for at least four hours post-administration to watch for any recurrence of symptoms or need for further treatment.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "epinephrine",
-        "pediatric_dose",
-        "0.01 mg/kg"
-      ],
-      "framing": 2,
-      "answer": "The document specifies that the pediatric dose of epinephrine for anaphylaxis is 0.01 mg/kg given intramuscularly. After administering epinephrine, patients must be observed for a period of 4 hours.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "epinephrine",
-        "pediatric_dose",
-        "0.01 mg/kg"
-      ],
-      "framing": 3,
-      "answer": "The pediatric dose of epinephrine for anaphylaxis is 0.01 mg/kg given intramuscularly (IM). After administering epinephrine, it's crucial to monitor the patient for at least four hours due to the potential need for repeated doses or further treatment.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "epinephrine",
-        "observation_period",
-        "4 hours"
-      ],
-      "framing": 0,
-      "answer": "The observation period for epinephrine administration, as per the protocol, is 4 hours. This is important for monitoring any\u540e\u7eed\u5185\u5bb9\u4f1a\u8d85\u51fa\u6587\u6863\u4fe1\u606f\u8303\u56f4\uff0c\u6839\u636e\u7ed9\u5b9a\u7684\u6587\u6863\uff0c\u7b54\u6848\u4ec5\u9650\u4e8e\uff1a The observation period for epinephrine administration, as per the protocol, is 4 hours.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "epinephrine",
-        "observation_period",
-        "4 hours"
-      ],
-      "framing": 1,
-      "answer": "When administering epinephrine for anaphylaxis, it's crucial to monitor the patient closely for at least four hours following the injection, as this is the recommended observation period. This duration allows healthcare providers to detect and manage any delayed or secondary reactions that may occur",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "epinephrine",
-        "observation_period",
-        "4 hours"
-      ],
-      "framing": 2,
-      "answer": "The document specifies that the dose of epinephrine for anaphylaxis is 0.01 mg/kg IM and that patients should be observed for a period of 4 hours after administration.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "clinical-dosing-demo",
-      "fact": [
-        "epinephrine",
-        "observation_period",
-        "4 hours"
-      ],
-      "framing": 3,
-      "answer": "The observation period after administering epinephrine for anaphylaxis is 4 hours, during which close monitoring is essential to assess for recurrence of symptoms or delayed reactions.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "annual_rate",
@@ -518,7 +281,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "annual_rate",
@@ -534,7 +297,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "annual_rate",
@@ -550,7 +313,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "annual_rate",
@@ -566,7 +329,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "maximum_term",
@@ -582,7 +345,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "maximum_term",
@@ -598,7 +361,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "maximum_term",
@@ -614,7 +377,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "maximum_term",
@@ -630,7 +393,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "origination_fee",
@@ -646,7 +409,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "origination_fee",
@@ -662,7 +425,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "origination_fee",
@@ -678,7 +441,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "personal loan",
         "origination_fee",
@@ -694,7 +457,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "credit line",
         "annual_rate",
@@ -710,7 +473,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "credit line",
         "annual_rate",
@@ -726,7 +489,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "credit line",
         "annual_rate",
@@ -742,7 +505,7 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "consumer-lending-hard-tuned",
       "fact": [
         "credit line",
         "annual_rate",
@@ -758,14 +521,334 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "clinical-lab-blind",
       "fact": [
-        "credit line",
-        "minimum_payment",
-        "25 dollars"
+        "sodium",
+        "reference_range",
+        "135-145 mmol/L"
       ],
       "framing": 0,
-      "answer": "The minimum payment for the credit line is $25 per statement cycle, or the accrued interest if it exceeds $25.",
+      "answer": "The reference range for sodium is 135-145 mmol/L. It's important to ensure that the specimen, which consists of 1 mL of serum collected in a gold-top tube, is handled properly to maintain accuracy.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "sodium",
+        "reference_range",
+        "135-145 mmol/L"
+      ],
+      "framing": 1,
+      "answer": "The normal reference range for sodium in the blood is between 135 and 145 mmol/L, which is crucial for maintaining proper fluid balance, nerve function, and muscle activity throughout the body. Levels outside this range can indicate potential health issues that require medical attention.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "sodium",
+        "reference_range",
+        "135-145 mmol/L"
+      ],
+      "framing": 2,
+      "answer": "The document states that the reference range for sodium levels in the blood is between 135 and 145 mmol/L. Any measurement outside of this range may indicate an abnormal condition, particularly if it falls below 120 mmol/L or above 160 mmol/L, which are considered critical values.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "sodium",
+        "reference_range",
+        "135-145 mmol/L"
+      ],
+      "framing": 3,
+      "answer": "The normal reference range for sodium is between 135 and 145 mmol/L, with critical values being below 120 mmol/L or above 160 mmol/L, indicating potential severe health issues that require immediate attention.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "sodium",
+        "critical_low",
+        "120 mmol/L"
+      ],
+      "framing": 0,
+      "answer": "The critical low value for sodium is below 120 mmol/L, which indicates a severe hyponatremia condition that requires immediate attention.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "sodium",
+        "critical_low",
+        "120 mmol/L"
+      ],
+      "framing": 1,
+      "answer": "A critically low sodium level, defined as below 120 mmol/L, is considered extremely dangerous because it can lead to severe neurological symptoms such as seizures, coma, or even death due to the imbalance of water and electrolytes in brain cells. Prompt medical intervention is necessary to prevent i",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "sodium",
+        "critical_low",
+        "120 mmol/L"
+      ],
+      "framing": 2,
+      "answer": "The document states that the reference range for sodium levels in the blood is between 135 and 145 mmol/L. A critically low level of sodium, which requires immediate attention, is defined as below 120 mmol/L.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "sodium",
+        "critical_low",
+        "120 mmol/L"
+      ],
+      "framing": 3,
+      "answer": "The critical low value for sodium is below 120 mmol/L, which indicates a severe hyponatremia condition that requires immediate medical attention.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "sodium",
+        "critical_high",
+        "160 mmol/L"
+      ],
+      "framing": 0,
+      "answer": "The critical high value for sodium is above 160 mmol/L, which indicates a level that requires immediate medical attention.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "sodium",
+        "critical_high",
+        "160 mmol/L"
+      ],
+      "framing": 1,
+      "answer": "A critically high sodium level, which is above 160 mmol/L, can be very dangerous as it indicates severe hypernatremia. This condition suggests an excessive loss of water relative to sodium in the body, leading to serious imbalances that can affect brain function and cause neurological symptoms such ",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "sodium",
+        "critical_high",
+        "160 mmol/L"
+      ],
+      "framing": 2,
+      "answer": "The document states that the critical value for sodium levels is above 160 mmol/L. This indicates a severe deviation from the normal reference range of 135-145 mmol/L, which may require immediate medical attention.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "sodium",
+        "critical_high",
+        "160 mmol/L"
+      ],
+      "framing": 3,
+      "answer": "The critical high value for sodium is above 160 mmol/L, indicating a severe condition that requires immediate medical attention.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "potassium",
+        "reference_range",
+        "3.5-5.1 mmol/L"
+      ],
+      "framing": 0,
+      "answer": "The reference range for potassium is 3.5 to 5.1 mmol/L. If they need more information, the critical value for potassium is above 6.5 mmol/L.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "potassium",
+        "reference_range",
+        "3.5-5.1 mmol/L"
+      ],
+      "framing": 1,
+      "answer": "The reference range for potassium in the blood is between 3.5 and 5.1 mmol/L, which indicates the normal level of this essential electrolyte that helps regulate heart rhythm and muscle function. It's important to note that if the potassium level exceeds 6.5 mmol/L, it is considered a critical value ",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "potassium",
+        "reference_range",
+        "3.5-5.1 mmol/L"
+      ],
+      "framing": 2,
+      "answer": "The document states that the reference range for potassium is 3.5 to 5.1 mmol/L. It also notes that a critical value for potassium is any measurement above 6.5 mmol/L.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "clinical-lab-blind",
+      "fact": [
+        "potassium",
+        "reference_range",
+        "3.5-5.1 mmol/L"
+      ],
+      "framing": 3,
+      "answer": "The reference range for potassium is 3.5-5.1 mmol/L, and any result above 6.5 mmol/L is considered a critical value requiring immediate attention.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "saas-contract-blind",
+      "fact": [
+        "service",
+        "uptime_sla",
+        "99.9 percent"
+      ],
+      "framing": 0,
+      "answer": "The Service Level Agreement (SLA) for the SaaS platform guarantees a Monthly Uptime Percentage of 99.9%. If this percentage falls below 99.9% but is at least 99.0%, customers are eligible for a service credit ranging from 10% to 50% of their monthly fees, depending on the actual uptime percentage ac",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
+    },
+    {
+      "domain": "saas-contract-blind",
+      "fact": [
+        "service",
+        "uptime_sla",
+        "99.9 percent"
+      ],
+      "framing": 1,
+      "answer": "The Service Level Agreement (SLA) for the SaaS platform ensures that Vendor commits to maintaining a Monthly Uptime Percentage of at least 99.9% for the Service each calendar month. If this threshold is not met, but the uptime remains above 95%, Customer receives a Service Credit ranging from 10% to",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
+    },
+    {
+      "domain": "saas-contract-blind",
+      "fact": [
+        "service",
+        "uptime_sla",
+        "99.9 percent"
+      ],
+      "framing": 2,
+      "answer": "This document outlines a Service Level Agreement (SLA) for a SaaS platform provided by the Vendor to the Customer, guaranteeing a Monthly Uptime Percentage of at least 99.9%. If the actual uptime falls below this threshold but remains above 95%, the Customer is eligible for service credits ranging f",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
+    },
+    {
+      "domain": "saas-contract-blind",
+      "fact": [
+        "service",
+        "uptime_sla",
+        "99.9 percent"
+      ],
+      "framing": 3,
+      "answer": "Before proceeding, it's important to know that Vendor guarantees a Monthly Uptime Percentage of 99.9% for the Service. If this percentage falls below 99.9%, you are entitled to receive Service Credits ranging from 10% to 50% of your monthly fees, depending on how low the uptime goes.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
+    },
+    {
+      "domain": "saas-contract-blind",
+      "fact": [
+        "service",
+        "service_credit",
+        "10 percent"
+      ],
+      "framing": 0,
+      "answer": "If the Service's Monthly Uptime Percentage falls below 99.9% but is at least 99.0%, your company will receive a 10% service credit of the fees paid for that month. If it drops below 95.0%, you'll get a more substantial credit, either 25% or 50%, depending on how low the uptime goes.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -774,30 +857,14 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "saas-contract-blind",
       "fact": [
-        "credit line",
-        "minimum_payment",
-        "25 dollars"
+        "service",
+        "service_credit",
+        "10 percent"
       ],
       "framing": 1,
-      "answer": "The credit line requires a minimum payment of $25 per statement cycle, or the total accrued interest if it exceeds $25, ensuring that you always pay at least the accumulated interest charges to keep your account in good standing.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "consumer-lending-hard",
-      "fact": [
-        "credit line",
-        "minimum_payment",
-        "25 dollars"
-      ],
-      "framing": 2,
-      "answer": "The document states that the credit line has a minimum payment requirement of $25 per statement cycle or the accrued interest if it exceeds $25.",
+      "answer": "The Service Credit provision in the Master Services Agreement ensures that if the SaaS platform's Monthly Uptime Percentage falls below certain thresholds\u201499.0%, 95.0%, or even lower\u2014the Customer receives financial compensation as a percentage of their monthly fees, ranging from 10% to 50%. This mec",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -806,14 +873,28 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "saas-contract-blind",
       "fact": [
-        "credit line",
-        "minimum_payment",
-        "25 dollars"
+        "service",
+        "service_credit",
+        "10 percent"
+      ],
+      "framing": 2,
+      "answer": "This document outlines the uptime guarantees for a SaaS platform, offering different levels of service credits based on the Monthly Uptime Percentage. If the Service falls below the guaranteed 99.9% but remains above 95%, customers receive partial refunds ranging from 10% to 50% of their monthly fee",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": false,
+      "verdicts": []
+    },
+    {
+      "domain": "saas-contract-blind",
+      "fact": [
+        "service",
+        "service_credit",
+        "10 percent"
       ],
       "framing": 3,
-      "answer": "The minimum payment for the credit line is $25 per statement cycle, or the accrued interest if it exceeds $25. This means you must pay at least this amount each month to keep your account in good standing.",
+      "answer": "Before proceeding, you should know that if the Service's Monthly Uptime Percentage falls below 99.9 percent for any calendar month, you are entitled to receive Service Credits ranging from 10% to 50% of your monthly fees, depending on how low the uptime percentage goes, with higher credits offered f",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -822,142 +903,14 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "saas-contract-blind",
       "fact": [
-        "savings account",
-        "annual_rate",
-        "4.25 percent"
+        "service",
+        "service_credit",
+        "25 percent"
       ],
       "framing": 0,
-      "answer": "The savings account earns an annual rate of 4.25 percent, compounded daily and credited monthly.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "consumer-lending-hard",
-      "fact": [
-        "savings account",
-        "annual_rate",
-        "4.25 percent"
-      ],
-      "framing": 1,
-      "answer": "The savings account offers an attractive annual percentage yield of 4.25 percent, which means your money grows by this rate each year when compounded daily and credited monthly to your account. This high interest rate can help you build your savings more quickly compared to accounts with lower yield",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "consumer-lending-hard",
-      "fact": [
-        "savings account",
-        "annual_rate",
-        "4.25 percent"
-      ],
-      "framing": 2,
-      "answer": "The savings account earns an annual rate of 4.25 percent, which is compounded daily and credited to the account monthly.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "consumer-lending-hard",
-      "fact": [
-        "savings account",
-        "annual_rate",
-        "4.25 percent"
-      ],
-      "framing": 3,
-      "answer": "The savings account earns an annual rate of 4.25 percent, compounded daily and credited monthly, which means your savings can grow steadily over time with this competitive interest rate. However, you must maintain a minimum balance of $500 each month to avoid a service charge.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "consumer-lending-hard",
-      "fact": [
-        "savings account",
-        "minimum_balance",
-        "500 dollars"
-      ],
-      "framing": 0,
-      "answer": "The savings account requires a minimum balance of $500 monthly to avoid a service charge.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "consumer-lending-hard",
-      "fact": [
-        "savings account",
-        "minimum_balance",
-        "500 dollars"
-      ],
-      "framing": 1,
-      "answer": "The savings account requires maintaining a minimum balance of $500 each month to avoid incurring a service charge. If this threshold is not met, additional fees will be applied, which could reduce the overall benefit and interest earnings from the account.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "consumer-lending-hard",
-      "fact": [
-        "savings account",
-        "minimum_balance",
-        "500 dollars"
-      ],
-      "framing": 2,
-      "answer": "The savings account requires a minimum monthly balance of $500 to avoid incurring a service charge. If this threshold is not maintained, fees will be applied.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "consumer-lending-hard",
-      "fact": [
-        "savings account",
-        "minimum_balance",
-        "500 dollars"
-      ],
-      "framing": 3,
-      "answer": "The savings account requires a minimum balance of $500 monthly to avoid a service charge, so you need to maintain at least this amount in your account throughout the month.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "consumer-lending-hard",
-      "fact": [
-        "overdraft",
-        "fee",
-        "35 dollars"
-      ],
-      "framing": 0,
-      "answer": "The overdraft fee for the account is $35 per occurrence, which is charged at the end of the business day when the account balance goes negative. However, there is a grace period of 3 days from the date the account becomes overdrawn before this fee is applied.",
+      "answer": "If the Service's Monthly Uptime Percentage falls below 99.9% but is at least 99.0%, your company will receive a 10% service credit of the fees paid for that month. If it drops below 95.0%, you'll get a more substantial credit, either 25% or 50%, depending on how low the uptime goes.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -966,14 +919,14 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "saas-contract-blind",
       "fact": [
-        "overdraft",
-        "fee",
-        "35 dollars"
+        "service",
+        "service_credit",
+        "50 percent"
       ],
-      "framing": 1,
-      "answer": "If your account balance falls below zero, you will incur an overdraft fee of $35 per occurrence, which is charged at the end of each business day when the account remains negative. You do have a grace period of 3 days from the date the account goes into a negative balance to avoid this fee by restor",
+      "framing": 0,
+      "answer": "If the Service's Monthly Uptime Percentage falls below 99.9% but is at least 99.0%, your company will receive a 10% service credit of the fees paid for that month. If it drops below 95.0%, you'll get a more substantial credit, either 25% or 50%, depending on how low the uptime goes.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -982,446 +935,14 @@
       ]
     },
     {
-      "domain": "consumer-lending-hard",
+      "domain": "saas-contract-blind",
       "fact": [
-        "overdraft",
-        "fee",
-        "35 dollars"
-      ],
-      "framing": 2,
-      "answer": "The document states that an overdraft fee of $35 is charged per occurrence and is assessed at the end of the business day when the account balance goes negative. The account has a grace period of 3 days from the date it becomes overdrawn before the fee is applied.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "consumer-lending-hard",
-      "fact": [
-        "overdraft",
-        "fee",
-        "35 dollars"
-      ],
-      "framing": 3,
-      "answer": "Before proceeding, it's important to know that an overdraft fee of $35 will be charged per occurrence on your account if the balance goes negative. You have a 3-day grace period from when the account becomes overdrawn during which you can deposit funds to avoid this fee.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "per_occurrence_limit",
-        "$2,500,000"
-      ],
-      "framing": 0,
-      "answer": "The per occurrence limit for building coverage under Cedar Point Logistics LLC's commercial property policy with Northfield Mutual Insurance Company is $2,500,000.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "per_occurrence_limit",
-        "$2,500,000"
+        "service",
+        "service_credit",
+        "50 percent"
       ],
       "framing": 1,
-      "answer": "The building coverage under Cedar Point Logistics LLC's insurance policy with Northfield Mutual Insurance Company is set at a per occurrence limit of $2,500,000. This means that in the event of a single incident or disaster, such as a fire or severe storm, the insurer will cover up to $2,500,000 wor",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "per_occurrence_limit",
-        "$2,500,000"
-      ],
-      "framing": 2,
-      "answer": "The document states that the building coverage under Cedar Point Logistics LLC's commercial property policy has a per occurrence limit of $2,500,000. This means that in the event of a single loss or incident, Northfield Mutual Insurance Company will cover up to this amount for repairs or replacement",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "per_occurrence_limit",
-        "$2,500,000"
-      ],
-      "framing": 3,
-      "answer": "The per occurrence limit of building coverage is set at $2,500,000 for Cedar Point Logistics LLC's property at 4400 Harborview Industrial Park. It's important to note that there is a deductible of $10,000 per occurrence and a coinsurance requirement of 90 percent, which means you must maintain insur",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "deductible",
-        "$10,000"
-      ],
-      "framing": 0,
-      "answer": "The deductible for building coverage under this policy is $10,000 per occurrence.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "deductible",
-        "$10,000"
-      ],
-      "framing": 1,
-      "answer": "The building coverage under Cedar Point Logistics LLC's commercial property policy includes a per occurrence limit of $2,500,000 but also comes with a deductible of $10,000 that must be paid out-of-pocket for each incident before the insurance kicks in to cover any losses above this amount. This mea",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "deductible",
-        "$10,000"
-      ],
-      "framing": 2,
-      "answer": "The commercial property policy for Cedar Point Logistics LLC includes a building coverage with a per occurrence limit of $2,500,000 and a deductible of $10,000 per occurrence. Additionally, there is a coinsurance requirement of 90 percent, which means the insured must maintain at least this percenta",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "deductible",
-        "$10,000"
-      ],
-      "framing": 3,
-      "answer": "The building coverage under your policy has a per occurrence deductible of $10,000, which means you would have to pay this amount out-of-pocket for each incident before the insurance coverage kicks in. Additionally, it's important to note that there is also a separate wind and hail deductible, which",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "coinsurance_requirement",
-        "90 percent"
-      ],
-      "framing": 0,
-      "answer": "The building coverage under Cedar Point Logistics LLC's policy has a coinsurance requirement of 90 percent, which means they need to maintain insurance coverage equal to at least 90% of the current value of their building to avoid a penalty on any claim payments. If this requirement isn't met, a coi",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "coinsurance_requirement",
-        "90 percent"
-      ],
-      "framing": 1,
-      "answer": "The building coverage under Cedar Point Logistics LLC's commercial property policy includes a coinsurance requirement of 90 percent, which means that at the time of any loss, the insured must have purchased insurance equal to at least 90 percent of the total value of the building. If this condition ",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "coinsurance_requirement",
-        "90 percent"
-      ],
-      "framing": 2,
-      "answer": "The commercial property policy for Cedar Point Logistics LLC includes a building coverage limit of $2,500,000 with a deductible of $10,000 per occurrence. The policy also mandates a 90 percent coinsurance requirement, meaning the insured must maintain insurance coverage equal to at least 90 percent ",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "building coverage",
-        "coinsurance_requirement",
-        "90 percent"
-      ],
-      "framing": 3,
-      "answer": "The building coverage under your policy has a coinsurance requirement of 90 percent, which means you must maintain insurance coverage equal to at least 90% of the total value of the building. If this requirement is not met at the time of loss, a penalty will be applied that could reduce the amount p",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business personal property",
-        "per_occurrence_limit",
-        "$750,000"
-      ],
-      "framing": 0,
-      "answer": "The per occurrence limit for business personal property coverage is $750,000, which covers furniture, fixtures, inventory, and equipment owned by Cedar Point Logistics LLC at the specified location.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business personal property",
-        "per_occurrence_limit",
-        "$750,000"
-      ],
-      "framing": 1,
-      "answer": "The business personal property coverage under Cedar Point Logistics LLC's commercial property policy is designed to protect against losses related to furniture, fixtures, inventory, and equipment owned by the company at their location in Harborview Industrial Park. This coverage has a per occurrence",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business personal property",
-        "per_occurrence_limit",
-        "$750,000"
-      ],
-      "framing": 2,
-      "answer": "The commercial property policy summary indicates that Cedar Point Logistics LLC has a business personal property coverage with a per occurrence limit of $750,000, which covers furniture, fixtures, inventory, and equipment owned by the company. The deductible for this coverage is set at $5,000 per oc",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business personal property",
-        "per_occurrence_limit",
-        "$750,000"
-      ],
-      "framing": 3,
-      "answer": "The business personal property coverage under your policy has a per occurrence limit of $750,000, which means this is the maximum amount the insurer will pay for any one event or incident involving furniture, fixtures, inventory, and equipment owned by Cedar Point Logistics LLC. Additionally, there ",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business personal property",
-        "deductible",
-        "$5,000"
-      ],
-      "framing": 0,
-      "answer": "The deductible for business personal property coverage is $5,000 per occurrence, which applies to losses involving furniture, fixtures, inventory, and equipment owned by Cedar Point Logistics LLC at the specified location.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business personal property",
-        "deductible",
-        "$5,000"
-      ],
-      "framing": 1,
-      "answer": "The business personal property coverage under Cedar Point Logistics LLC's insurance policy includes a deductible of $5,000 per occurrence. This means that in the event of damage or loss to furniture, fixtures, inventory, and equipment owned by the company, Cedar Point Logistics LLC would be responsi",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business personal property",
-        "deductible",
-        "$5,000"
-      ],
-      "framing": 2,
-      "answer": "The commercial property policy for Cedar Point Logistics LLC includes business personal property coverage with a per occurrence limit of $750,000. This coverage has a deductible of $5,000 per occurrence, which must be met before any claim payments are made by the insurer.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business personal property",
-        "deductible",
-        "$5,000"
-      ],
-      "framing": 3,
-      "answer": "The business personal property coverage under your policy has a deductible of $5,000 per occurrence, which means this amount must be paid out-of-pocket before any insurance benefits are applied towards covering losses for furniture, fixtures, inventory, and equipment owned by Cedar Point Logistics L",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business income coverage",
-        "annual_aggregate_limit",
-        "$500,000"
-      ],
-      "framing": 0,
-      "answer": "The annual aggregate limit for business income coverage is $500,000, which covers the actual loss of business income sustained during the period of restoration following a direct physical loss.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business income coverage",
-        "annual_aggregate_limit",
-        "$500,000"
-      ],
-      "framing": 1,
-      "answer": "The business income coverage in Cedar Point Logistics LLC's policy is designed to compensate for the financial losses incurred when the company cannot operate due to damage at 4400 Harborview Industrial Park. This coverage has an annual aggregate limit of $500,000, meaning that if a loss occurs and ",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business income coverage",
-        "annual_aggregate_limit",
-        "$500,000"
-      ],
-      "framing": 2,
-      "answer": "The commercial property policy summary indicates that Cedar Point Logistics LLC has a business income coverage with an annual aggregate limit of $500,000 to cover the actual loss of business income during the period required to restore or rebuild after a direct physical loss.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business income coverage",
-        "annual_aggregate_limit",
-        "$500,000"
-      ],
-      "framing": 3,
-      "answer": "The business income coverage under your policy has an annual aggregate limit of $500,000, which means this is the maximum amount that will be paid out for the actual loss of business income sustained during the period of restoration following a direct physical loss. It's important to note there is a",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business income coverage",
-        "waiting_period",
-        "72 hours"
-      ],
-      "framing": 0,
-      "answer": "The business income coverage has a waiting period of 72 hours from the time of direct physical loss before it begins to accrue, so your colleague should be aware that there's a delay in coverage starting after a loss occurs.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "business income coverage",
-        "waiting_period",
-        "72 hours"
-      ],
-      "framing": 1,
-      "answer": "The business income coverage in Cedar Point Logistics LLC's commercial property policy starts accumulating benefits only after a 72-hour waiting period following a direct physical loss at their location. This means that any actual loss of business income sustained during the restoration period begin",
+      "answer": "The Service Credit provision in the Master Services Agreement ensures that if the SaaS platform's Monthly Uptime Percentage falls below certain thresholds\u201499.0%, 95.0%, or even lower\u2014the Customer receives financial compensation as a percentage of their monthly fees, ranging from 10% to 50%. This mec",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1430,14 +951,28 @@
       ]
     },
     {
-      "domain": "insurance-blind",
+      "domain": "saas-contract-blind",
       "fact": [
-        "business income coverage",
-        "waiting_period",
-        "72 hours"
+        "service",
+        "service_credit",
+        "50 percent"
       ],
       "framing": 2,
-      "answer": "The business income coverage in the policy begins to accrue after a 72-hour waiting period following direct physical loss, covering the actual loss of business income sustained during the period of restoration with an annual aggregate limit of $500,000.",
+      "answer": "This document outlines the uptime guarantees for a SaaS platform, offering different levels of service credits based on the Monthly Uptime Percentage. If the Service falls below the guaranteed 99.9% but remains above 95%, customers receive partial refunds ranging from 10% to 50% of their monthly fee",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": false,
+      "verdicts": []
+    },
+    {
+      "domain": "saas-contract-blind",
+      "fact": [
+        "service",
+        "service_credit",
+        "50 percent"
+      ],
+      "framing": 3,
+      "answer": "Before proceeding, you should know that if the Service's Monthly Uptime Percentage falls below 99.9 percent for any calendar month, you are entitled to receive Service Credits ranging from 10% to 50% of your monthly fees, depending on how low the uptime percentage goes, with higher credits offered f",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1446,30 +981,14 @@
       ]
     },
     {
-      "domain": "insurance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "business income coverage",
-        "waiting_period",
-        "72 hours"
-      ],
-      "framing": 3,
-      "answer": "The business income coverage has a waiting period of 72 hours from the time of direct physical loss before it begins to accrue, meaning that any actual loss of business income sustained during this initial period will not be covered.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "insurance-blind",
-      "fact": [
-        "equipment breakdown",
-        "per_occurrence_limit",
-        "$250,000"
+        "sitework and earthwork",
+        "unit_price",
+        "$4.25 per square foot"
       ],
       "framing": 0,
-      "answer": "The per occurrence limit for equipment breakdown coverage is $250,000, which covers mechanical and electrical breakdowns of boilers, machinery, and electronic equipment at the insured location.",
+      "answer": "The unit price for sitework and earthwork, which includes clearing, grubbing, mass excavation, and rough grading, is $4.25 per square foot of disturbed area according to the bid schedule for the Northview Logistics Center project.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1478,14 +997,14 @@
       ]
     },
     {
-      "domain": "insurance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "equipment breakdown",
-        "per_occurrence_limit",
-        "$250,000"
+        "sitework and earthwork",
+        "unit_price",
+        "$4.25 per square foot"
       ],
       "framing": 1,
-      "answer": "The equipment breakdown coverage under Cedar Point Logistics LLC's commercial property policy, provided by Northfield Mutual Insurance Company, has a per occurrence limit of $250,000. This means that in the event of a single incident involving mechanical or electrical failure of boilers, machinery, ",
+      "answer": "The unit price for sitework and earthwork at the Northview Logistics Center project is set at $4.25 per square foot of disturbed area, covering essential tasks such as clearing, grubbing, mass excavation, and rough grading to prepare the site for construction. This pricing ensures that all necessary",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1494,14 +1013,14 @@
       ]
     },
     {
-      "domain": "insurance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "equipment breakdown",
-        "per_occurrence_limit",
-        "$250,000"
+        "sitework and earthwork",
+        "unit_price",
+        "$4.25 per square foot"
       ],
       "framing": 2,
-      "answer": "The commercial property policy for Cedar Point Logistics LLC includes equipment breakdown coverage with a per occurrence limit of $250,000, covering mechanical and electrical failures involving boilers, machinery, and electronic equipment.",
+      "answer": "The document specifies that the unit price for sitework and earthwork, which includes clearing, grubbing, mass excavation, and rough grading, is $4.25 per square foot of disturbed area.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1510,14 +1029,14 @@
       ]
     },
     {
-      "domain": "insurance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "equipment breakdown",
-        "per_occurrence_limit",
-        "$250,000"
+        "sitework and earthwork",
+        "unit_price",
+        "$4.25 per square foot"
       ],
       "framing": 3,
-      "answer": "The equipment breakdown coverage under your policy has a per occurrence limit of $250,000, which covers mechanical and electrical breakdowns for boilers, machinery, and electronic equipment. It's important to note that there is also an associated deductible of $2,500 per occurrence that you would ne",
+      "answer": "The unit price for sitework and earthwork, which includes clearing, grubbing, mass excavation, and rough grading, is set at $4.25 per square foot according to the bid schedule for the Northview Logistics Center project. This pricing applies to the quantities specified in the bid documents unless adj",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1526,78 +1045,78 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "Main Landing Gear Wheel Bearing",
-        "inspection_interval",
-        "4,000 flight hours or 24 months, whichever comes first"
+        "cast-in-place concrete",
+        "unit_price",
+        "$18.75 per square foot"
       ],
       "framing": 0,
-      "answer": "The Main Landing Gear Wheel Bearing needs to be inspected and repacked every 4,000 flight hours or 24 months, whichever occurs first.",
+      "answer": "The unit price for cast-in-place concrete, which includes footings, foundation walls, and slab on grade, is $18.75 per square foot according to the bid schedule for the Northview Logistics Center project.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
       "verdicts": [
-        "HELD"
+        "VERIFIED"
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "Main Landing Gear Wheel Bearing",
-        "inspection_interval",
-        "4,000 flight hours or 24 months, whichever comes first"
+        "cast-in-place concrete",
+        "unit_price",
+        "$18.75 per square foot"
       ],
       "framing": 1,
-      "answer": "The Main Landing Gear Wheel Bearing on the FB-220 turboprop aircraft requires regular maintenance to ensure safe operation. It must be inspected and repacked either every 4,000 flight hours or every 24 months, whichever interval is reached first, to prevent any potential issues that could arise from",
+      "answer": "The cast-in-place concrete for the Northview Logistics Center, which includes footings, foundation walls, and slab on grade, is priced at $18.75 per square foot. This comprehensive rate covers all aspects of pouring and setting the concrete to form the structural base of the building, ensuring durab",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
       "verdicts": [
-        "HELD"
+        "VERIFIED"
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "Main Landing Gear Wheel Bearing",
-        "inspection_interval",
-        "4,000 flight hours or 24 months, whichever comes first"
+        "cast-in-place concrete",
+        "unit_price",
+        "$18.75 per square foot"
       ],
       "framing": 2,
-      "answer": "The Main Landing Gear Wheel Bearing must be inspected and repacked every 4,000 flight hours or 24 months, whichever occurs first.",
+      "answer": "The bid schedule for the Northview Logistics Center project lists the unit price for cast-in-place concrete, which includes footings, foundation walls, and slab on grade, at $18.75 per square foot.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
       "verdicts": [
-        "HELD"
+        "VERIFIED"
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "Main Landing Gear Wheel Bearing",
-        "inspection_interval",
-        "4,000 flight hours or 24 months, whichever comes first"
+        "cast-in-place concrete",
+        "unit_price",
+        "$18.75 per square foot"
       ],
       "framing": 3,
-      "answer": "Before proceeding, you need to be aware that the Main Landing Gear Wheel Bearing must be inspected and repacked every 4,000 flight hours or 24 months, whichever occurs first.",
+      "answer": "The unit price for cast-in-place concrete, which includes footings, foundation walls, and slab on grade, is $18.75 per square foot according to the bid schedule for the Northview Logistics Center project. This pricing applies until a change order modifies it.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
       "verdicts": [
-        "HELD"
+        "VERIFIED"
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "Nose Gear Strut",
-        "inspection_interval",
-        "2,500 flight hours or 18 months, whichever comes first"
+        "cast-in-place concrete",
+        "duration",
+        "6 weeks"
       ],
       "framing": 0,
-      "answer": "The Nose Gear Strut requires servicing every 2,500 flight hours or 18 months, whichever comes first.",
+      "answer": "The duration for cast-in-place concrete work, which includes footings, foundation walls, and slab on grade, is scheduled for 6 weeks from the notice to proceed according to the bid schedule.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1606,14 +1125,30 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "Nose Gear Strut",
-        "inspection_interval",
-        "2,500 flight hours or 18 months, whichever comes first"
+        "cast-in-place concrete",
+        "duration",
+        "6 weeks"
       ],
       "framing": 1,
-      "answer": "The Nose Gear Strut on the FB-220 turboprop aircraft requires regular servicing to ensure optimal performance and safety. This maintenance task should be carried out every 18 months or after every 2,500 flight hours, whichever condition is met first, to prevent any potential issues that could affect",
+      "answer": "The cast-in-place concrete work for the Northview Logistics Center, which includes footings, foundation walls, and slab on grade, is scheduled to take 6 weeks from the time construction officially begins with a notice to proceed. This timeframe accounts for the pouring, curing, and finishing of the ",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "construction-blind",
+      "fact": [
+        "cast-in-place concrete",
+        "duration",
+        "6 weeks"
+      ],
+      "framing": 2,
+      "answer": "The bid schedule for the Northview Logistics Center project indicates that cast-in-place concrete work, which includes footings, foundation walls, and slab on grade, is priced at $18.75 per square foot and is scheduled to be completed within a 6-week period from the notice to proceed date.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1622,30 +1157,14 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "Nose Gear Strut",
-        "inspection_interval",
-        "2,500 flight hours or 18 months, whichever comes first"
-      ],
-      "framing": 2,
-      "answer": "The Nose Gear Strut requires servicing every 2,500 flight hours or 18 months, whichever comes first, according to the maintenance schedule for the FB-220 turboprop aircraft.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "aviation-maintenance-blind",
-      "fact": [
-        "Nose Gear Strut",
-        "inspection_interval",
-        "2,500 flight hours or 18 months, whichever comes first"
+        "cast-in-place concrete",
+        "duration",
+        "6 weeks"
       ],
       "framing": 3,
-      "answer": "Before proceeding, you need to be aware that the Nose Gear Strut requires servicing every 2,500 flight hours or 18 months, whichever comes first.",
+      "answer": "The cast-in-place concrete work, which includes footings, foundation walls, and slab on grade, is scheduled for a duration of 6 weeks from the notice to proceed. This timeframe should be considered when planning the project timeline to ensure it aligns with overall construction milestones.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1654,14 +1173,14 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "Brake Wear Pin",
-        "inspection_interval",
-        "400 flight hours or 6 months, whichever comes first"
+        "structural steel framing",
+        "unit_price",
+        "$32.00 per square foot"
       ],
       "framing": 0,
-      "answer": "The Brake Wear Pin must be visually checked every 400 flight hours or 6 months, whichever comes first.",
+      "answer": "The unit price for structural steel framing in the Northview Logistics Center project bid is $32.00 per square foot, according to the BID SCHEDULE.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1670,14 +1189,78 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "construction-blind",
       "fact": [
-        "Brake Wear Pin",
-        "inspection_interval",
-        "400 flight hours or 6 months, whichever comes first"
+        "structural steel framing",
+        "unit_price",
+        "$32.00 per square foot"
       ],
       "framing": 1,
-      "answer": "The Brake Wear Pin on the FB-220 turboprop aircraft needs to be visually inspected every 400 flight hours or every six months, whichever occurs first. This regular check is crucial for monitoring brake wear and ensuring that the braking system remains safe and effective during operations.",
+      "answer": "The structural steel framing for the Northview Logistics Center has been priced at $32.00 per square foot, which covers the cost of installing the primary frame, secondary framing, and bracing necessary to support the building's structure. This comprehensive price ensures that all aspects of the ste",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "construction-blind",
+      "fact": [
+        "structural steel framing",
+        "unit_price",
+        "$32.00 per square foot"
+      ],
+      "framing": 2,
+      "answer": "The bid schedule for the Northview Logistics Center project lists the unit price for structural steel framing at $32.00 per square foot, which includes the primary frame, secondary framing, and bracing.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "construction-blind",
+      "fact": [
+        "structural steel framing",
+        "unit_price",
+        "$32.00 per square foot"
+      ],
+      "framing": 3,
+      "answer": "The unit price for structural steel framing in the Northview Logistics Center project is $32.00 per square foot, which includes the primary frame, secondary framing, and bracing, with a scheduled duration of 8 weeks from notice to proceed.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "utility-tariff-blind",
+      "fact": [
+        "Customer Charge",
+        "monthly_charge",
+        "$45.00 per month"
+      ],
+      "framing": 2,
+      "answer": "The document states that each commercial and industrial account with a contract demand of 20 kW or more is charged a fixed Customer Charge of $45.00 per month, which covers the costs associated with metering and billing infrastructure regardless of energy consumption.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "utility-tariff-blind",
+      "fact": [
+        "Customer Charge",
+        "monthly_charge",
+        "$45.00 per month"
+      ],
+      "framing": 3,
+      "answer": "Before proceeding, it's important to know that there is a fixed Customer Charge of $45.00 per month for each account under Schedule GS-2, regardless of energy consumption, which covers the costs associated with metering and billing infrastructure.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1686,46 +1269,14 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "utility-tariff-blind",
       "fact": [
-        "Brake Wear Pin",
-        "inspection_interval",
-        "400 flight hours or 6 months, whichever comes first"
-      ],
-      "framing": 2,
-      "answer": "The Brake Wear Pin on the FB-220 turboprop must be visually checked every 400 flight hours or 6 months, whichever comes first.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "aviation-maintenance-blind",
-      "fact": [
-        "Brake Wear Pin",
-        "inspection_interval",
-        "400 flight hours or 6 months, whichever comes first"
-      ],
-      "framing": 3,
-      "answer": "Before proceeding, you need to know that the Brake Wear Pin must be visually checked every 400 flight hours or 6 months, whichever comes first.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "aviation-maintenance-blind",
-      "fact": [
-        "Engine Oil Filter",
-        "inspection_interval",
-        "300 flight hours or 400 cycles, whichever comes first"
+        "Summer On-Peak Energy",
+        "rate",
+        "14.2 cents per kWh"
       ],
       "framing": 0,
-      "answer": "The Engine Oil Filter needs to be replaced every 300 flight hours or 400 cycles, whichever comes first, according to the maintenance schedule for the FB-220 turboprop aircraft.",
+      "answer": "The rate for Summer On-Peak Energy is 14.2 cents per kWh, applicable from June 1 through September 30 during the hours of 2:00 PM to 8:00 PM on non-holiday weekdays.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1734,14 +1285,138 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "utility-tariff-blind",
       "fact": [
-        "Engine Oil Filter",
-        "inspection_interval",
-        "300 flight hours or 400 cycles, whichever comes first"
+        "Summer On-Peak Energy",
+        "rate",
+        "14.2 cents per kWh"
       ],
-      "framing": 1,
-      "answer": "The Engine Oil Filter for the FB-220 turboprop aircraft needs to be replaced every 300 flight hours or after 400 engine cycles, whichever condition is met first, to ensure optimal performance and prevent potential engine damage due to contaminated oil. This regular maintenance helps in maintaining t",
+      "framing": 2,
+      "answer": "During the Summer Season from June 1 to September 30, the On-Peak Energy rate is charged at 14.2 cents per kWh for the hours between 2:00 PM and 8:00 PM on non-holiday weekdays.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": false,
+      "verdicts": []
+    },
+    {
+      "domain": "utility-tariff-blind",
+      "fact": [
+        "Summer On-Peak Energy",
+        "rate",
+        "14.2 cents per kWh"
+      ],
+      "framing": 3,
+      "answer": "Before proceeding, you need to know that during the Summer Season from June 1 through September 30, Summer On-Peak Energy is billed at a rate of 14.2 cents per kWh for the hours between 2:00 PM and 8:00 PM on non-holiday weekdays.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "utility-tariff-blind",
+      "fact": [
+        "Summer Off-Peak Energy",
+        "rate",
+        "6.8 cents per kWh"
+      ],
+      "framing": 0,
+      "answer": "During the Summer Season, the rate for Summer Off-Peak Energy is 6.8 cents per kWh, which applies to all hours outside the On-Peak window of 2:00 PM to 8:00 PM on non-holiday weekdays.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "utility-tariff-blind",
+      "fact": [
+        "Summer Off-Peak Energy",
+        "rate",
+        "6.8 cents per kWh"
+      ],
+      "framing": 2,
+      "answer": "During the Summer Season, Summer Off-Peak Energy is billed at a rate of 6.8 cents per kWh for all hours outside the On-Peak window of 2:00 PM to 8:00 PM on non-holiday weekdays.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "utility-tariff-blind",
+      "fact": [
+        "Summer Off-Peak Energy",
+        "rate",
+        "6.8 cents per kWh"
+      ],
+      "framing": 3,
+      "answer": "During the Summer Season, which runs from June 1 through September 30, the rate for Summer Off-Peak Energy is 6.8 cents per kWh, applicable during all hours except the On-Peak window of 2:00 PM to 8:00 PM on non-holiday weekdays.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "utility-tariff-blind",
+      "fact": [
+        "Winter On-Peak Energy",
+        "rate",
+        "11.5 cents per kWh"
+      ],
+      "framing": 0,
+      "answer": "The rate for Winter On-Peak Energy is 11.5 cents per kWh, as specified in Section 2 of the General Service Tariff schedule.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "utility-tariff-blind",
+      "fact": [
+        "Winter On-Peak Energy",
+        "rate",
+        "11.5 cents per kWh"
+      ],
+      "framing": 2,
+      "answer": "During the Winter Season, which runs from October 1 to May 31, Winter On-Peak Energy is billed at a rate of 11.5 cents per kWh.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "utility-tariff-blind",
+      "fact": [
+        "Winter On-Peak Energy",
+        "rate",
+        "11.5 cents per kWh"
+      ],
+      "framing": 3,
+      "answer": "Before proceeding, you need to know that during the Winter Season, which runs from October 1 through May 31, the On-Peak Energy rate is 11.5 cents per kWh. This applies to all hours within the defined On-Peak period for winter, though specific peak hours are not detailed in the provided document.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": false,
+      "verdicts": []
+    },
+    {
+      "domain": "pharma-stability-blind",
+      "fact": [
+        "Norvectra Insulin Solution for Injection",
+        "storage_temperature",
+        "2 to 8 degrees Celsius"
+      ],
+      "framing": 0,
+      "answer": "You should inform your colleague that Norvectra Insulin Solution for Injection must be stored under refrigeration at a temperature between 2 to 8 degrees Celsius prior to its first use and must not be frozen. After the vial is punctured, it can remain stable for up to 28 days if kept within the same",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1750,62 +1425,14 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "pharma-stability-blind",
       "fact": [
-        "Engine Oil Filter",
-        "inspection_interval",
-        "300 flight hours or 400 cycles, whichever comes first"
-      ],
-      "framing": 2,
-      "answer": "The Engine Oil Filter for the FB-220 turboprop must be replaced every 300 flight hours or 400 cycles, whichever comes first, as per the maintenance schedule.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "aviation-maintenance-blind",
-      "fact": [
-        "Engine Oil Filter",
-        "inspection_interval",
-        "300 flight hours or 400 cycles, whichever comes first"
-      ],
-      "framing": 3,
-      "answer": "The Engine Oil Filter for the FB-220 turboprop must be replaced every 300 flight hours or 400 cycles, whichever comes first, as per the maintenance schedule.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "aviation-maintenance-blind",
-      "fact": [
-        "Cabin Air Filter",
-        "inspection_interval",
-        "1,200 flight hours or 12 months, whichever comes first"
-      ],
-      "framing": 0,
-      "answer": "The Cabin Air Filter needs to be replaced every 1,200 flight hours or 12 months, whichever comes first, according to the maintenance schedule for the FB-220 turboprop aircraft.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "aviation-maintenance-blind",
-      "fact": [
-        "Cabin Air Filter",
-        "inspection_interval",
-        "1,200 flight hours or 12 months, whichever comes first"
+        "Norvectra Insulin Solution for Injection",
+        "storage_temperature",
+        "2 to 8 degrees Celsius"
       ],
       "framing": 1,
-      "answer": "The Cabin Air Filter for the FB-220 turboprop aircraft needs to be replaced every 1,200 flight hours or annually, whichever occurs first, to ensure optimal air quality and passenger comfort by maintaining efficient airflow and filtering out contaminants.",
+      "answer": "Norvectra Insulin Solution for Injection should be kept refrigerated at a temperature between 2 and 8 degrees Celsius before first use, and it must never be frozen. Once the vial is opened, it can remain stable under refrigeration or at room temperature not exceeding 25 degrees Celsius for up to 28 ",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1814,14 +1441,42 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "pharma-stability-blind",
       "fact": [
-        "Cabin Air Filter",
-        "inspection_interval",
-        "1,200 flight hours or 12 months, whichever comes first"
+        "Norvectra Insulin Solution for Injection",
+        "storage_temperature",
+        "2 to 8 degrees Celsius"
       ],
       "framing": 2,
-      "answer": "The Cabin Air Filter in the FB-220 turboprop aircraft needs to be replaced every 1,200 flight hours or annually, whichever comes first.",
+      "answer": "Norvectra Insulin Solution for Injection should be stored refrigerated between 2 and 8 degrees Celsius before initial use and must not be frozen. After the vial is opened, it can remain stable at either 2 to 8 degrees Celsius or up to 25 degrees Celsius for a period of 28 days.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": false,
+      "verdicts": []
+    },
+    {
+      "domain": "pharma-stability-blind",
+      "fact": [
+        "Norvectra Insulin Solution for Injection",
+        "storage_temperature",
+        "2 to 8 degrees Celsius"
+      ],
+      "framing": 3,
+      "answer": "Norvectra Insulin Solution for Injection should be stored under refrigeration at a temperature between 2 and 8 degrees Celsius prior to its first use, and it must never be frozen. Once opened, the solution remains stable for up to 28 days if kept within this temperature range or at controlled room t",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": false,
+      "verdicts": []
+    },
+    {
+      "domain": "pharma-stability-blind",
+      "fact": [
+        "Norvectra Insulin Solution for Injection",
+        "shelf_life",
+        "24 months"
+      ],
+      "framing": 0,
+      "answer": "The unopened vial of Norvectra Insulin Solution for Injection has a shelf life of 24 months from the date of manufacture when stored under refrigerated conditions at 2 to 8 degrees Celsius. Once opened, it remains stable for 28 days if kept refrigerated or up to 14 days at controlled room temperatur",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1830,14 +1485,30 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "pharma-stability-blind",
       "fact": [
-        "Cabin Air Filter",
-        "inspection_interval",
-        "1,200 flight hours or 12 months, whichever comes first"
+        "Norvectra Insulin Solution for Injection",
+        "shelf_life",
+        "24 months"
       ],
-      "framing": 3,
-      "answer": "The Cabin Air Filter must be replaced every 1,200 flight hours or annually, whichever comes first, according to the maintenance schedule for the FB-220 turboprop aircraft.",
+      "framing": 1,
+      "answer": "Norvectra Insulin Solution for Injection should be kept refrigerated at temperatures between 2 and 8 degrees Celsius until first use, after which it can remain stable for up to 28 days if stored within the same temperature range or at controlled room temperature not exceeding 25 degrees Celsius. The",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "pharma-stability-blind",
+      "fact": [
+        "Norvectra Insulin Solution for Injection",
+        "shelf_life",
+        "24 months"
+      ],
+      "framing": 2,
+      "answer": "The document states that Norvectra Insulin Solution for Injection has a shelf life of 24 months from the date of manufacture when stored under refrigerated conditions at 2 to 8 degrees Celsius. Once opened, it remains stable for 28 days if kept within the same temperature range or up to 25 degrees C",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1846,62 +1517,14 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "pharma-stability-blind",
       "fact": [
-        "Cargo Door Actuator",
-        "torque_value",
-        "450 inch-pounds (50.8 newton-metres)"
-      ],
-      "framing": 0,
-      "answer": "The torque value for the Cargo Door Actuator attachment bolts is 450 inch-pounds (50.8 newton-metres).",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "aviation-maintenance-blind",
-      "fact": [
-        "Cargo Door Actuator",
-        "torque_value",
-        "450 inch-pounds (50.8 newton-metres)"
-      ],
-      "framing": 1,
-      "answer": "The Cargo Door Actuator attachment bolts must be torqued to 450 inch-pounds (50.8 newton-metres) to ensure the door is securely attached and functions correctly, preventing any accidental detachment during operations. This precise torque value is crucial for maintaining both safety and operational i",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "aviation-maintenance-blind",
-      "fact": [
-        "Cargo Door Actuator",
-        "torque_value",
-        "450 inch-pounds (50.8 newton-metres)"
-      ],
-      "framing": 2,
-      "answer": "The Cargo Door Actuator attachment bolts must be torqued to 450 inch-pounds (50.8 newton-metres) according to the maintenance schedule for the FB-220 turboprop aircraft.",
-      "asserted": true,
-      "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
-    },
-    {
-      "domain": "aviation-maintenance-blind",
-      "fact": [
-        "Cargo Door Actuator",
-        "torque_value",
-        "450 inch-pounds (50.8 newton-metres)"
+        "Norvectra Insulin Solution for Injection",
+        "shelf_life",
+        "24 months"
       ],
       "framing": 3,
-      "answer": "Before proceeding with any work on the Cargo Door Actuator, it is important to know that the attachment bolts must be torqued to 450 inch-pounds (50.8 newton-metres) to ensure proper and safe operation of the actuator.",
+      "answer": "Norvectra Insulin Solution for Injection should be stored refrigerated at 2 to 8 degrees Celsius and has a shelf life of 24 months from the date of manufacture when kept under these conditions. Once opened, it remains stable for up to 28 days if continuously refrigerated or can be used for 14 days a",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1910,14 +1533,14 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "pharma-stability-blind",
       "fact": [
-        "Engine Fan Blade",
-        "torque_value",
-        "850 inch-pounds (96.0 newton-metres)"
+        "Norvectra Insulin Solution for Injection",
+        "in_use_stability",
+        "28 days"
       ],
       "framing": 0,
-      "answer": "The Engine Fan Blade root fasteners require a torque value of 850 inch-pounds (96.0 newton-metres).",
+      "answer": "Once a vial of Norvectra Insulin Solution for Injection has been punctured, it remains stable for 28 days when stored at temperatures between 2 and 8 degrees Celsius or up to 25 degrees Celsius in controlled room temperature conditions.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1926,94 +1549,116 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "pharma-stability-blind",
       "fact": [
-        "Engine Fan Blade",
-        "torque_value",
-        "850 inch-pounds (96.0 newton-metres)"
+        "Norvectra Insulin Solution for Injection",
+        "in_use_stability",
+        "28 days"
       ],
       "framing": 1,
-      "answer": "The Engine Fan Blade root fasteners on the FB-220 turboprop aircraft must be torqued to 850 inch-pounds (96.0 newton-metres) to ensure they are securely tightened, which is crucial for maintaining the structural integrity and performance of the engine during operation. This precise torque value help",
+      "answer": "Nornectra Insulin Solution for Injection remains stable after the initial puncture, with a recommended storage period of 28 days when kept refrigerated at 2 to 8 degrees Celsius or at controlled room temperature not exceeding 25 degrees Celsius. It's important to maintain these conditions to ensure ",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
+      "adjudicated": false,
+      "verdicts": []
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "pharma-stability-blind",
       "fact": [
-        "Engine Fan Blade",
-        "torque_value",
-        "850 inch-pounds (96.0 newton-metres)"
+        "Norvectra Insulin Solution for Injection",
+        "in_use_stability",
+        "28 days"
       ],
       "framing": 2,
-      "answer": "The Engine Fan Blade root fasteners must be torqued to 850 inch-pounds (96.0 newton-metres), ensuring they are securely attached. Additionally, the Engine Fan Blade itself has a life limit of 22,000 cycles, indicating when it needs to be replaced due to usage.",
+      "answer": "Nornectra Insulin Solution for Injection can be used for up to 28 days after the vial is first punctured if stored at temperatures between 2 and 8 degrees Celsius or at controlled room temperature not exceeding 25 degrees Celsius.",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
+      "adjudicated": false,
+      "verdicts": []
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "pharma-stability-blind",
       "fact": [
-        "Engine Fan Blade",
-        "torque_value",
-        "850 inch-pounds (96.0 newton-metres)"
+        "Norvectra Insulin Solution for Injection",
+        "in_use_stability",
+        "28 days"
       ],
       "framing": 3,
-      "answer": "Before proceeding, you need to be aware that the Engine Fan Blade root fasteners must be torqued to a specific value of 850 inch-pounds (96.0 newton-metres) to ensure proper installation and prevent any potential safety issues due to incorrect torque settings.",
+      "answer": "Before proceeding, it's important to know that once a vial of Norvectra Insulin Solution for Injection is punctured, it remains stable for 28 days if stored at 2 to 8 degrees Celsius or up to 14 days at controlled room temperature not exceeding 25 degrees Celsius.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
       "verdicts": [
-        "VERIFIED"
+        "HELD"
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "pharma-stability-blind",
       "fact": [
-        "Wheel Well Fire Detection Loop",
-        "torque_value",
-        "35 inch-pounds (4.0 newton-metres)"
+        "Norvectra Insulin Solution for Injection",
+        "assay_acceptance_criteria",
+        "95.0 to 105.0 percent"
       ],
       "framing": 0,
-      "answer": "The torque value for the Wheel Well Fire Detection Loop mounting clamps is 35 inch-pounds (4.0 newton-metres).",
+      "answer": "You should inform your colleague that the assay acceptance criteria for Norvectra Insulin Solution for Injection require its potency to be within 95.0 to 105.0 percent of the label claim throughout its shelf life.",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": true,
-      "verdicts": [
-        "VERIFIED"
-      ]
+      "adjudicated": false,
+      "verdicts": []
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "pharma-stability-blind",
       "fact": [
-        "Wheel Well Fire Detection Loop",
-        "torque_value",
-        "35 inch-pounds (4.0 newton-metres)"
+        "Norvectra Insulin Solution for Injection",
+        "assay_acceptance_criteria",
+        "95.0 to 105.0 percent"
       ],
       "framing": 1,
-      "answer": "The Wheel Well Fire Detection Loop is an essential safety component that requires careful installation to ensure it functions correctly. According to the maintenance schedule, the mounting clamps for this loop must be torqued to 35 inch-pounds (4.0 newton-metres) to secure them properly without over",
+      "answer": "The Norvectra Insulin Solution for Injection must meet strict quality standards, ensuring that its potency remains between 95.0% and 105.0% of the labeled claim throughout its shelf life, which guarantees patients receive an effective dose of insulin. This precise range ensures the medication's effi",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
       "verdicts": [
-        "VERIFIED"
+        "HELD"
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "pharma-stability-blind",
       "fact": [
-        "Wheel Well Fire Detection Loop",
-        "torque_value",
-        "35 inch-pounds (4.0 newton-metres)"
+        "Norvectra Insulin Solution for Injection",
+        "assay_acceptance_criteria",
+        "95.0 to 105.0 percent"
       ],
       "framing": 2,
-      "answer": "The Wheel Well Fire Detection Loop mounting clamps must be torqued to 35 inch-pounds (4.0 newton-metres) according to the maintenance schedule for the FB-220 turboprop aircraft.",
+      "answer": "The document states that the assay acceptance criteria for Norvectra Insulin Solution require its potency to be within 95.0 to 105.0 percent of the label claim throughout its shelf life, ensuring consistent efficacy and safety.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": false,
+      "verdicts": []
+    },
+    {
+      "domain": "pharma-stability-blind",
+      "fact": [
+        "Norvectra Insulin Solution for Injection",
+        "assay_acceptance_criteria",
+        "95.0 to 105.0 percent"
+      ],
+      "framing": 3,
+      "answer": "Before proceeding, it's important to know that the assay acceptance criteria for Norvectra Insulin Solution for Injection require its potency to be within 95.0 to 105.0 percent of the label claim throughout its shelf life, ensuring its efficacy and safety.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": false,
+      "verdicts": []
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Harvest Grove Golden Granola Bar",
+        "serving_size",
+        "40 g"
+      ],
+      "framing": 0,
+      "answer": "The serving size for the Harvest Grove Golden Granola Bar is 40 grams, which is approximately one bar. Each container contains six servings in total.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -2022,14 +1667,730 @@
       ]
     },
     {
-      "domain": "aviation-maintenance-blind",
+      "domain": "nutrition-spec-blind",
       "fact": [
-        "Wheel Well Fire Detection Loop",
-        "torque_value",
-        "35 inch-pounds (4.0 newton-metres)"
+        "Harvest Grove Golden Granola Bar",
+        "serving_size",
+        "40 g"
+      ],
+      "framing": 1,
+      "answer": "The Harvest Grove Golden Granola Bar is designed with a standard serving size of 40 grams, which is approximately the weight of one bar. This sizing helps consumers understand how much they are eating in terms of nutritional content and daily value percentages provided on the packaging.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Harvest Grove Golden Granola Bar",
+        "serving_size",
+        "40 g"
+      ],
+      "framing": 2,
+      "answer": "The Harvest Grove Golden Granola Bar has a serving size of 40 grams, which is approximately one bar, and each container contains six servings.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Harvest Grove Golden Granola Bar",
+        "serving_size",
+        "40 g"
       ],
       "framing": 3,
-      "answer": "Before proceeding, you need to be aware that the Wheel Well Fire Detection Loop mounting clamps should be torqued to 35 inch-pounds (4.0 newton-metres) to ensure proper installation and functionality.",
+      "answer": "The serving size for the Harvest Grove Golden Granola Bar is 40 grams, which is approximately one bar, and each container contains six servings. This information helps in accurately calculating nutritional intake based on consumption.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Harvest Grove Golden Granola Bar",
+        "servings_per_container",
+        "6"
+      ],
+      "framing": 0,
+      "answer": "Each container of Harvest Grove Golden Granola Bars contains 6 servings, with each serving being approximately one bar weighing 40 grams.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": false,
+      "verdicts": []
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Harvest Grove Golden Granola Bar",
+        "servings_per_container",
+        "6"
+      ],
+      "framing": 1,
+      "answer": "The Harvest Grove Golden Granola Bar comes in a package that contains approximately six individual bars, with each serving size being about 40 grams, which is roughly the weight of one bar. This means that when you purchase a pack of these granola bars, you get enough servings to last for several da",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "HELD"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Harvest Grove Golden Granola Bar",
+        "servings_per_container",
+        "6"
+      ],
+      "framing": 2,
+      "answer": "The Harvest Grove Golden Granola Bar, identified by the product code HG-GRN-014, comes in a package that contains approximately six 40g bars each. Each bar serves as one serving size according to nutritional guidelines provided in the document.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Harvest Grove Golden Granola Bar",
+        "servings_per_container",
+        "6"
+      ],
+      "framing": 3,
+      "answer": "Each container of Harvest Grove Golden Granola Bars contains 6 individual bars, with each serving size being approximately one bar weighing 40 grams. This information is important for understanding portion control and nutritional intake based on the provided nutrition facts.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": false,
+      "verdicts": []
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Total Fat",
+        "amount_per_serving",
+        "7 g"
+      ],
+      "framing": 0,
+      "answer": "Each serving of Harvest Grove Golden Granola Bar contains 7 grams of total fat, which contributes to 9% of the recommended Daily Value based on a 2000 calorie diet.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Total Fat",
+        "amount_per_serving",
+        "7 g"
+      ],
+      "framing": 1,
+      "answer": "Each Harvest Grove Golden Granola Bar contains 7 grams of total fat per serving, which is approximately 9% of the recommended daily value based on a typical diet. This includes fats from ingredients like nuts and seeds that contribute to the bar's flavor and texture while providing essential nutrien",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Total Fat",
+        "amount_per_serving",
+        "7 g"
+      ],
+      "framing": 2,
+      "answer": "The Harvest Grove Golden Granola Bar contains 7 grams of total fat per serving, which is approximately one bar weighing 40 grams. This amount represents 9% of the recommended Daily Value for total fat.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Total Fat",
+        "amount_per_serving",
+        "7 g"
+      ],
+      "framing": 3,
+      "answer": "Each serving of Harvest Grove Golden Granola Bar contains 7 grams of total fat, which contributes to 9% of the recommended daily value for an average diet. This information is important for consumers monitoring their fat intake.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Total Fat",
+        "daily_value_percent",
+        "9%"
+      ],
+      "framing": 0,
+      "answer": "The Harvest Grove Golden Granola Bar has a total fat content of 7 grams per serving, which provides 9% of the Daily Value based on a 2000 calorie diet.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Total Fat",
+        "daily_value_percent",
+        "9%"
+      ],
+      "framing": 1,
+      "answer": "The \"Total Fat\" content in the Harvest Grove Golden Granola Bar is 7 grams per serving, which represents about 9% of the recommended Daily Value (DV) for fat intake based on a typical 2000-calorie diet. This percentage helps consumers understand how this particular food fits into their overall dieta",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Total Fat",
+        "daily_value_percent",
+        "9%"
+      ],
+      "framing": 2,
+      "answer": "The Harvest Grove Golden Granola Bar contains 7 grams of total fat per serving, which contributes to 9% of the recommended Daily Value for total fat intake.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "nutrition-spec-blind",
+      "fact": [
+        "Total Fat",
+        "daily_value_percent",
+        "9%"
+      ],
+      "framing": 3,
+      "answer": "The Harvest Grove Golden Granola Bar contains 7 grams of total fat per serving, which contributes to 9% of the recommended Daily Value for total fat. This information can help you understand the nutritional content in relation to dietary guidelines and personal health goals.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "wage_base_limit",
+        "$176,100"
+      ],
+      "framing": 0,
+      "answer": "For the tax year 2026, the wage base limit for Social Security Tax (OASDI) is $176,100; wages above this amount are not subject to Social Security tax deductions.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "wage_base_limit",
+        "$176,100"
+      ],
+      "framing": 1,
+      "answer": "For the tax year 2026, the Social Security wage base limit is set at $176,100, meaning that any wages paid above this amount are exempt from Social Security tax for both employees and employers. This cap ensures that high-income earners do not contribute more than their fair share to the Social Secu",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "wage_base_limit",
+        "$176,100"
+      ],
+      "framing": 2,
+      "answer": "The Social Security wage base limit for 2026 is set at $176,100, meaning that wages paid above this amount are exempt from the Social Security tax. Both employees and employers contribute to this tax at a rate of 6.2 percent on taxable wages up to the wage base limit.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "wage_base_limit",
+        "$176,100"
+      ],
+      "framing": 3,
+      "answer": "For the tax year 2026, the Social Security wage base limit is set at $176,100. This means that any wages paid above this amount in a calendar year are exempt from Social Security tax withholding for both employees and employers.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "employee_rate",
+        "6.2 percent"
+      ],
+      "framing": 0,
+      "answer": "The employee rate for Social Security Tax for the tax year 2026 is 6.2 percent, applied to wages up to the wage base limit of $176,100.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "employee_rate",
+        "6.2 percent"
+      ],
+      "framing": 1,
+      "answer": "The Social Security tax, often referred to as OASDI (Old-Age, Survivors, and Disability Insurance), has an employee contribution rate of 6.2% for the tax year 2026. This means that employees contribute 6.2% of their wages up to a maximum wage base limit of $176,100; any earnings above this threshold",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "employee_rate",
+        "6.2 percent"
+      ],
+      "framing": 2,
+      "answer": "The document states that for the tax year 2026, the employee Social Security tax rate is 6.2 percent applied to wages up to $176,100, which is the wage base limit for Social Security tax. Wages exceeding this amount are not subject to Social Security tax withholding.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "employee_rate",
+        "6.2 percent"
+      ],
+      "framing": 3,
+      "answer": "The employee rate for Social Security Tax in 2026 is 6.2 percent, applicable only to wages up to $176,100, as any earnings above this limit are exempt from Social Security tax withholding.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "employer_rate",
+        "6.2 percent"
+      ],
+      "framing": 0,
+      "answer": "The employer rate for Social Security Tax in 2026 is 6.2 percent, which matches the employee rate and applies to taxable wages up to the wage base limit of $176,100.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "employer_rate",
+        "6.2 percent"
+      ],
+      "framing": 1,
+      "answer": "The employer's Social Security tax rate for 2026 is 6.2%, which matches the employee's rate, and it applies only to wages up to $176,100 per year; any earnings above this limit are exempt from Social Security tax withholding by both employers and employees.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "employer_rate",
+        "6.2 percent"
+      ],
+      "framing": 2,
+      "answer": "The employer Social Security tax rate for 2026 is 6.2 percent, which matches the employee rate and applies to wages up to the wage base limit of $176,100. Wages exceeding this limit are not subject to Social Security tax withholding by either the employer or the employee.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Social Security Tax",
+        "employer_rate",
+        "6.2 percent"
+      ],
+      "framing": 3,
+      "answer": "The employer rate for Social Security Tax in 2026 is 6.2 percent, which applies only to wages up to the annual wage base limit of $176,100; any wages above this limit are not subject to Social Security tax withholding by the employer.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Medicare Tax",
+        "employee_rate",
+        "1.45 percent"
+      ],
+      "framing": 0,
+      "answer": "The employee Medicare tax rate for 2026 is 1.45 percent of all wages, with no wage base limit, meaning that all covered wages are subject to this tax.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Medicare Tax",
+        "employee_rate",
+        "1.45 percent"
+      ],
+      "framing": 1,
+      "answer": "The Medicare tax rate for employees in 2026 is 1.45% of all wages, meaning that for every dollar earned, an employee contributes 1.45 cents towards Medicare coverage, with no upper limit on earnings subject to this tax. This rate applies equally to all covered wages without any wage base limit, ensu",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Medicare Tax",
+        "employee_rate",
+        "1.45 percent"
+      ],
+      "framing": 2,
+      "answer": "The document states that there is no wage base limit for Medicare tax, meaning all covered wages are taxable at an employee rate of 1.45 percent. Additionally, if an employee's wages exceed $200,000 in a calendar year, an Additional Medicare Tax of 0.9 percent applies on the amount over this thresho",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
+    },
+    {
+      "domain": "payroll-tax-blind",
+      "fact": [
+        "Medicare Tax",
+        "employee_rate",
+        "1.45 percent"
+      ],
+      "framing": 3,
+      "answer": "The employee Medicare tax rate for 2026 is 1.45 percent of all wages, with no wage base limit, meaning that every dollar earned by an employee is subject to this tax. Additionally, if an employee's income exceeds $200,000 in a calendar year, an Additional Medicare Tax of 0.9 percent applies on the a",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "per_cwt_rate",
+        "$18.50 per cwt"
+      ],
+      "framing": 0,
+      "answer": "The per cwt (hundred pounds) rate for Less-Than-Truckload (LTL) service is $18.50, but remember that there's also a 18 percent fuel surcharge applied to this base linehaul charge.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "HELD"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "per_cwt_rate",
+        "$18.50 per cwt"
+      ],
+      "framing": 2,
+      "answer": "The document states that the LTL linehaul rate is $18.50 per cwt (hundred pounds), with a minimum charge of $95 for any shipment and an 18 percent fuel surcharge applied to this base rate.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "per_cwt_rate",
+        "$18.50 per cwt"
+      ],
+      "framing": 3,
+      "answer": "The LTL linehaul rate is $18.50 per cwt, but you should be aware that there's also a minimum charge of $95 for any LTL shipment and an 18 percent fuel surcharge applied to the base linehaul charge.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "minimum_charge",
+        "$95"
+      ],
+      "framing": 0,
+      "answer": "The minimum charge for Less-Than-Truckload (LTL) service is $95, regardless of the actual weight or size of the shipment.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "minimum_charge",
+        "$95"
+      ],
+      "framing": 1,
+      "answer": "The Less-Than-Truckload (LTL) service from Northbridge Freight & Warehousing has a minimum charge of $95 for any shipment, regardless of the actual weight or size of the items being shipped. This ensures that even very small shipments are cost-effective and profitable for the carrier to handle, sett",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "minimum_charge",
+        "$95"
+      ],
+      "framing": 2,
+      "answer": "The document states that for Less-Than-Truckload (LTL) service, there is a minimum charge of $95 for any shipment, regardless of its actual weight or size. This ensures a base level of revenue for handling even the smallest shipments efficiently.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "minimum_charge",
+        "$95"
+      ],
+      "framing": 3,
+      "answer": "Before proceeding with an LTL shipment, it's important to know that there is a minimum charge of $95 for any Less-Than-Truckload shipment, regardless of its actual weight or size. This ensures a baseline cost for smaller shipments that might otherwise be too light or small to accurately price based ",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "fuel_surcharge",
+        "18 percent"
+      ],
+      "framing": 0,
+      "answer": "For LTL service, there is an 18 percent fuel surcharge added to the base linehaul charge on all shipments.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "fuel_surcharge",
+        "18 percent"
+      ],
+      "framing": 1,
+      "answer": "The Less-Than-Truckload (LTL) service includes a fuel surcharge of 18 percent, which is added to the base linehaul rate for all shipments. This additional charge helps Northbridge Freight & Warehousing offset fluctuations in fuel prices, ensuring that customers are only responsible for predictable c",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "fuel_surcharge",
+        "18 percent"
+      ],
+      "framing": 2,
+      "answer": "The document states that for Less-Than-Truckload (LTL) service, a fuel surcharge of 18 percent is added to the base linehaul charge. This applies to all LTL shipments and increases the overall cost based on fluctuating fuel prices.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "fuel_surcharge",
+        "18 percent"
+      ],
+      "framing": 3,
+      "answer": "For LTL (Less-Than-Truckload) shipments, there is an 18 percent fuel surcharge applied to the base linehaul charge. This additional cost reflects fluctuations in fuel prices and must be considered when calculating total shipping expenses.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "dim_weight_divisor",
+        "194"
+      ],
+      "framing": 0,
+      "answer": "The dimensional weight for LTL freight is calculated using a divisor of 194, so you should use this number when calculating the dimensional weight for any shipment.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "dim_weight_divisor",
+        "194"
+      ],
+      "framing": 1,
+      "answer": "For Less-Than-Truckload (LTL) shipments, NORTHBRIDGE FREIGHT & WAREHOUSING uses a dimensional weight calculation with a divisor of 194 to determine the chargeable weight. This means that for every cubic foot of space an LTL shipment occupies, it is considered equivalent to approximately 194 pounds i",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "dim_weight_divisor",
+        "194"
+      ],
+      "framing": 2,
+      "answer": "The document specifies that for Less-Than-Truckload (LTL) shipments, the dimensional weight is calculated using a divisor of 194. This means that if the cubic dimensions of the shipment result in a higher charge than its actual weight, customers will be billed based on the dimensional weight.",
+      "asserted": true,
+      "states_wrong_value": false,
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
+    },
+    {
+      "domain": "logistics-blind",
+      "fact": [
+        "LTL service",
+        "dim_weight_divisor",
+        "194"
+      ],
+      "framing": 3,
+      "answer": "For LTL shipments, the dimensional weight is calculated using a divisor of 194. This means that if the cubic dimensions of your shipment result in a higher charge than its actual weight, you will be billed based on the dimensional weight.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,

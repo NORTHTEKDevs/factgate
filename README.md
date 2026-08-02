@@ -12,7 +12,7 @@ for the exact boundary.
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-786%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-795%20passing-brightgreen)
 
 ## The idea
 
@@ -54,7 +54,7 @@ gate's own false-accept rate, not an observed hallucination rate of any model.
 | False-VERIFIED rate, absent facts (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | False-VERIFIED rate, corrupted claims (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | True-fact verify coverage (N=1500) | **34%** | [31.6%, 36.4%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| Test suite | **786 passed** | — | `pytest tests/ -q` |
+| Test suite | **795 passed** | — | `pytest tests/ -q` |
 
 **LLM-in-the-loop results.** Only these involved a running model. Note the sample size.
 
@@ -191,39 +191,46 @@ attached.
 ### Does the gate actually see what the model says?
 
 Every other number here is conditional on a claim **reaching** the gate. A value the model
-asserts in prose that the extractor never turns into a claim is protected by nothing. That
-denominator was unmeasured until now.
+asserts in prose that the extractor never turns into a claim is protected by nothing.
 
-`scripts/routing_coverage.py` measures it, and it deliberately asks the hard question. The
+`scripts/routing_coverage.py` measures it, and asks the hard question deliberately. The
 domain benchmark asks the slot question directly — *"what is the pediatric dose of
-ibuprofen?"* — which is the easiest possible case for extraction and is not what anyone
-types. This asks four natural framings per fact, none naming the relation as a field:
+ibuprofen?"* — the easiest possible case for extraction, and not what anyone types. This
+asks four natural framings per fact, none naming the relation as a field:
 
 > *"A colleague asked me about the pediatric dose for ibuprofen. What should I tell them?"*
 
-and the value comes back buried in a paragraph. Four domains, `qwen2.5:14b`:
+so the value comes back buried in a paragraph. **Ten domains**, `qwen2.5:14b`:
 
 | | |
 |---|---|
-| Answers that asserted a value | 127 |
-| **Adjudicated — reached the gate** | **126/127 = 99%** CI95 [96%, 100%] |
-| Bypassed — asserted, unguarded | 1/127 = 1% |
-| **Unguarded AND wrong** | **0/127 = 0%** CI95 [0%, 2.9%] |
+| Answers that asserted a value | 151 |
+| **Adjudicated — reached the gate** | **138/151 = 91%** CI95 [86%, 95%] |
+| Bypassed — asserted, unguarded | 13/151 = 9% |
+| **Unguarded AND wrong** | **0/151 = 0%** CI95 [0%, 2.5%] |
 | Verified despite stating a wrong value | **0** |
 
 **Unguarded and wrong** is the number that decides real-world risk: a figure differing from
 the document, stated in prose, with nothing in its way. Ground truth is computed from the
 fact set, not judged by a model, and the wrong-value test fires only on a number that
-*provably* differs under the declared unit — a paraphrase or an omission is never counted
-as an error.
+*provably* differs **under the declared unit** — a paraphrase, an omission, or a figure
+belonging to another slot is never counted as an error.
 
-The first run of this measurement found two things. A model answering *"a four-hour
-observation period"* — the correct value, spelled out — was **bypassed entirely**, because
-the digit never appears and grounding failed. A bypass is worse than a hold: a hold tells
-the user to check, a bypass tells them nothing. Number words are now substituted before
-grounding. It also found that the harness itself had scored a correct answer as
-unguarded-and-wrong by attributing another slot's figure to it; fixing that moved the
-headline the *wrong* way for the story and the right way for the truth.
+**An earlier version of this section reported 99%, on four domains.** That was a selection
+effect, not a measurement. Widening to ten gave 85%, and the correction is recorded here
+rather than quietly replaced, because 99% is the number that would have been quoted.
+
+Three defects surfaced from running this, each fixed and each in the table above:
+
+- A model answering *"a four-hour observation period"* — the correct value, **spelled out**
+  — was bypassed entirely, because the digit never appears and grounding failed.
+- The dominant cause of bypass was the ambiguity guard firing on a passage discussing
+  several values of the same kind (*"sodium reference range is 135 to 145 mmol/L; critically
+  low is below 120"*). Refusing to guess is correct; doing it **silently** was not. Those
+  slots are now reported and become **HELD**. That took 85% → 91%.
+- Twice, the harness itself scored a correct answer as unguarded-and-wrong by attributing
+  another slot's figure to it. A measurement that flatters the danger is as useless as one
+  that flatters the product.
 
 ### Measured behaviour
 
@@ -401,7 +408,7 @@ python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -e .
 ./.venv/Scripts/python.exe -m pip install -e ../rck   # path to your local RCK checkout
 
-# run the test suite (786 tests, no network, <10s)
+# run the test suite (795 tests, no network, <10s)
 ./.venv/Scripts/python.exe -m pytest tests/ -q
 
 # reproduce the headline guarantee measurement (N=1500/class against the live KB)

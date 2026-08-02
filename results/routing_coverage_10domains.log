@@ -1,0 +1,186 @@
+
+consumer-lending-demo: 4 facts x 4 framings
+   0.0 ADJUDICATED
+   0.1 ADJUDICATED
+   0.2 ADJUDICATED
+   0.3 ADJUDICATED
+   1.0 ADJUDICATED
+   1.1 ADJUDICATED
+   1.2 ADJUDICATED
+   1.3 ADJUDICATED
+   2.0 ADJUDICATED
+   2.1 ADJUDICATED
+   2.2 ADJUDICATED
+   2.3 ADJUDICATED
+   3.0 ADJUDICATED
+   3.1 ADJUDICATED
+   3.2 ADJUDICATED
+   3.3 ADJUDICATED
+
+consumer-lending-hard-tuned: 4 facts x 4 framings
+   0.0 ADJUDICATED
+   0.1 ADJUDICATED
+   0.2 ADJUDICATED
+   0.3 ADJUDICATED
+   1.0 ADJUDICATED
+   1.1 ADJUDICATED
+   1.2 ADJUDICATED
+   1.3 ADJUDICATED
+   2.0 ADJUDICATED
+   2.1 ADJUDICATED
+   2.2 ADJUDICATED
+   2.3 ADJUDICATED
+   3.0 ADJUDICATED
+   3.1 ADJUDICATED
+   3.2 ADJUDICATED
+   3.3 ADJUDICATED
+
+clinical-lab-blind: 4 facts x 4 framings
+   0.0 ADJUDICATED
+   0.1 ADJUDICATED
+   0.2 ADJUDICATED
+   0.3 ADJUDICATED
+   1.0 ADJUDICATED
+   1.1 ADJUDICATED
+   1.2 HELD-UNRESOLV
+   1.3 ADJUDICATED
+   2.0 ADJUDICATED
+   2.1 ADJUDICATED
+   2.2 HELD-UNRESOLV
+   2.3 ADJUDICATED
+   3.0 ADJUDICATED
+   3.1 ADJUDICATED
+   3.2 ADJUDICATED
+   3.3 ADJUDICATED
+
+saas-contract-blind: 4 facts x 4 framings
+   0.0 HELD-UNRESOLV
+   0.1 HELD-UNRESOLV
+   0.2 HELD-UNRESOLV
+   0.3 HELD-UNRESOLV
+   1.0 ADJUDICATED
+   1.1 ADJUDICATED
+   1.2 BYPASSED   
+   1.3 ADJUDICATED
+   2.0 ADJUDICATED
+   3.0 ADJUDICATED
+   3.1 ADJUDICATED
+   3.2 BYPASSED   
+   3.3 ADJUDICATED
+
+construction-blind: 4 facts x 4 framings
+   0.0 ADJUDICATED
+   0.1 ADJUDICATED
+   0.2 ADJUDICATED
+   0.3 ADJUDICATED
+   1.0 ADJUDICATED
+   1.1 ADJUDICATED
+   1.2 ADJUDICATED
+   1.3 ADJUDICATED
+   2.0 ADJUDICATED
+   2.1 ADJUDICATED
+   2.2 ADJUDICATED
+   2.3 ADJUDICATED
+   3.0 ADJUDICATED
+   3.1 ADJUDICATED
+   3.2 ADJUDICATED
+   3.3 ADJUDICATED
+
+utility-tariff-blind: 4 facts x 4 framings
+   0.2 ADJUDICATED
+   0.3 ADJUDICATED
+   1.0 ADJUDICATED
+   1.2 BYPASSED   
+   1.3 ADJUDICATED
+   2.0 ADJUDICATED
+   2.2 ADJUDICATED
+   2.3 ADJUDICATED
+   3.0 ADJUDICATED
+   3.2 ADJUDICATED
+   3.3 BYPASSED   
+
+pharma-stability-blind: 4 facts x 4 framings
+   0.0 ADJUDICATED
+   0.1 ADJUDICATED
+   0.2 BYPASSED   
+   0.3 BYPASSED   
+   1.0 ADJUDICATED
+   1.1 ADJUDICATED
+   1.2 ADJUDICATED
+   1.3 ADJUDICATED
+   2.0 ADJUDICATED
+   2.1 BYPASSED   
+   2.2 BYPASSED   
+   2.3 ADJUDICATED
+   3.0 BYPASSED   
+   3.1 ADJUDICATED
+   3.2 BYPASSED   
+   3.3 BYPASSED   
+
+nutrition-spec-blind: 4 facts x 4 framings
+   0.0 ADJUDICATED
+   0.1 ADJUDICATED
+   0.2 ADJUDICATED
+   0.3 ADJUDICATED
+   1.0 BYPASSED   
+   1.1 ADJUDICATED
+   1.2 ADJUDICATED
+   1.3 BYPASSED   
+   2.0 ADJUDICATED
+   2.1 ADJUDICATED
+   2.2 HELD-UNRESOLV
+   2.3 ADJUDICATED
+   3.0 ADJUDICATED
+   3.1 ADJUDICATED
+   3.2 ADJUDICATED
+   3.3 ADJUDICATED
+
+payroll-tax-blind: 4 facts x 4 framings
+   0.0 ADJUDICATED
+   0.1 ADJUDICATED
+   0.2 ADJUDICATED
+   0.3 ADJUDICATED
+   1.0 ADJUDICATED
+   1.1 ADJUDICATED
+   1.2 ADJUDICATED
+   1.3 ADJUDICATED
+   2.0 ADJUDICATED
+   2.1 ADJUDICATED
+   2.2 ADJUDICATED
+   2.3 ADJUDICATED
+   3.0 ADJUDICATED
+   3.1 ADJUDICATED
+   3.2 HELD-UNRESOLV
+   3.3 HELD-UNRESOLV
+
+logistics-blind: 4 facts x 4 framings
+   0.0 ADJUDICATED
+   0.2 ADJUDICATED
+   0.3 ADJUDICATED
+   1.0 ADJUDICATED
+   1.1 ADJUDICATED
+   1.2 ADJUDICATED
+   1.3 ADJUDICATED
+   2.0 ADJUDICATED
+   2.1 ADJUDICATED
+   2.2 ADJUDICATED
+   2.3 ADJUDICATED
+   3.0 ADJUDICATED
+   3.1 ADJUDICATED
+   3.2 ADJUDICATED
+   3.3 ADJUDICATED
+
+======================================================================
+ROUTING COVERAGE  model=qwen2.5:14b  2544s
+  answers that asserted a value        151
+  answers that declined (excluded)     9
+  ADJUDICATED (reached the gate)       138/151 = 91%  CI95 [86%, 95%]
+  BYPASSED (unguarded)                 13/151 = 9%  CI95 [5%, 14%]
+  UNGUARDED AND WRONG                  0/151 = 0.0%  CI95 [0.0%, 2.5%]
+  verified despite stating a wrong value  0
+======================================================================
+UNGUARDED AND WRONG is the number that decides real-world risk: a figure that
+differs from the document, stated in prose, with nothing in its way. Every other
+rate this project reports is conditional on a claim reaching the gate at all.
+
+-> C:\Users\Krist\projects\active\factgate\results\routing_coverage.json
