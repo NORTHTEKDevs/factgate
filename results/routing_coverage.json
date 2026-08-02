@@ -2,9 +2,9 @@
   "model": "qwen2.5:14b",
   "totals": {
     "asserted": 151,
-    "adjudicated": 138,
+    "adjudicated": 142,
     "held_unresolved": 9,
-    "bypassed": 13,
+    "bypassed": 9,
     "declined": 9
   },
   "rows": [
@@ -1295,8 +1295,10 @@
       "answer": "During the Summer Season from June 1 to September 30, the On-Peak Energy rate is charged at 14.2 cents per kWh for the hours between 2:00 PM and 8:00 PM on non-holiday weekdays.",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
     },
     {
       "domain": "utility-tariff-blind",
@@ -1306,7 +1308,7 @@
         "14.2 cents per kWh"
       ],
       "framing": 3,
-      "answer": "Before proceeding, you need to know that during the Summer Season from June 1 through September 30, Summer On-Peak Energy is billed at a rate of 14.2 cents per kWh for the hours between 2:00 PM and 8:00 PM on non-holiday weekdays.",
+      "answer": "Before proceeding, it's important to know that during the Summer Season from June 1 through September 30, Summer On-Peak Energy is billed at a higher rate of 14.2 cents per kWh for usage between 2:00 PM and 8:00 PM on non-holiday weekdays.",
       "asserted": true,
       "states_wrong_value": false,
       "adjudicated": true,
@@ -1405,8 +1407,10 @@
       "answer": "Before proceeding, you need to know that during the Winter Season, which runs from October 1 through May 31, the On-Peak Energy rate is 11.5 cents per kWh. This applies to all hours within the defined On-Peak period for winter, though specific peak hours are not detailed in the provided document.",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
     },
     {
       "domain": "pharma-stability-blind",
@@ -1725,8 +1729,10 @@
       "answer": "Each container of Harvest Grove Golden Granola Bars contains 6 servings, with each serving being approximately one bar weighing 40 grams.",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "HELD"
+      ]
     },
     {
       "domain": "nutrition-spec-blind",
@@ -1771,8 +1777,10 @@
       "answer": "Each container of Harvest Grove Golden Granola Bars contains 6 individual bars, with each serving size being approximately one bar weighing 40 grams. This information is important for understanding portion control and nutritional intake based on the provided nutrition facts.",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "VERIFIED"
+      ]
     },
     {
       "domain": "nutrition-spec-blind",

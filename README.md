@@ -12,7 +12,7 @@ for the exact boundary.
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-795%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-800%20passing-brightgreen)
 
 ## The idea
 
@@ -54,7 +54,7 @@ gate's own false-accept rate, not an observed hallucination rate of any model.
 | False-VERIFIED rate, absent facts (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | False-VERIFIED rate, corrupted claims (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | True-fact verify coverage (N=1500) | **34%** | [31.6%, 36.4%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| Test suite | **795 passed** | — | `pytest tests/ -q` |
+| Test suite | **800 passed** | — | `pytest tests/ -q` |
 
 **LLM-in-the-loop results.** Only these involved a running model. Note the sample size.
 
@@ -205,8 +205,8 @@ so the value comes back buried in a paragraph. **Ten domains**, `qwen2.5:14b`:
 | | |
 |---|---|
 | Answers that asserted a value | 151 |
-| **Adjudicated — reached the gate** | **138/151 = 91%** CI95 [86%, 95%] |
-| Bypassed — asserted, unguarded | 13/151 = 9% |
+| **Adjudicated — reached the gate** | **142/151 = 94%** CI95 [89%, 97%] |
+| Bypassed — asserted, unguarded | 9/151 = 6% |
 | **Unguarded AND wrong** | **0/151 = 0%** CI95 [0%, 2.5%] |
 | Verified despite stating a wrong value | **0** |
 
@@ -218,9 +218,10 @@ belonging to another slot is never counted as an error.
 
 **An earlier version of this section reported 99%, on four domains.** That was a selection
 effect, not a measurement. Widening to ten gave 85%, and the correction is recorded here
-rather than quietly replaced, because 99% is the number that would have been quoted.
+rather than quietly replaced, because 99% is the number that would have been quoted. Fixing
+what the wider run exposed took it 85% → 91% → 94%.
 
-Three defects surfaced from running this, each fixed and each in the table above:
+Four defects surfaced from running this, each fixed and each reflected in the table above:
 
 - A model answering *"a four-hour observation period"* — the correct value, **spelled out**
   — was bypassed entirely, because the digit never appears and grounding failed.
@@ -228,6 +229,12 @@ Three defects surfaced from running this, each fixed and each in the table above
   several values of the same kind (*"sodium reference range is 135 to 145 mmol/L; critically
   low is below 120"*). Refusing to guess is correct; doing it **silently** was not. Those
   slots are now reported and become **HELD**. That took 85% → 91%.
+- A multi-word entity name split across its sentence never resolved: a tariff declaring
+  *"Summer On-Peak Energy"* answered as *"During the Summer Season … the On-Peak Energy rate
+  is 14.2 cents per kWh"* matched nothing, so no slot was even queried. Matching now also
+  succeeds when every significant word appears in **one sentence** — scoped to a sentence,
+  because attaching a claim to the wrong entity is the worst thing that function can do.
+  That took 91% → 94%.
 - Twice, the harness itself scored a correct answer as unguarded-and-wrong by attributing
   another slot's figure to it. A measurement that flatters the danger is as useless as one
   that flatters the product.
@@ -408,7 +415,7 @@ python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -e .
 ./.venv/Scripts/python.exe -m pip install -e ../rck   # path to your local RCK checkout
 
-# run the test suite (795 tests, no network, <10s)
+# run the test suite (800 tests, no network, <10s)
 ./.venv/Scripts/python.exe -m pytest tests/ -q
 
 # reproduce the headline guarantee measurement (N=1500/class against the live KB)
