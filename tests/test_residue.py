@@ -90,13 +90,11 @@ def test_fabricated_basis_is_refused():
      "The overdraft fee is 35 dollars per occurrence, assessed at end of business day.",
      "35 dollars per occurrence"),
     ("2 percent",
-     "The personal loan origination fee is 2 percent of the amount advanced, deducted "
-     "at closing.",
-     "2 percent of the amount advanced, deducted at closing"),
+     "The personal loan origination fee is 2 percent of the amount advanced.",
+     "2 percent of the amount advanced"),
     ("25 dollars",
-     "The credit line minimum payment is 25 dollars per statement cycle, or the accrued "
-     "interest if greater.",
-     "25 dollars per statement cycle, or the accrued interest if greater"),
+     "The credit line minimum payment is 25 dollars per statement cycle.",
+     "25 dollars per statement cycle"),
     ("500 dollars",
      "The savings account requires a minimum balance of 500 dollars monthly to avoid the "
      "service charge.",
@@ -172,6 +170,48 @@ def test_rule_refuses_empty_and_missing_inputs():
     assert source_grounded("x", "y", "") is False
 
 
+@pytest.mark.parametrize("declared,source,claimed", [
+    ("2 percent",
+     "The personal loan origination fee is 2 percent of the amount advanced, deducted "
+     "at closing.",
+     "2 percent of the amount advanced, deducted at closing"),
+    ("25 dollars",
+     "The credit line minimum payment is 25 dollars per statement cycle, or the accrued "
+     "interest if greater.",
+     "25 dollars per statement cycle, or the accrued interest if greater"),
+])
+def test_an_unrecognised_residue_shape_is_held_and_suggested(declared, source, claimed):
+    """THE COST OF FAIL-CLOSED, priced deliberately. Both of these verified while admission
+    depended on the ABSENCE of a blacklisted negation word. Admission now requires positive
+    recognition of a modifier phrase, and neither of these is one: the first continues with
+    a participle ("deducted ..."), which is the same shape as "waived for premium members";
+    the second introduces an ALTERNATIVE value ("or the accrued interest if greater").
+
+    They are HELD rather than lost. suggest_qualifiers proposes the exact wording, and
+    declaring it verifies them -- the run / read / declare / re-run loop the library is
+    built around."""
+    from factgate.domain.suggest import suggest_qualifiers
+    fs = _fs(declared, source)
+    assert gate_claim(fs, "e", "p", claimed).status == HELD
+    proposals = [i["qualifier"] for i in suggest_qualifiers(fs, [("e", "p", claimed)])]
+    assert proposals, "held with no suggestion is a dead end for the author"
+    tuned = _fs(declared, source, value_qualifiers=proposals)
+    assert gate_claim(tuned, "e", "p", claimed).status == VERIFIED
+
+
+@pytest.mark.parametrize("residue", [
+    "waived for premium members", "restricted to tier 2", "suspended for new accounts",
+    "free for premium members", "contraindicated for pregnant patients",
+])
+def test_an_exclusion_verb_nobody_listed_is_still_refused(residue):
+    """The point of the change. The negation list catches "waived" and "contraindicated";
+    it does not contain "restricted" or "suspended", and it never could contain the next
+    one. Under an allowlist an unrecognised construction is refused whether anyone
+    anticipated it or not."""
+    from factgate.domain.residue import _is_modifier_phrase
+    assert _is_modifier_phrase(" " + residue) is False
+
+
 def test_qualifier_normalisation_does_not_hide_the_residue():
     """MEASURED across two sister domains. Both declare the same fact with the same source
     sentence; the only difference is that one declares MORE value_qualifiers. In the
@@ -188,7 +228,11 @@ def test_qualifier_normalisation_does_not_hide_the_residue():
     tuned = _fs("2 percent", src,
                 value_qualifiers=["of the amount advanced", "deducted at closing"])
     assert tuned.normalise_value(claim) == "2 percent"      # heavily normalised
-    assert gate_claim(plain, "e", "p", claim).status == VERIFIED
+    # The plain domain now HOLDS this: the residue continues with a participle
+    # ("deducted ..."), which is the shape of "waived for premium members" and is no longer
+    # admitted. The tuned domain, whose author declared the wording, still verifies -- which
+    # is the point. Declaring is how an author opts in to wording the rule will not guess at.
+    assert gate_claim(plain, "e", "p", claim).status == HELD
     assert gate_claim(tuned, "e", "p", claim).status == VERIFIED
 
 

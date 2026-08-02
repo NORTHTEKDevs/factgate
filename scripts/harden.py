@@ -39,6 +39,10 @@ MUTANTS = [
      '    return " ".join(unicodedata.normalize("NFC", str(s))\n'
      '                    .translate(_PUNCT_FOLD).lower().split())',
      '    return " ".join(str(s).lower().split())'),
+    ("residue: modifier-shape allowlist disabled",
+     "factgate/domain/residue.py",
+     "    if not _is_modifier_phrase(residue, raw_residue):",
+     "    if False:"),
     ("residue: negation check disabled",
      "factgate/domain/residue.py",
      "        if _NEGATION & set(_WORD.findall(seg)):\n            continue",

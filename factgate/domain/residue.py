@@ -88,6 +88,77 @@ _WORD = re.compile(r"[a-z']+")
 _DIGIT = re.compile(r"[0-9]|\d", re.UNICODE)
 
 
+# Words that may BEGIN a fragment of an admissible residue. A residue is text that says
+# under what scope or basis the declared value applies -- "per occurrence", "of the amount
+# advanced", "monthly" -- and every real one measured across fifteen domains is a
+# prepositional phrase, a frequency adverb, a participial phrase, or a route code.
+_LEADERS = frozenset({
+    "per", "of", "at", "in", "on", "for", "by", "to", "from", "with", "within",
+    "before", "after", "during", "across", "under", "over", "up", "each", "every",
+})
+_ADVERBS = frozenset({
+    "monthly", "daily", "weekly", "annually", "quarterly", "hourly", "nightly",
+    "yearly", "once", "twice", "thrice", "flat", "total", "combined", "approximately",
+    "about", "roughly", "nominal", "maximum", "minimum", "inclusive", "exclusive",
+})
+# A fragment introducing an ALTERNATIVE or a CONDITION is not a modifier of this value, it
+# is a second value or a caveat. "or the accrued interest if greater" adds a competing
+# figure; refusing it costs one real case across fifteen domains and is the right trade.
+_STRUCTURAL = frozenset({
+    "or", "unless", "if", "except", "when", "while", "but", "though", "although",
+    "provided", "subject", "whereas", "otherwise", "instead", "rather", "versus",
+})
+_TOKEN = re.compile(r"[a-z0-9'/%°µ+-]+")
+_TOKEN_RAW = re.compile(r"[A-Za-z]+")
+
+
+def _is_modifier_phrase(residue: str, raw: str | None = None) -> bool:
+    """Is this residue a scope or basis phrase, and nothing else?
+
+    Fail-closed by construction: a fragment must be RECOGNISED to be admitted, so a
+    construction nobody anticipated is refused instead of allowed. Fragments are split on
+    commas because real residues chain them -- "of the amount advanced, deducted at
+    closing" is two.
+    """
+    # ALL-CAPS codes are recognised from the RAW residue, where the capitals survive.
+    codes = {w.lower() for w in _TOKEN_RAW.findall(raw or "")
+             if w.isupper() and w.isalpha() and 1 < len(w) <= 4}
+    text = residue.strip(" ,;:")
+    if not text:
+        return False
+    for fragment in (f.strip() for f in text.split(",")):
+        if not fragment:
+            continue
+        words = _TOKEN.findall(fragment.lower())
+        if not words:
+            return False
+        if _STRUCTURAL & set(words):
+            return False
+        head = words[0]
+        if head in _LEADERS or head in _ADVERBS:
+            continue
+        # NO PARTICIPLES. "deducted at closing" is a harmless continuation, but so is the
+        # shape of "waived for premium members", "restricted to tier 2" and
+        # "contraindicated for pregnant patients" -- all of which say the value does NOT
+        # apply to someone. The negation list catches the first two of those, and would
+        # miss the next verb nobody listed, which is precisely the fail-open behaviour this
+        # rule exists to remove.
+        #
+        # The cost is one real case across fifteen domains: "2 percent of the amount
+        # advanced, deducted at closing" is now HELD rather than verified, and
+        # suggest_qualifiers proposes the wording so an author can declare it in one line.
+        # Trading one verification for a rule that cannot be defeated by an unlisted verb
+        # is the right side of that trade.
+        # A short ALL-CAPS code is a route or method marker: PO, IV, IM, SC. The case is
+        # the signal, so this must be given the residue with its capitals intact -- checking
+        # a lowercased string here silently refused every route code, which the clinical
+        # domain's own test caught.
+        if head in codes:
+            continue
+        return False
+    return True
+
+
 def _norm(s: str) -> str:
     """Casefold and collapse whitespace. Punctuation is deliberately PRESERVED: removing
     it is what let a match run across a sentence boundary in the review above."""
@@ -124,6 +195,18 @@ def _grounded_one(declared: str, claimed: str, source: str,
         return False
 
     residue = nc[len(nd):]
+    raw_residue = (raw_claimed or claimed)[-len(residue) - 4:] if residue else ""
+    if not _is_modifier_phrase(residue, raw_residue):
+        # FAIL-CLOSED. Admission previously required the ABSENCE of a blacklisted negation
+        # word, so a word missing from the list admitted the clause -- the one fail-open
+        # path in the system, and it leaked once ("free for premium members" passed while
+        # the identical sentence using "waived" was held). A blacklist of natural-language
+        # negation can never be shown complete.
+        #
+        # Admission now requires POSITIVE RECOGNITION: the residue must be a modifier
+        # phrase, and an unrecognised construction is refused rather than waved through.
+        # The negation list is kept below as defence in depth, not as the defence.
+        return False
     if _DIGIT.search(residue) or any(ch.isnumeric() for ch in residue):
         # A second number in the residue is a second VALUE being asserted, not a basis for
         # this one. It must go through range/point comparison, which is deliberately

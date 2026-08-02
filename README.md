@@ -175,13 +175,18 @@ HARDEN PASSED: 15/15 checks in 77s
 | **Proven** | Extraction never emits a claim its own guards reject, **whatever the model says** -- tested against a hostile scripted model that fabricates, translates, glues, refuses and copies decoys |
 | **Proven** | Every check above catches the defence it protects |
 | **NOT proven** | Anything about notations outside the declared grammar. Those are **held**, which is the fail-closed answer, not a verified one. |
-| **NOT proven** | Completeness of the exclusion vocabulary used by *residue admission*. When a claim adds wording the fact's own source sentence supplies, that clause is checked against a hand-curated list of negation and exemption words. If a word is missing the clause is admitted, so this path is **fail-open, not fail-closed** — the one place in the system where that is true. It has already caused a leak once (`"free for premium members"` passed while the identical sentence using `"waived"` was held). The list is regression-tested and its removal is caught by mutation, but neither proves it complete. |
+| **Proven** | *Residue admission* — accepting a claim that adds wording the fact's own source supplies — is **fail-closed**. A residue must be positively recognised as a modifier phrase (a prepositional phrase, a frequency adverb, or a route code) to be admitted; anything unrecognised is held. This replaced a blacklist of negation words, which admitted whatever it had not been taught: `waived` and `contraindicated` were listed, `restricted` and `suspended` were not, and neither could the next one be. |
 
-Those last two rows are the boundary, and stating them is deliberate. The first is a design
-choice: hold what you cannot parse. The second is a genuine weakness, disclosed because an
-adversarial reviewer found it by reading the code and it is the one sentence in this claim
-that would not survive being discovered rather than declared. A guarantee with a stated edge
-survives contact with a real document; one without an edge does not.
+The NOT-proven row is the boundary, and stating it is deliberate: hold what you cannot
+parse. A guarantee with a stated edge survives contact with a real document; one without an
+edge does not.
+
+An adversarial reviewer found the residue path by reading the code and called it the one
+indefensible sentence in this claim, because admission depended on the ABSENCE of a
+blacklisted word and so admitted whatever the list had not been taught. It is now an
+allowlist: recognition is required, not merely a failure to object. The cost was one
+verification across fifteen domains, which became a hold with a one-line suggestion
+attached.
 
 ### Does the gate actually see what the model says?
 
