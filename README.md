@@ -1,30 +1,44 @@
 # FACTGATE
 
-**A deterministic gate that blocks any factual claim reaching it that a symbolic knowledge base cannot corroborate.**
+**A hallucination gate whose verdict is a comparison, not a judgement — so the verdict layer
+has no learned parameters and cannot itself hallucinate.**
 
-The verification mechanism has no learned parameters, so the gate itself cannot hallucinate a
-verdict. The guarantee is scoped to claims that reach the gate; see
-[extraction coverage](#the-honest-guarantee) for what that excludes.
+That property belongs to the VERDICT, and only to the verdict. Everything upstream of it —
+deciding which claims exist at all — uses a language model, and a model can invent a value.
+The system's answer to that is not a second guarantee but a set of deterministic guards, and
+a proof that they hold: **no claim the extractor emits can fail its own guards, whatever the
+model says**. Both halves are machine-checked; see [What is proven](#what-is-proven-and-by-what)
+for the exact boundary.
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![Tests](https://img.shields.io/badge/tests-778%20passing-brightgreen)
 
-## The idea, in 3 sentences
+## The idea
 
-FACTGATE pairs a fluent LLM with [RCK](https://github.com/NORTHTEKDevs/rck) (Resonant Cognitive
-Kernel), a public, exact bipolar-VSA fact store, and puts a deterministic gate between
-what the model *wants to say* and what it is *allowed to emit*. The model doesn't decide
-whether its own claim is true — it emits a lookup, RCK answers from its stored facts, and
-the gate blocks anything RCK can't corroborate. That is a categorically different
-guarantee from RLHF-style alignment: RLHF trains the model to be *less likely* to
-hallucinate; the gate makes an unverifiable claim *structurally unable to reach the user*
-as a confirmed fact, regardless of what the model's weights want to say.
+A fluent model proposes; a deterministic gate disposes. The model does not decide whether
+its own claim is true — a claim is extracted into a declared vocabulary, compared against a
+curated fact set, and returned as VERIFIED, BLOCK or HELD. The comparison has no thresholds,
+no scores and no model call, so a wrong verdict cannot be produced by the thing being
+guarded against.
 
-That structural property applies **to every claim that reaches the gate**. A claim the model
-asserts in free prose without emitting a lookup never enters the emission path being described,
-so the end-to-end guarantee is conditional on extraction coverage, which is not yet measured.
-See [The honest guarantee](#the-honest-guarantee).
+That is categorically different from RLHF-style alignment, which makes a model *less likely*
+to hallucinate. Here an unverifiable claim is *structurally unable* to reach the user as a
+confirmed fact, whatever the weights want to say.
+
+**It is fail-closed.** Anything not provably matching is HELD and routed to a human. The
+cost is real and measured below: on fifteen domains, 16% of correct values were held rather
+than confirmed. The benefit is that the failure mode is a queue, not a wrong answer.
+
+**It requires a bounded domain.** Free text does not work and the attempt is documented:
+two independent extractions of one fact shared 0 of 17 relation strings, so exact
+comparison was impossible. Entities, relations and facts must be declared per document.
+`lint()`, `suggest_qualifiers` and `suggest_entity_aliases` exist to make that authoring
+cheap, and the benchmark emits the review list itself.
+
+The optional [RCK](https://github.com/NORTHTEKDevs/rck) knowledge-base backend is research
+code from an earlier design. **The domain gate does not need it** — that is asserted by the
+clean-clone acceptance check on every run.
 
 ## Measured results
 
@@ -48,7 +62,7 @@ gate's own false-accept rate, not an observed hallucination rate of any model.
 |---|---|---|---|
 | Fine-tuned model tool-call rate, held-out prompts | **100%** (4/4) | — (N=4) | [`results/checkpoint_eval.json`](results/checkpoint_eval.json) |
 | Fine-tuned model gate leak (false-VERIFIED emitted) | **0** | — (N=4) | [`results/checkpoint_eval.json`](results/checkpoint_eval.json) |
-| End-to-end leak rate on free prose | *not yet measured* | — | see [The honest guarantee](#the-honest-guarantee) |
+| End-to-end leak, live extraction, 15 domains | **0** (0/366) | [0%, 1.0%] | [`results/`](results/), reproducible via `scripts/run_domain_bench.py` |
 
 The gate never accepted a false claim as VERIFIED across 3,000 adversarial **structured-triple**
 trials (1,500 facts deliberately absent from the KB, 1,500 with a corrupted object). The cost of
