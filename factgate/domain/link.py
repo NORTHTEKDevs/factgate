@@ -103,14 +103,30 @@ def mentioned_entities(text: str, fs: FactSet) -> set[str]:
     # wrap "oxygen saturation" across lines and hyphenate compound modifiers
     # ("fluid-resuscitation protocol"); missing those is a silent coverage hole that
     # surfaces as HELD rather than as an error.
-    low = _norm_surface(text)
+    # Two readings of the text, because a hyphen at a line break means opposite things.
+    # An extracted PDF wraps a long word as "aceta-\nminophen", where the hyphen is a
+    # typesetting artifact and the word is one token; it also wraps genuinely hyphenated
+    # names as "fluid-\nresuscitation", where the hyphen belongs. Nothing local can tell
+    # which, so both readings are tried and either may match.
+    readings = (_norm_surface(text), _norm_surface(_dehyphenate(text)))
     found = set()
     for canon, aliases in fs.entities.items():
         for surface in (canon, *aliases):
-            if _surface_matches(surface, low):
+            if any(_surface_matches(surface, low) for low in readings):
                 found.add(canon)
                 break
     return found
+
+
+def _dehyphenate(s: str) -> str:
+    """Join a word broken across a line by a hyphen.
+
+    Measured against the declared entity "acetaminophen": a passage reading
+    "aceta-\\nminophen" normalised to "aceta minophen" and matched nothing, so every fact
+    about that drug was silently unextractable. Documents converted from PDF are full of
+    this, and a miss here is a coverage hole that surfaces as HELD rather than as an error.
+    """
+    return re.sub(r"-\s*\n\s*", "", s)
 
 
 def _norm_surface(s: str) -> str:

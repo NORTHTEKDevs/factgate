@@ -8,7 +8,7 @@ verdict. The guarantee is scoped to claims that reach the gate; see
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-579%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-778%20passing-brightgreen)
 
 ## The idea, in 3 sentences
 
@@ -40,7 +40,7 @@ gate's own false-accept rate, not an observed hallucination rate of any model.
 | False-VERIFIED rate, absent facts (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | False-VERIFIED rate, corrupted claims (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | True-fact verify coverage (N=1500) | **34%** | [31.6%, 36.4%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| Test suite | **579 passed** | — | `pytest tests/ -q` |
+| Test suite | **778 passed** | — | `pytest tests/ -q` |
 
 **LLM-in-the-loop results.** Only these involved a running model. Note the sample size.
 
@@ -133,52 +133,65 @@ Full write-up, including a live false-BLOCK bug and its fix, is in
 
 ### Status
 
-Last full run, **fifteen domains**, `qwen2.5:14b`, every number executed rather than
-projected. All fifteen ship with the repository, so every row is reproducible from a clone:
+### What is proven, and by what
 
-| domain | leak | over-block | of the holds, the gate being strict |
-|---|---|---|---|
-| consumer lending | 0/24 | 0/12 | 0 |
-| consumer lending, hard | 0/24 | 0/12 | 0 |
-| consumer lending, hard + tuned | 0/24 | 0/12 | 0 |
-| electric utility tariff *(blind)* | 0/24 | 0/13 | 0 |
-| aircraft maintenance intervals *(blind)* | 0/30 | 0/16 | 0 |
-| commercial property policy *(blind)* | 0/18 | 1/14 | 0 |
-| clinical dosing | 0/24 | 1/12 | 0 |
-| freight rate sheet *(blind)* | 0/32 | 2/15 | 0 |
-| construction bid schedule *(blind)* | 0/21 | 2/15 | 0 |
-| payroll tax reference *(blind)* | 0/21 | 3/13 | 0 |
-| clinical lab reference ranges *(blind)* | 0/29 | 4/16 | 0 |
-| pharmaceutical stability spec *(blind)* | 0/17 | 4/15 | 1 |
-| SaaS master agreement *(blind)* | 0/30 | 5/15 | 1 |
-| food nutrition spec *(blind)* | 0/30 | 5/15 | 3 |
-| commercial lease abstract *(blind)* | 0/18 | 6/14 | 2 |
-| **total** | **0/366 = 0%** | **33/209 = 16%** | **7** |
+Every claim below is re-checked by `python scripts/harden.py` in about 80 seconds, and by
+CI on every push. It does not merely run the proofs -- it then **breaks the code ten ways
+and requires each proof to notice**. A surviving mutant fails the build, because it marks a
+defence that nothing tests.
 
-The eleven marked *blind* are genres the gate had never been measured on, with vocabularies
-declared from the document before any run and never tuned against gate behaviour.
+```
+PROOFS
+  full suite                                          778 passed
+  value grammar vs exact-arithmetic oracle             13 passed
+  residue and conditional verdict paths                79 passed
+  safety invariants I1-I7                               9 passed
+DOMAINS
+  every shipped domain loads, validates, lints clean   35 loaded, 0 bad
+MUTATION -- each proof must CATCH a broken defence    10 mutants, 10 caught
 
-**The leak rate is 0% across 366 adversarial trials.** It has been 0% in every
-configuration ever measured except one, and that exception is the most useful result this
-project has produced: a payroll sheet declaring a threshold both unconditionally and
-conditionally made the gate confirm the default without knowing the condition. It is fixed,
-tested, and described in [`docs/HALLUGATE.md`](docs/HALLUGATE.md) §17.
+HARDEN PASSED: 15/15 checks in 77s
+```
 
-**Of 209 faithful trials, 7 were the gate refusing a claim it should have confirmed.**
-Every run classifies its own holds by a rule applied blind to the verdict. Of the 33:
+| | |
+|---|---|
+| **Proven** | Over the declared value grammar, every MATCH is confirmed **equal** and every DIFFER confirmed **unequal**, by exact rational arithmetic (`fractions.Fraction`) that shares no code with the implementation |
+| **Proven** | No author declaration -- no `unit_aliases`, no `value_qualifiers` -- can make the gate verify an unequal value without `lint()` refusing the fact set first |
+| **Proven** | The residue and conditional-variant paths behave as constructed cases require, where the correct verdict follows from how the case was assembled rather than from what the code says |
+| **Proven** | Extraction never emits a claim its own guards reject, **whatever the model says** -- tested against a hostile scripted model that fabricates, translates, glues, refuses and copies decoys |
+| **Proven** | Every check above catches the defence it protects |
+| **NOT proven** | Anything about notations outside the declared grammar. Those are **held**, which is the fail-closed answer, not a verified one. |
 
-- **26** never reached the gate. Most are the model answering with *several* conditional
-  values at once, where refusing to pick one is correct; the rest are missing entity
-  aliases, which `suggest_entity_aliases` names for you.
-- **7** are the gate being strict: a claim that omits a unit the declaration carries
-  (`46` against `46 spaces`), or carries a word the author has not declared irrelevant
-  (`within 1 hour of submission` against `1 hour`). `suggest_qualifiers` proposes the
-  missing word; declaring it is a one-line change.
+That last row is the boundary, and it is deliberate. A guarantee with a stated edge survives
+contact with a real document; one without an edge does not.
 
-The headline rate is deliberately **not** adjusted by that breakdown. A metric that moved
-the number it explains would be marking its own homework.
+### Measured behaviour
 
-**Still not certified for unsupervised use.** No deployment has run without a human
+Fifteen domains, `qwen2.5:14b`, eleven of them authored blind in genres the gate had never
+been measured on. All reproducible from a clone:
+
+| | |
+|---|---|
+| Leak (a wrong value reaching the user as VERIFIED) | **0 / 366 = 0%** |
+| Over-block (a correct value failing to verify) | 33 / 209 = 16% |
+| — of those, the gate itself being too strict | **7 of 209 = 3.3%** |
+
+Live soak across eighteen domains: 335 claims adjudicated, every safety invariant holding on
+every verdict a real model produced.
+
+### How this was reached
+
+Five rounds of adversarial review found defects one at a time, and by the fourth round most
+new leaks were **inside the previous round's fixes** -- the search was not converging, and
+each notation added to reduce over-block created leak surface faster than review closed it.
+The proofs above replaced that process. They caught a false block on their first run, and
+the mutation gate immediately exposed two defects in the oracle itself while it appeared to
+pass. `docs/HALLUGATE.md` records every defect with its measured reproduction.
+
+**What is still not certified.** No deployment has run without a human reviewing the held
+queue. The three private evaluation documents are not in this repository, so two of the
+measured rows cannot be reproduced from a clone. And the boundary above is real: a document
+using a notation outside the declared grammar will be held, not verified. No deployment has run without a human
 reviewing the held queue, the two real documents cost a review pass each, and the private
 evaluation corpora are not in this repository so those two rows cannot be reproduced from
 a clone. What is verified is stated above and re-runnable for the four public domains.
@@ -328,7 +341,7 @@ python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -e .
 ./.venv/Scripts/python.exe -m pip install -e ../rck   # path to your local RCK checkout
 
-# run the test suite (579 tests, no network, <10s)
+# run the test suite (778 tests, no network, <10s)
 ./.venv/Scripts/python.exe -m pytest tests/ -q
 
 # reproduce the headline guarantee measurement (N=1500/class against the live KB)

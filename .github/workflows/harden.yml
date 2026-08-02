@@ -1,0 +1,23 @@
+name: harden
+
+# The loop that replaced hand-hunting. It runs every proof AND deliberately breaks the code
+# to confirm the proofs notice; a surviving mutant fails the build, because it marks a
+# defence nothing tests.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  harden:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e . pytest
+      - name: proofs, domains, and mutation testing
+        run: python scripts/harden.py
+      - name: clean-clone acceptance
+        run: python scripts/acceptance.py
