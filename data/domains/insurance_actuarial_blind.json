@@ -1,0 +1,183 @@
+{
+  "domain": "insurance-actuarial-blind",
+  "_disclaimer": "SYNTHETIC ILLUSTRATIVE DATA. Authored as a BLIND generalisation test of the bounded-domain gate: the entities, relations, value_qualifiers and question phrasings below were written from priors BEFORE any benchmark run, and were not revised in response to results. Not a real insurer's reserving memorandum and not derived from any actual filing.",
+  "corpus": "LOSS RESERVE ANALYSIS MEMORANDUM. Prepared by the Actuarial Reserving Committee for the Year-End 2024 statutory valuation. This memorandum documents the indicated and carried reserves for three lines of business, Commercial Auto Liability, Workers' Compensation, and General Liability, each evaluated as of December 31, 2024. SECTION I, COMMERCIAL AUTO LIABILITY. For accident year 2023, the net loss ratio for Commercial Auto Liability was 68.4 percent. For accident year 2024, the net loss ratio for Commercial Auto Liability was 71.2 percent. The combined ratio for Commercial Auto Liability was 97.6 percent. The carried reserve for Commercial Auto Liability, net of reinsurance, is $142.5 million. The age-to-ultimate development factor for Commercial Auto Liability is 1.0450. The discount rate applied to Commercial Auto Liability reserves is 275 basis points. SECTION II, WORKERS' COMPENSATION. For accident year 2023, the net loss ratio for Workers' Compensation was 61.9 percent. For accident year 2024, the net loss ratio for Workers' Compensation was 59.3 percent. The combined ratio for Workers' Compensation was 94.1 percent. The carried reserve for Workers' Compensation, gross of reinsurance, is $310.8 million. The average claim severity for Workers' Compensation is $42,300. The confidence level of the Workers' Compensation reserve estimate, held at the 80th percentile of the distribution, is 80 percent. SECTION III, GENERAL LIABILITY. The combined ratio for General Liability was 103.5 percent. The carried reserve for General Liability is approximately $87.2 million. The reserving basis for General Liability is the Bornhuetter-Ferguson method.",
+  "entities": {
+    "commercial auto liability": [
+      "commercial auto",
+      "auto liability",
+      "CAL"
+    ],
+    "workers' compensation": [
+      "workers compensation",
+      "workers comp",
+      "WC"
+    ],
+    "general liability": [
+      "GL"
+    ]
+  },
+  "relations": {
+    "net_loss_ratio": {
+      "kind": "quantity",
+      "description": "net incurred losses divided by net earned premium for the accident year",
+      "question": "what is the net loss ratio of {entity}?"
+    },
+    "combined_ratio": {
+      "kind": "quantity",
+      "description": "losses, loss adjustment expense, and underwriting expense divided by earned premium",
+      "question": "what is the combined ratio of {entity}?"
+    },
+    "development_factor": {
+      "kind": "quantity",
+      "description": "the age-to-ultimate loss development factor applied to reported losses",
+      "question": "what is the age-to-ultimate development factor for {entity}?"
+    },
+    "carried_reserve": {
+      "kind": "quantity",
+      "description": "the reserve amount carried on the balance sheet for unpaid losses",
+      "question": "what is the carried reserve for {entity}?"
+    },
+    "discount_rate": {
+      "kind": "quantity",
+      "description": "the rate used to discount undiscounted reserves to present value",
+      "question": "what is the discount rate applied to {entity} reserves?"
+    },
+    "claim_severity": {
+      "kind": "quantity",
+      "description": "the average dollar amount paid per claim",
+      "question": "what is the average claim severity for {entity}?"
+    },
+    "confidence_level": {
+      "kind": "quantity",
+      "description": "the percentile of the loss distribution at which the reserve estimate is held",
+      "question": "what is the confidence level of the {entity} reserve estimate?"
+    },
+    "reserving_basis": {
+      "kind": "text",
+      "description": "the actuarial method used to derive the reserve estimate",
+      "question": "what is the reserving basis for {entity}?"
+    }
+  },
+  "conditions": [
+    "accident_year"
+  ],
+  "value_qualifiers": [
+    "net of reinsurance",
+    "gross of reinsurance",
+    "approximately",
+    "about",
+    "roughly",
+    "at least",
+    "at most",
+    "undiscounted",
+    "on a discounted basis"
+  ],
+  "unit_aliases": {
+    "%": "percent"
+  },
+  "facts": [
+    {
+      "s": "commercial auto liability",
+      "r": "net_loss_ratio",
+      "o": "68.4 percent",
+      "when": {
+        "accident_year": "2023"
+      },
+      "source": "For accident year 2023, the net loss ratio for Commercial Auto Liability was 68.4 percent."
+    },
+    {
+      "s": "commercial auto liability",
+      "r": "net_loss_ratio",
+      "o": "71.2 percent",
+      "when": {
+        "accident_year": "2024"
+      },
+      "source": "For accident year 2024, the net loss ratio for Commercial Auto Liability was 71.2 percent."
+    },
+    {
+      "s": "commercial auto liability",
+      "r": "combined_ratio",
+      "o": "97.6 percent",
+      "source": "The combined ratio for Commercial Auto Liability was 97.6 percent."
+    },
+    {
+      "s": "commercial auto liability",
+      "r": "carried_reserve",
+      "o": "$142.5 million",
+      "source": "The carried reserve for Commercial Auto Liability, net of reinsurance, is $142.5 million."
+    },
+    {
+      "s": "commercial auto liability",
+      "r": "development_factor",
+      "o": "1.0450",
+      "source": "The age-to-ultimate development factor for Commercial Auto Liability is 1.0450."
+    },
+    {
+      "s": "commercial auto liability",
+      "r": "discount_rate",
+      "o": "275 basis points",
+      "source": "The discount rate applied to Commercial Auto Liability reserves is 275 basis points."
+    },
+    {
+      "s": "workers' compensation",
+      "r": "net_loss_ratio",
+      "o": "61.9 percent",
+      "when": {
+        "accident_year": "2023"
+      },
+      "source": "For accident year 2023, the net loss ratio for Workers' Compensation was 61.9 percent."
+    },
+    {
+      "s": "workers' compensation",
+      "r": "net_loss_ratio",
+      "o": "59.3 percent",
+      "when": {
+        "accident_year": "2024"
+      },
+      "source": "For accident year 2024, the net loss ratio for Workers' Compensation was 59.3 percent."
+    },
+    {
+      "s": "workers' compensation",
+      "r": "combined_ratio",
+      "o": "94.1 percent",
+      "source": "The combined ratio for Workers' Compensation was 94.1 percent."
+    },
+    {
+      "s": "workers' compensation",
+      "r": "carried_reserve",
+      "o": "$310.8 million",
+      "source": "The carried reserve for Workers' Compensation, gross of reinsurance, is $310.8 million."
+    },
+    {
+      "s": "workers' compensation",
+      "r": "claim_severity",
+      "o": "$42,300",
+      "source": "The average claim severity for Workers' Compensation is $42,300."
+    },
+    {
+      "s": "workers' compensation",
+      "r": "confidence_level",
+      "o": "80 percent",
+      "source": "The confidence level of the Workers' Compensation reserve estimate, held at the 80th percentile of the distribution, is 80 percent."
+    },
+    {
+      "s": "general liability",
+      "r": "combined_ratio",
+      "o": "103.5 percent",
+      "source": "The combined ratio for General Liability was 103.5 percent."
+    },
+    {
+      "s": "general liability",
+      "r": "carried_reserve",
+      "o": "$87.2 million",
+      "source": "The carried reserve for General Liability is approximately $87.2 million."
+    },
+    {
+      "s": "general liability",
+      "r": "reserving_basis",
+      "o": "the Bornhuetter-Ferguson method",
+      "source": "The reserving basis for General Liability is the Bornhuetter-Ferguson method."
+    }
+  ]
+}

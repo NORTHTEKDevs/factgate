@@ -1,0 +1,176 @@
+{
+  "domain": "brewing-spec-blind",
+  "corpus": "Cascade Trail Pale Ale is brewed to a target original gravity of 1.048, equivalent to 11.9 degrees Plato. The recipe specifies a final gravity of 1.010 at the end of primary fermentation. Cascade Trail Pale Ale finishes at an alcohol by volume of 5.2 percent. The bittering schedule for Cascade Trail Pale Ale targets 38 IBU. Primary fermentation for Cascade Trail Pale Ale proceeds at 18 to 20 degrees Celsius using a British ale strain.\n\nSolstice Imperial Stout carries a target original gravity of 1.092, equivalent to 22.1 degrees Plato. The recipe specifies a final gravity of 1.022 for Solstice Imperial Stout. Solstice Imperial Stout reaches an alcohol by volume of 9.6 percent. The bittering schedule for Solstice Imperial Stout targets 55 IBU. Solstice Imperial Stout is specified at a colour of 80 EBC, equivalent to 40 SRM. Primary fermentation for Solstice Imperial Stout proceeds at 18 to 22 degrees Celsius using a robust ale strain.\n\nHarbor Light Lager is fermented at 9 to 12 degrees Celsius over a lagering period of three weeks. The pitching rate for Harbor Light Lager is set at 1.2 million cells per milliliter per degree Plato. When packaged in kegs, Harbor Light Lager is carbonated to 2.6 volumes of carbon dioxide. When packaged in bottles, Harbor Light Lager is carbonated to 2.4 volumes of carbon dioxide.\n\nEmber Amber Ale finishes at an alcohol by volume of 5.5 percent. The bittering schedule for Ember Amber Ale targets 32 IBU. Ember Amber Ale is specified at a colour of 28 EBC. The pitching rate for Ember Amber Ale is set at 0.9 million cells per milliliter per degree Plato.",
+  "entities": {
+    "Cascade Trail Pale Ale": [
+      "Cascade Trail",
+      "Cascade Trail Ale"
+    ],
+    "Solstice Imperial Stout": [
+      "Solstice Stout",
+      "Solstice Imperial"
+    ],
+    "Harbor Light Lager": [
+      "Harbor Light",
+      "Harbor Lager"
+    ],
+    "Ember Amber Ale": [
+      "Ember Amber",
+      "Ember Ale"
+    ]
+  },
+  "relations": {
+    "original_gravity_sg": {
+      "kind": "quantity",
+      "question": "what is the original gravity, as specific gravity, of {entity}?"
+    },
+    "original_gravity_plato": {
+      "kind": "quantity",
+      "question": "what is the original gravity, in degrees Plato, of {entity}?"
+    },
+    "final_gravity": {
+      "kind": "quantity",
+      "question": "what is the final gravity of {entity}?"
+    },
+    "abv": {
+      "kind": "quantity",
+      "question": "what is the alcohol by volume of {entity}?"
+    },
+    "ibu": {
+      "kind": "quantity",
+      "question": "what is the IBU of {entity}?"
+    },
+    "colour_ebc": {
+      "kind": "quantity",
+      "question": "what is the colour, in EBC, of {entity}?"
+    },
+    "colour_srm": {
+      "kind": "quantity",
+      "question": "what is the colour, in SRM, of {entity}?"
+    },
+    "fermentation_temperature": {
+      "kind": "quantity",
+      "question": "what is the fermentation temperature of {entity}?"
+    },
+    "pitching_rate": {
+      "kind": "quantity",
+      "question": "what is the pitching rate of {entity}?"
+    },
+    "carbonation": {
+      "kind": "quantity",
+      "question": "what is the carbonation level of {entity}?"
+    }
+  },
+  "conditions": [
+    "packaging"
+  ],
+  "value_qualifiers": [
+    "target",
+    "equivalent to"
+  ],
+  "unit_aliases": {},
+  "facts": [
+    {
+      "s": "Cascade Trail Pale Ale",
+      "r": "original_gravity_sg",
+      "o": "1.048",
+      "source": "Cascade Trail Pale Ale is brewed to a target original gravity of 1.048, equivalent to 11.9 degrees Plato."
+    },
+    {
+      "s": "Cascade Trail Pale Ale",
+      "r": "original_gravity_plato",
+      "o": "11.9 degrees Plato",
+      "source": "Cascade Trail Pale Ale is brewed to a target original gravity of 1.048, equivalent to 11.9 degrees Plato."
+    },
+    {
+      "s": "Cascade Trail Pale Ale",
+      "r": "abv",
+      "o": "5.2 percent",
+      "source": "Cascade Trail Pale Ale finishes at an alcohol by volume of 5.2 percent."
+    },
+    {
+      "s": "Cascade Trail Pale Ale",
+      "r": "ibu",
+      "o": "38 IBU",
+      "source": "The bittering schedule for Cascade Trail Pale Ale targets 38 IBU."
+    },
+    {
+      "s": "Solstice Imperial Stout",
+      "r": "original_gravity_sg",
+      "o": "1.092",
+      "source": "Solstice Imperial Stout carries a target original gravity of 1.092, equivalent to 22.1 degrees Plato."
+    },
+    {
+      "s": "Solstice Imperial Stout",
+      "r": "final_gravity",
+      "o": "1.022",
+      "source": "The recipe specifies a final gravity of 1.022 for Solstice Imperial Stout."
+    },
+    {
+      "s": "Solstice Imperial Stout",
+      "r": "colour_ebc",
+      "o": "80 EBC",
+      "source": "Solstice Imperial Stout is specified at a colour of 80 EBC, equivalent to 40 SRM."
+    },
+    {
+      "s": "Solstice Imperial Stout",
+      "r": "colour_srm",
+      "o": "40 SRM",
+      "source": "Solstice Imperial Stout is specified at a colour of 80 EBC, equivalent to 40 SRM."
+    },
+    {
+      "s": "Harbor Light Lager",
+      "r": "fermentation_temperature",
+      "o": "9 to 12 degrees Celsius",
+      "source": "Harbor Light Lager is fermented at 9 to 12 degrees Celsius over a lagering period of three weeks."
+    },
+    {
+      "s": "Harbor Light Lager",
+      "r": "pitching_rate",
+      "o": "1.2 million cells per milliliter per degree Plato",
+      "source": "The pitching rate for Harbor Light Lager is set at 1.2 million cells per milliliter per degree Plato."
+    },
+    {
+      "s": "Harbor Light Lager",
+      "r": "carbonation",
+      "o": "2.6 volumes of carbon dioxide",
+      "source": "When packaged in kegs, Harbor Light Lager is carbonated to 2.6 volumes of carbon dioxide.",
+      "when": {
+        "packaging": "keg"
+      }
+    },
+    {
+      "s": "Harbor Light Lager",
+      "r": "carbonation",
+      "o": "2.4 volumes of carbon dioxide",
+      "source": "When packaged in bottles, Harbor Light Lager is carbonated to 2.4 volumes of carbon dioxide.",
+      "when": {
+        "packaging": "bottle"
+      }
+    },
+    {
+      "s": "Ember Amber Ale",
+      "r": "abv",
+      "o": "5.5 percent",
+      "source": "Ember Amber Ale finishes at an alcohol by volume of 5.5 percent."
+    },
+    {
+      "s": "Ember Amber Ale",
+      "r": "ibu",
+      "o": "32 IBU",
+      "source": "The bittering schedule for Ember Amber Ale targets 32 IBU."
+    },
+    {
+      "s": "Ember Amber Ale",
+      "r": "colour_ebc",
+      "o": "28 EBC",
+      "source": "Ember Amber Ale is specified at a colour of 28 EBC."
+    },
+    {
+      "s": "Ember Amber Ale",
+      "r": "pitching_rate",
+      "o": "0.9 million cells per milliliter per degree Plato",
+      "source": "The pitching rate for Ember Amber Ale is set at 0.9 million cells per milliliter per degree Plato."
+    }
+  ]
+}

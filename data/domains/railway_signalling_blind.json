@@ -1,0 +1,52 @@
+{
+  "domain": "railway-signalling-blind",
+  "corpus": "AK RAIL NETWORK - SIGNALLING AND TRACK MAINTENANCE STANDARD STD-217\n\nSection 4: Curve 47\nCurve 47 on the Down Main between mile markers 14 and 15 carries a permanent speed restriction. For conventional trains, the maximum permitted speed over Curve 47 is 95 km/h. Tilting trains fitted with an approved tilt system may pass over Curve 47 at a maximum permitted speed of 105 km/h. Expressed in imperial units, the conventional limit is 59 mph and the tilting-train limit is 65 mph. The applied cant through Curve 47 is 150 mm. The cant deficiency permitted through Curve 47 is 110 mm.\n\nSection 5: Gradient Section 12\nGradient Section 12 climbs away from North Junction toward the summit. The gradient is expressed in the traditional notation as 1 in 80. In the equivalent percentage notation used on the electronic gradient profile, Gradient Section 12 is graded at 1.25%.\n\nSection 6: North Junction\nNorth Junction is laid to standard gauge throughout. The track gauge at North Junction is 1435 mm.\n\nSection 7: Signal SB204\nSignal SB204 protects the approach to Platform 3 Crossover. The required braking distance on the approach to Signal SB204 is 1200 m. The minimum sighting time for Signal SB204 is 12 seconds. Signal SB204 is a four-aspect colour light signal.\n\nSection 8: Bridge 88\nBridge 88 carries the Down Main over the river on a steel through-girder structure. The maximum axle load permitted on Bridge 88 is 25 tonnes.\n\nSection 9: Viaduct 22\nViaduct 22 is a masonry structure dating from 1932 with twelve arches. The maximum axle load permitted on Viaduct 22 is 22.5 tonnes.\n\nSection 10: Level Crossing 9\nLevel Crossing 9 is an automatic half-barrier crossing on the branch line. The controlling authority for Level Crossing 9 is Network Control North.\n\nSection 11: Tunnel Section 4\nTunnel Section 4 passes beneath the summit ridge for approximately 900 metres. The maximum permitted speed through Tunnel Section 4 is 60 km/h.\n\nAll speeds, gradients, gauges, braking distances, axle loads, sighting times and cant values in this standard are binding on maintenance and signalling staff.",
+  "entities": {
+    "curve_47": ["Curve 47"],
+    "gradient_section_12": ["Gradient Section 12"],
+    "north_junction": ["North Junction"],
+    "signal_sb204": ["Signal SB204"],
+    "bridge_88": ["Bridge 88"],
+    "viaduct_22": ["Viaduct 22"],
+    "level_crossing_9": ["Level Crossing 9"],
+    "tunnel_4": ["Tunnel Section 4"]
+  },
+  "relations": {
+    "max_speed_kmh": {"kind": "quantity", "question": "what is the maximum permitted speed in km/h of {entity}?"},
+    "max_speed_mph": {"kind": "quantity", "question": "what is the maximum permitted speed in mph of {entity}?"},
+    "cant_mm": {"kind": "quantity", "question": "what is the applied cant in millimetres of {entity}?"},
+    "cant_deficiency_mm": {"kind": "quantity", "question": "what is the cant deficiency in millimetres of {entity}?"},
+    "gradient_ratio": {"kind": "text", "question": "what is the gradient ratio of {entity}?"},
+    "gradient_percent": {"kind": "quantity", "question": "what is the gradient as a percentage of {entity}?"},
+    "track_gauge_mm": {"kind": "quantity", "question": "what is the track gauge in millimetres of {entity}?"},
+    "braking_distance_m": {"kind": "quantity", "question": "what is the required braking distance in metres of {entity}?"},
+    "signal_sighting_time_s": {"kind": "quantity", "question": "what is the minimum signal sighting time in seconds of {entity}?"},
+    "signal_aspect": {"kind": "text", "question": "what is the signal aspect of {entity}?"},
+    "axle_load_tonnes": {"kind": "quantity", "question": "what is the maximum permitted axle load in tonnes of {entity}?"},
+    "controlling_authority": {"kind": "text", "question": "what is the controlling authority of {entity}?"}
+  },
+  "conditions": ["train_type"],
+  "value_qualifiers": [],
+  "unit_aliases": {
+    "t": ["tonnes"],
+    "s": ["seconds"]
+  },
+  "facts": [
+    {"s": "curve_47", "r": "max_speed_kmh", "o": "95 km/h", "source": "For conventional trains, the maximum permitted speed over Curve 47 is 95 km/h.", "when": {"train_type": "conventional"}},
+    {"s": "curve_47", "r": "max_speed_kmh", "o": "105 km/h", "source": "Tilting trains fitted with an approved tilt system may pass over Curve 47 at a maximum permitted speed of 105 km/h.", "when": {"train_type": "tilting"}},
+    {"s": "curve_47", "r": "max_speed_mph", "o": "59 mph", "source": "the conventional limit is 59 mph", "when": {"train_type": "conventional"}},
+    {"s": "curve_47", "r": "max_speed_mph", "o": "65 mph", "source": "the tilting-train limit is 65 mph", "when": {"train_type": "tilting"}},
+    {"s": "curve_47", "r": "cant_mm", "o": "150 mm", "source": "The applied cant through Curve 47 is 150 mm."},
+    {"s": "curve_47", "r": "cant_deficiency_mm", "o": "110 mm", "source": "The cant deficiency permitted through Curve 47 is 110 mm."},
+    {"s": "gradient_section_12", "r": "gradient_ratio", "o": "1 in 80", "source": "The gradient is expressed in the traditional notation as 1 in 80."},
+    {"s": "gradient_section_12", "r": "gradient_percent", "o": "1.25%", "source": "Gradient Section 12 is graded at 1.25%."},
+    {"s": "north_junction", "r": "track_gauge_mm", "o": "1435 mm", "source": "The track gauge at North Junction is 1435 mm."},
+    {"s": "signal_sb204", "r": "braking_distance_m", "o": "1200 m", "source": "The required braking distance on the approach to Signal SB204 is 1200 m."},
+    {"s": "signal_sb204", "r": "signal_sighting_time_s", "o": "12 seconds", "source": "The minimum sighting time for Signal SB204 is 12 seconds."},
+    {"s": "signal_sb204", "r": "signal_aspect", "o": "four-aspect", "source": "Signal SB204 is a four-aspect colour light signal."},
+    {"s": "bridge_88", "r": "axle_load_tonnes", "o": "25 tonnes", "source": "The maximum axle load permitted on Bridge 88 is 25 tonnes."},
+    {"s": "viaduct_22", "r": "axle_load_tonnes", "o": "22.5 tonnes", "source": "The maximum axle load permitted on Viaduct 22 is 22.5 tonnes."},
+    {"s": "level_crossing_9", "r": "controlling_authority", "o": "Network Control North", "source": "The controlling authority for Level Crossing 9 is Network Control North."},
+    {"s": "tunnel_4", "r": "max_speed_kmh", "o": "60 km/h", "source": "The maximum permitted speed through Tunnel Section 4 is 60 km/h."}
+  ]
+}

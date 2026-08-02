@@ -1,0 +1,43 @@
+{
+  "domain": "datacentre-sla-blind",
+  "corpus": "This Service Schedule sets out the availability, power, cooling, environmental, incident response, and change management commitments applicable to each colocation tier offered under this Agreement.\n\nThe Standard Tier guarantees a monthly uptime commitment of 99.95000 percent, measured at the meet-me room demarcation point. Facility-wide power usage effectiveness for the Standard Tier is targeted at a PUE of 1.60. Each Standard Tier rack is provisioned with 5 kW of committed power draw. Standard Tier cabinets are cooled by a dedicated CRAC allocation of 1.5 tons per rack.\n\nThe Premium Tier improves on facility efficiency with a PUE target of 1.40. Premium Tier racks are provisioned at 10 kVA of committed power draw per cabinet. Premium Tier cooling is delivered at a dedicated allocation of 7 kW per rack through in-row cooling units. Every Premium Tier order includes 4 cross-connects at no additional charge.\n\nThe Enterprise Tier carries the highest availability commitment in this Agreement, with a monthly uptime commitment of 99.99900 percent. The Enterprise Tier PUE target is 1.20, reflecting fully contained hot-aisle and free-cooling design. Enterprise Tier racks are provisioned at 18 kVA of committed power draw per cabinet. The Enterprise Tier white-space envelope is maintained between 18 to 27 degrees Fahrenheit and between 40 to 60 percent relative humidity at all times. For Severity-1 incidents, the Enterprise Tier guarantees an on-site technician response time of 15 minutes. For Severity-2 incidents, the Enterprise Tier guarantees an on-site technician response time of 60 minutes. Any planned maintenance affecting the Enterprise Tier requires a notice period of 30 days prior to the maintenance window.",
+  "entities": {
+    "standard_tier": ["Standard Tier"],
+    "premium_tier": ["Premium Tier"],
+    "enterprise_tier": ["Enterprise Tier"]
+  },
+  "relations": {
+    "uptime_commitment": {"kind": "quantity", "question": "what is the monthly uptime commitment of {entity}?"},
+    "pue_target": {"kind": "quantity", "question": "what is the PUE target of {entity}?"},
+    "rack_power_kw": {"kind": "quantity", "question": "what is the committed power draw per rack of {entity}, in kW?"},
+    "rack_power_kva": {"kind": "quantity", "question": "what is the committed power draw per rack of {entity}, in kVA?"},
+    "cooling_capacity_tons": {"kind": "quantity", "question": "what is the cooling capacity per rack of {entity}, in tons?"},
+    "cooling_capacity_kw": {"kind": "quantity", "question": "what is the cooling capacity per rack of {entity}, in kW?"},
+    "temp_envelope": {"kind": "quantity", "question": "what is the temperature envelope of {entity}?"},
+    "humidity_envelope": {"kind": "quantity", "question": "what is the humidity envelope of {entity}?"},
+    "response_time": {"kind": "quantity", "question": "what is the incident response time of {entity}?"},
+    "cross_connect_allowance": {"kind": "text", "question": "how many cross-connects are included with {entity}?"},
+    "notice_period": {"kind": "quantity", "question": "what is the maintenance notice period for {entity}?"}
+  },
+  "conditions": ["severity"],
+  "value_qualifiers": [],
+  "unit_aliases": {},
+  "facts": [
+    {"s": "standard_tier", "r": "uptime_commitment", "o": "99.95000 percent", "source": "The Standard Tier guarantees a monthly uptime commitment of 99.95000 percent, measured at the meet-me room demarcation point."},
+    {"s": "standard_tier", "r": "pue_target", "o": "1.60", "source": "Facility-wide power usage effectiveness for the Standard Tier is targeted at a PUE of 1.60."},
+    {"s": "standard_tier", "r": "rack_power_kw", "o": "5 kW", "source": "Each Standard Tier rack is provisioned with 5 kW of committed power draw."},
+    {"s": "standard_tier", "r": "cooling_capacity_tons", "o": "1.5 tons", "source": "Standard Tier cabinets are cooled by a dedicated CRAC allocation of 1.5 tons per rack."},
+    {"s": "premium_tier", "r": "pue_target", "o": "1.40", "source": "The Premium Tier improves on facility efficiency with a PUE target of 1.40."},
+    {"s": "premium_tier", "r": "rack_power_kva", "o": "10 kVA", "source": "Premium Tier racks are provisioned at 10 kVA of committed power draw per cabinet."},
+    {"s": "premium_tier", "r": "cooling_capacity_kw", "o": "7 kW", "source": "Premium Tier cooling is delivered at a dedicated allocation of 7 kW per rack through in-row cooling units."},
+    {"s": "premium_tier", "r": "cross_connect_allowance", "o": "4 cross-connects", "source": "Every Premium Tier order includes 4 cross-connects at no additional charge."},
+    {"s": "enterprise_tier", "r": "uptime_commitment", "o": "99.99900 percent", "source": "The Enterprise Tier carries the highest availability commitment in this Agreement, with a monthly uptime commitment of 99.99900 percent."},
+    {"s": "enterprise_tier", "r": "pue_target", "o": "1.20", "source": "The Enterprise Tier PUE target is 1.20, reflecting fully contained hot-aisle and free-cooling design."},
+    {"s": "enterprise_tier", "r": "rack_power_kva", "o": "18 kVA", "source": "Enterprise Tier racks are provisioned at 18 kVA of committed power draw per cabinet."},
+    {"s": "enterprise_tier", "r": "temp_envelope", "o": "18 to 27 degrees Fahrenheit", "source": "The Enterprise Tier white-space envelope is maintained between 18 to 27 degrees Fahrenheit and between 40 to 60 percent relative humidity at all times."},
+    {"s": "enterprise_tier", "r": "humidity_envelope", "o": "40 to 60 percent", "source": "The Enterprise Tier white-space envelope is maintained between 18 to 27 degrees Fahrenheit and between 40 to 60 percent relative humidity at all times."},
+    {"s": "enterprise_tier", "r": "response_time", "o": "15 minutes", "when": {"severity": "Severity-1 incidents"}, "source": "For Severity-1 incidents, the Enterprise Tier guarantees an on-site technician response time of 15 minutes."},
+    {"s": "enterprise_tier", "r": "response_time", "o": "60 minutes", "when": {"severity": "Severity-2 incidents"}, "source": "For Severity-2 incidents, the Enterprise Tier guarantees an on-site technician response time of 60 minutes."},
+    {"s": "enterprise_tier", "r": "notice_period", "o": "30 days", "source": "Any planned maintenance affecting the Enterprise Tier requires a notice period of 30 days prior to the maintenance window."}
+  ]
+}

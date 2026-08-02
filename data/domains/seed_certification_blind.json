@@ -1,0 +1,192 @@
+{
+  "domain": "seed-certification-blind",
+  "_disclaimer": "SYNTHETIC ILLUSTRATIVE DATA. Authored as a BLIND vocabulary declaration for the bounded-domain gate: entities, relations, value_qualifiers and question phrasings below were written from priors before any benchmark run and were not revised in response to gate behaviour. Not a real certification body.",
+  "corpus": "NORTHERN PLAINS SEED CERTIFICATION AND PURITY STANDARD\n\nSection 1: General Requirements\nAll certified seed lots are tested by an accredited seed testing laboratory before a certificate of analysis is issued. Off-types are recorded during field inspection, and any lot exceeding its permitted off-type tolerance is downgraded to the next lower certification class. Isolation distances are measured as the minimum separation between a certified seed field and any field of a different or unapproved variety of the same species, to prevent cross-pollination.\n\nSection 2: Certified Spring Wheat Seed Lot SW-114\nCertified Spring Wheat Seed Lot SW-114 achieved a germination rate of 96.0 percent when tested at certification. After 12 months of storage, Certified Spring Wheat Seed Lot SW-114 was retested and achieved a germination rate of 91.5 percent. The purity percentage of Certified Spring Wheat Seed Lot SW-114 was determined to be 99.2 percent. Other-crop seed content in Certified Spring Wheat Seed Lot SW-114 was measured at 3 seeds per kilogram. The moisture content of Certified Spring Wheat Seed Lot SW-114 was 12.5 percent at the time of bagging. The thousand-kernel weight of Certified Spring Wheat Seed Lot SW-114 was 38.4 grams. The tolerance for off-types in Certified Spring Wheat Seed Lot SW-114 is set at 1 in 3,000 plants. The isolation distance required for Certified Spring Wheat Seed Lot SW-114 is 3 metres from any other spring wheat variety.\n\nSection 3: Certified Barley Seed Lot BC-207\nCertified Barley Seed Lot BC-207 achieved a germination rate of 94.5 percent. The purity percentage of Certified Barley Seed Lot BC-207 was determined to be 98.7 percent. The tolerance for off-types in Certified Barley Seed Lot BC-207 is set at 1 in 2,000 plants.\n\nSection 4: Foundation Canola Seed Lot CN-330\nFoundation Canola Seed Lot CN-330 achieved a germination rate of 92.0 percent. The isolation distance required for Foundation Canola Seed Lot CN-330 is 400 meters from any other canola variety.\n\nSection 5: Registered Oat Seed Lot OT-88\nThe purity percentage of Registered Oat Seed Lot OT-88 was determined to be 97.5 percent.\n\nSection 6: Certified Timothy Grass Seed Lot TG-45\nCertified Timothy Grass Seed Lot TG-45 is classified as Certified seed.",
+  "entities": {
+    "SW114": [
+      "SW-114",
+      "Spring Wheat Seed Lot SW-114",
+      "Certified Spring Wheat Seed Lot SW-114"
+    ],
+    "BC207": [
+      "BC-207",
+      "Barley Seed Lot BC-207",
+      "Certified Barley Seed Lot BC-207"
+    ],
+    "CN330": [
+      "CN-330",
+      "Canola Seed Lot CN-330",
+      "Foundation Canola Seed Lot CN-330"
+    ],
+    "OT88": [
+      "OT-88",
+      "Oat Seed Lot OT-88",
+      "Registered Oat Seed Lot OT-88"
+    ],
+    "TG45": [
+      "TG-45",
+      "Timothy Grass Seed Lot TG-45",
+      "Certified Timothy Grass Seed Lot TG-45"
+    ]
+  },
+  "relations": {
+    "germination_rate": {
+      "kind": "quantity",
+      "description": "the percentage of seeds that germinated under standard laboratory test conditions",
+      "question": "what is the germination rate of {entity}?"
+    },
+    "purity_percentage": {
+      "kind": "quantity",
+      "description": "the percentage by weight of pure seed of the labeled kind and variety",
+      "question": "what is the purity percentage of {entity}?"
+    },
+    "other_crop_seed_content": {
+      "kind": "quantity",
+      "description": "the count of seeds from crops other than the labeled kind, expressed per kilogram of the lot",
+      "question": "what is the other-crop seed content of {entity}?"
+    },
+    "moisture_content": {
+      "kind": "quantity",
+      "description": "the percentage moisture content of the seed lot at the time of bagging",
+      "question": "what is the moisture content of {entity}?"
+    },
+    "thousand_kernel_weight": {
+      "kind": "quantity",
+      "description": "the mass in grams of one thousand kernels drawn from the lot",
+      "question": "what is the thousand-kernel weight of {entity}?"
+    },
+    "off_type_tolerance": {
+      "kind": "text",
+      "description": "the maximum permitted ratio of off-type plants found during field inspection",
+      "question": "what is the off-type tolerance of {entity}?"
+    },
+    "isolation_distance": {
+      "kind": "quantity",
+      "description": "the minimum separation distance required from fields of a different or unapproved variety of the same species",
+      "question": "what is the isolation distance required for {entity}?"
+    },
+    "certification_class": {
+      "kind": "text",
+      "description": "the certification class assigned to the seed lot",
+      "question": "what is the certification class of {entity}?"
+    }
+  },
+  "conditions": [
+    "test_timing"
+  ],
+  "value_qualifiers": [
+    "approximately",
+    "about",
+    "roughly",
+    "up to",
+    "at least",
+    "no more than",
+    "a maximum of",
+    "a minimum of",
+    "at the time of bagging",
+    "when tested at certification",
+    "under standard test conditions",
+    "per the certificate of analysis"
+  ],
+  "unit_aliases": {
+    "meters": "metres"
+  },
+  "facts": [
+    {
+      "s": "SW114",
+      "r": "germination_rate",
+      "o": "96.0 percent",
+      "when": {
+        "test_timing": "at certification"
+      },
+      "source": "Certified Spring Wheat Seed Lot SW-114 achieved a germination rate of 96.0 percent when tested at certification."
+    },
+    {
+      "s": "SW114",
+      "r": "germination_rate",
+      "o": "91.5 percent",
+      "when": {
+        "test_timing": "after 12 months of storage"
+      },
+      "source": "After 12 months of storage, Certified Spring Wheat Seed Lot SW-114 was retested and achieved a germination rate of 91.5 percent."
+    },
+    {
+      "s": "SW114",
+      "r": "purity_percentage",
+      "o": "99.2 percent",
+      "source": "The purity percentage of Certified Spring Wheat Seed Lot SW-114 was determined to be 99.2 percent."
+    },
+    {
+      "s": "SW114",
+      "r": "other_crop_seed_content",
+      "o": "3 seeds per kilogram",
+      "source": "Other-crop seed content in Certified Spring Wheat Seed Lot SW-114 was measured at 3 seeds per kilogram."
+    },
+    {
+      "s": "SW114",
+      "r": "moisture_content",
+      "o": "12.5 percent",
+      "source": "The moisture content of Certified Spring Wheat Seed Lot SW-114 was 12.5 percent at the time of bagging."
+    },
+    {
+      "s": "SW114",
+      "r": "thousand_kernel_weight",
+      "o": "38.4 grams",
+      "source": "The thousand-kernel weight of Certified Spring Wheat Seed Lot SW-114 was 38.4 grams."
+    },
+    {
+      "s": "SW114",
+      "r": "off_type_tolerance",
+      "o": "1 in 3,000",
+      "source": "The tolerance for off-types in Certified Spring Wheat Seed Lot SW-114 is set at 1 in 3,000 plants."
+    },
+    {
+      "s": "SW114",
+      "r": "isolation_distance",
+      "o": "3 metres",
+      "source": "The isolation distance required for Certified Spring Wheat Seed Lot SW-114 is 3 metres from any other spring wheat variety."
+    },
+    {
+      "s": "BC207",
+      "r": "germination_rate",
+      "o": "94.5 percent",
+      "source": "Certified Barley Seed Lot BC-207 achieved a germination rate of 94.5 percent."
+    },
+    {
+      "s": "BC207",
+      "r": "purity_percentage",
+      "o": "98.7 percent",
+      "source": "The purity percentage of Certified Barley Seed Lot BC-207 was determined to be 98.7 percent."
+    },
+    {
+      "s": "BC207",
+      "r": "off_type_tolerance",
+      "o": "1 in 2,000",
+      "source": "The tolerance for off-types in Certified Barley Seed Lot BC-207 is set at 1 in 2,000 plants."
+    },
+    {
+      "s": "CN330",
+      "r": "germination_rate",
+      "o": "92.0 percent",
+      "source": "Foundation Canola Seed Lot CN-330 achieved a germination rate of 92.0 percent."
+    },
+    {
+      "s": "CN330",
+      "r": "isolation_distance",
+      "o": "400 meters",
+      "source": "The isolation distance required for Foundation Canola Seed Lot CN-330 is 400 meters from any other canola variety."
+    },
+    {
+      "s": "OT88",
+      "r": "purity_percentage",
+      "o": "97.5 percent",
+      "source": "The purity percentage of Registered Oat Seed Lot OT-88 was determined to be 97.5 percent."
+    },
+    {
+      "s": "TG45",
+      "r": "certification_class",
+      "o": "Certified",
+      "source": "Certified Timothy Grass Seed Lot TG-45 is classified as Certified seed."
+    }
+  ]
+}

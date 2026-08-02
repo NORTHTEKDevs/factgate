@@ -1,0 +1,42 @@
+{
+  "domain": "building-energy-blind",
+  "corpus": "ENERGY PERFORMANCE CERTIFICATE REPORT — PORTFOLIO ASSESSMENT 2026\n\n1. Meadow Court Apartments\nMeadow Court Apartments has been assessed with a wall U-value of 0.28 W/m2K and a roof U-value of 0.16 W/m2K. Before retrofit works, the measured air permeability of Meadow Court Apartments was 9.5 m3/h/m2. After retrofit works, the measured air permeability of Meadow Court Apartments was 4.2 m3/h/m2. The energy use intensity of Meadow Court Apartments is 95 kWh/m2/yr, and the carbon intensity of Meadow Court Apartments is 18 kgCO2/m2/yr. Meadow Court Apartments has been rated EPC band C.\n\n2. Riverside Depot Warehouse\nRiverside Depot Warehouse has a wall U-value of 0.35 W/m2K and a window U-value of 1.6 W/m2K. The measured air permeability of Riverside Depot Warehouse was 12.0 m3/h/m2. The installed boiler at Riverside Depot Warehouse operates at a seasonal efficiency of 78%. Riverside Depot Warehouse has been rated EPC band D.\n\n3. Oak Street Terrace\nOak Street Terrace has a glazing ratio of 22%. The energy use intensity of Oak Street Terrace is 210 kWh/m2/yr, and the carbon intensity of Oak Street Terrace is 46 kgCO2/m2/yr.\n\n4. Pine Hall Community Centre\nThe installed boiler at Pine Hall Community Centre operates at a seasonal efficiency of 91%.\n",
+  "entities": {
+    "meadow_court": ["Meadow Court Apartments"],
+    "riverside_depot": ["Riverside Depot Warehouse"],
+    "oak_terrace": ["Oak Street Terrace"],
+    "pine_hall": ["Pine Hall Community Centre"]
+  },
+  "relations": {
+    "wall_u_value": {"kind": "quantity", "question": "what is the wall U-value of {entity}?"},
+    "roof_u_value": {"kind": "quantity", "question": "what is the roof U-value of {entity}?"},
+    "window_u_value": {"kind": "quantity", "question": "what is the window U-value of {entity}?"},
+    "air_permeability": {"kind": "quantity", "question": "what is the air permeability of {entity}?"},
+    "energy_use_intensity": {"kind": "quantity", "question": "what is the energy use intensity of {entity}?"},
+    "carbon_intensity": {"kind": "quantity", "question": "what is the carbon intensity of {entity}?"},
+    "boiler_efficiency": {"kind": "quantity", "question": "what is the boiler efficiency of {entity}?"},
+    "glazing_ratio": {"kind": "quantity", "question": "what is the glazing ratio of {entity}?"},
+    "epc_band": {"kind": "text", "question": "what is the EPC band of {entity}?"}
+  },
+  "conditions": ["retrofit_status"],
+  "value_qualifiers": ["measured", "assessed", "installed", "seasonal"],
+  "unit_aliases": {},
+  "facts": [
+    {"s": "meadow_court", "r": "wall_u_value", "o": "0.28 W/m2K", "source": "wall U-value of 0.28 W/m2K"},
+    {"s": "meadow_court", "r": "roof_u_value", "o": "0.16 W/m2K", "source": "roof U-value of 0.16 W/m2K"},
+    {"s": "meadow_court", "r": "air_permeability", "o": "9.5 m3/h/m2", "source": "Before retrofit works, the measured air permeability of Meadow Court Apartments was 9.5 m3/h/m2.", "when": {"retrofit_status": "pre-retrofit"}},
+    {"s": "meadow_court", "r": "air_permeability", "o": "4.2 m3/h/m2", "source": "After retrofit works, the measured air permeability of Meadow Court Apartments was 4.2 m3/h/m2.", "when": {"retrofit_status": "post-retrofit"}},
+    {"s": "meadow_court", "r": "energy_use_intensity", "o": "95 kWh/m2/yr", "source": "The energy use intensity of Meadow Court Apartments is 95 kWh/m2/yr"},
+    {"s": "meadow_court", "r": "carbon_intensity", "o": "18 kgCO2/m2/yr", "source": "the carbon intensity of Meadow Court Apartments is 18 kgCO2/m2/yr"},
+    {"s": "meadow_court", "r": "epc_band", "o": "C", "source": "Meadow Court Apartments has been rated EPC band C."},
+    {"s": "riverside_depot", "r": "wall_u_value", "o": "0.35 W/m2K", "source": "Riverside Depot Warehouse has a wall U-value of 0.35 W/m2K"},
+    {"s": "riverside_depot", "r": "window_u_value", "o": "1.6 W/m2K", "source": "window U-value of 1.6 W/m2K"},
+    {"s": "riverside_depot", "r": "air_permeability", "o": "12.0 m3/h/m2", "source": "The measured air permeability of Riverside Depot Warehouse was 12.0 m3/h/m2."},
+    {"s": "riverside_depot", "r": "boiler_efficiency", "o": "78%", "source": "The installed boiler at Riverside Depot Warehouse operates at a seasonal efficiency of 78%."},
+    {"s": "riverside_depot", "r": "epc_band", "o": "D", "source": "Riverside Depot Warehouse has been rated EPC band D."},
+    {"s": "oak_terrace", "r": "glazing_ratio", "o": "22%", "source": "Oak Street Terrace has a glazing ratio of 22%."},
+    {"s": "oak_terrace", "r": "energy_use_intensity", "o": "210 kWh/m2/yr", "source": "The energy use intensity of Oak Street Terrace is 210 kWh/m2/yr"},
+    {"s": "oak_terrace", "r": "carbon_intensity", "o": "46 kgCO2/m2/yr", "source": "the carbon intensity of Oak Street Terrace is 46 kgCO2/m2/yr"},
+    {"s": "pine_hall", "r": "boiler_efficiency", "o": "91%", "source": "The installed boiler at Pine Hall Community Centre operates at a seasonal efficiency of 91%."}
+  ]
+}
