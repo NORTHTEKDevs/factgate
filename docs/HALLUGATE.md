@@ -1031,6 +1031,47 @@ Every value-shape and safety fix in this section came from genres that did not e
 corpus a day earlier. The rate of finding is not falling, and that is the honest headline:
 the method works, and it is not finished.
 
+## 18. What replaced the hunt
+
+Five rounds of adversarial review found defects one at a time:
+
+| round | leaks found | where |
+|---|---|---|
+| 1 | 0 | -- |
+| 2 | 1 | conditional default; eleven domains never surfaced it |
+| 3 | 1 | inside round 2's fix |
+| 4 | 4 | three in code less than a day old |
+| 5 | 1 | inside a fix from that morning |
+
+The rate did not fall, and by round 4 most new leaks were inside the previous round's
+fixes. Each notation added to reduce over-block created leak surface faster than review
+closed it. That is not a process that terminates.
+
+What replaced it is a set of proofs a machine re-runs in eighty seconds, over the four
+places a verdict is actually decided:
+
+  `compare_values`     an exact-rational oracle sharing no code with the implementation
+  author configuration either lint refuses the fact set, or every VERIFIED is oracle-equal
+  residue and lookup   construction-based cases, where the answer follows from the assembly
+  extraction           the pipeline emits no claim its own guards reject, whatever the
+                       model says -- driven by a hostile scripted model
+
+And a mutation gate, which is the part that makes the rest mean anything. `harden.py`
+breaks the code ten ways and requires each proof to notice. A surviving mutant fails the
+build, because it marks a defence nothing tests.
+
+That rule earned itself immediately. The config proof's FIRST mutation run caught **zero**,
+which is how two defects in the oracle itself were found while it was passing green: it
+answered DONT_KNOW for every differing unit, so it could never prove "15 mg" and "15 mcg"
+unequal -- precisely the class it existed to cover -- and it read "5 mg" as magnitude "m"
+plus unit "g". A proof that cannot fail manufactures confidence instead of providing it.
+
+The proofs then found what five rounds of review had not: a false BLOCK on `"0.5"` against
+`"1/2"`, on their first run; and a coverage hole where a word broken across a line as
+`aceta-
+minophen` matched nothing, making every fact about that drug silently
+unextractable.
+
 ## Reproduce
 
 ```bash
