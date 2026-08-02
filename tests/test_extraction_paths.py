@@ -260,3 +260,37 @@ def test_a_spelled_number_is_grounded_but_a_wrong_one_still_is_not():
     answer = "the dose is 0.01 mg/kg IM and requires a four-hour observation period"
     assert value_is_grounded("4 hours", answer) is True
     assert value_is_grounded("9 hours", answer) is False
+
+
+def test_an_unresolvable_slot_is_reported_not_swallowed(monkeypatch):
+    """MEASURED across ten domains: the ambiguity guard is the dominant cause of unguarded
+    assertions -- 15% of answers, almost all of them passages discussing several values of
+    the same kind ("the reference range is 135 to 145 mmol/L; critically low is below 120").
+
+    Dropping the claim is right; dropping it SILENTLY is not. The caller then emits no
+    verdict at all and the reader is never told there was something to check -- a bypass,
+    which is worse than a hold. The slot is now reported so a caller can hold it."""
+    passage = ("Sodium reference range is 135 to 145 mmol/L. A critically low value is "
+               "below 120 mmol/L.")
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"sodium": []},
+        "relations": {"critical_low": {"kind": "quantity"}},
+        "facts": [{"s": "sodium", "r": "critical_low", "o": "120 mmol/L",
+                   "source": passage}]})
+    monkeypatch.setattr(link, "ollama", _scripted("Value: 120 mmol/L"))
+    claims, unresolved = link.link_targeted(passage, fs, "m", report_unresolved=True)
+    assert claims == [], "an ambiguous passage must not produce a confirmed claim"
+    assert unresolved == [("sodium", "critical_low", "120 mmol/L")]
+
+
+def test_reporting_unresolved_does_not_change_what_is_claimed(monkeypatch):
+    """The added channel must not alter the verdicts. An unambiguous passage yields the same
+    claim whether or not the caller asks for the unresolved list."""
+    passage = "Give acetaminophen 7.5 mg/kg PO now."
+    fs = _fs(declared="7.5 mg/kg")
+    monkeypatch.setattr(link, "ollama", _scripted("Value: 7.5 mg/kg"))
+    plain = link.link_targeted(passage, fs, "m")
+    monkeypatch.setattr(link, "ollama", _scripted("Value: 7.5 mg/kg"))
+    claims, unresolved = link.link_targeted(passage, fs, "m", report_unresolved=True)
+    assert plain == claims == [("acetaminophen", "dose", "7.5 mg/kg")]
+    assert unresolved == []

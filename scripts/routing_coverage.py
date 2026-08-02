@@ -91,6 +91,15 @@ def states_a_different_value(answer: str, fact, fs: FactSet) -> bool:
     for m in _NUM.finditer(answer):
         if m.group(0).replace(",", "") in other_values:
             continue                          # this figure belongs to a different slot
+        # ...and it must carry the DECLARED unit. Declared "6" servings against an answer
+        # reading "approximately six 40g bars" was scored wrong because 40 differs from 6 --
+        # the bar WEIGHT attributed to the serving COUNT. A number wearing a different unit
+        # is not a competing reading of this slot.
+        trailing = answer[m.end():m.end() + 24].strip().lower()
+        if unit and not trailing.startswith(unit.lower()[:3]):
+            continue
+        if not unit and re.match(r"^[a-z%/]", trailing):
+            continue                          # declared value is unitless; this one is not
         candidate = f"{m.group(0)} {unit}".strip()
         if compare_values(fact.o, candidate) == DIFFER:
             return True
@@ -139,12 +148,28 @@ def main() -> int:
                 totals["asserted"] += 1
 
                 try:
-                    claims = link_targeted(answer, fs, a.model)
+                    claims, unresolved = link_targeted(
+                        answer, fs, a.model, report_unresolved=True)
                 except ExtractionUnavailable:
                     totals["transport_failure"] += 1
                     continue
                 adjudicated = [gate_claim(fs, s, r, o) for s, r, o in claims
                                if r == fact.r and fs.resolve_entity(s) == fact.s]
+                # A slot the extractor saw but could not resolve is HELD, not silence. It
+                # reaches the reader as "this needs checking", which is the whole point of
+                # a fail-closed gate, so it counts as adjudicated.
+                held_unresolved = [1 for s, r, _ in unresolved
+                                   if r == fact.r and fs.resolve_entity(s) == fact.s]
+                if held_unresolved and not adjudicated:
+                    totals["adjudicated"] += 1
+                    totals["held_unresolved"] += 1
+                    rows.append({"domain": fs.domain, "fact": [fact.s, fact.r, fact.o],
+                                 "framing": j, "answer": " ".join(answer.split())[:300],
+                                 "asserted": asserted, "states_wrong_value": wrong,
+                                 "adjudicated": True, "verdicts": ["HELD (unresolved)"]})
+                    print(f"  {i:2d}.{j} HELD-UNRESOLV{'  WRONG' if wrong else ''}",
+                          flush=True)
+                    continue
 
                 if adjudicated:
                     totals["adjudicated"] += 1

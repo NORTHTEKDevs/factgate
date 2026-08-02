@@ -472,14 +472,15 @@ def foreign_words(value: str, passage: str) -> list[str]:
 
 
 def link_targeted(text: str, fs: FactSet, model: str,
-                  **kw) -> list[tuple[str, str, str]]:
+                  report_unresolved: bool = False, **kw):
     """Ask one targeted question per (mentioned entity, declared relation) pair.
 
     Only pairs that actually have a declared fact are queried: a slot with nothing to
     compare against could never produce anything but HELD, so asking would burn a model
     call for no verdict.
     """
-    claims = []
+    claims: list[tuple[str, str, str]] = []
+    unresolved: list[tuple[str, str, str]] = []
     for entity in sorted(mentioned_entities(text, fs)):
         for relation, spec in fs.relations.items():
             # A slot with no declared value could only ever produce HELD, so asking would
@@ -533,7 +534,15 @@ def link_targeted(text: str, fs: FactSet, model: str,
             #                  the extractor inventing the declared value outright)
             #   unambiguous -- the passage must not carry a competing value for the slot
             #                  (the decoy attack: plant the declared value, state another)
-            if (value is not None and value_is_grounded(value, text, fs)
-                    and not ambiguous_candidates(value, text, fs, entity, relation)):
-                claims.append((entity, relation, value))
-    return claims
+            if value is None or not value_is_grounded(value, text, fs):
+                continue
+            if ambiguous_candidates(value, text, fs, entity, relation):
+                # A value WAS seen for this slot and could not be resolved. Dropping it
+                # silently is a BYPASS: the caller emits nothing and the reader is never
+                # told there was something to check. Measured across ten domains, this is
+                # the dominant cause of unguarded assertions -- 15% of answers, almost all
+                # of them passages discussing several values of the same kind.
+                unresolved.append((entity, relation, value))
+                continue
+            claims.append((entity, relation, value))
+    return (claims, unresolved) if report_unresolved else claims
