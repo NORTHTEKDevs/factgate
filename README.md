@@ -12,7 +12,7 @@ for the exact boundary.
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-778%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-786%20passing-brightgreen)
 
 ## The idea
 
@@ -54,7 +54,7 @@ gate's own false-accept rate, not an observed hallucination rate of any model.
 | False-VERIFIED rate, absent facts (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | False-VERIFIED rate, corrupted claims (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | True-fact verify coverage (N=1500) | **34%** | [31.6%, 36.4%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| Test suite | **778 passed** | — | `pytest tests/ -q` |
+| Test suite | **786 passed** | — | `pytest tests/ -q` |
 
 **LLM-in-the-loop results.** Only these involved a running model. Note the sample size.
 
@@ -182,6 +182,43 @@ choice: hold what you cannot parse. The second is a genuine weakness, disclosed 
 adversarial reviewer found it by reading the code and it is the one sentence in this claim
 that would not survive being discovered rather than declared. A guarantee with a stated edge
 survives contact with a real document; one without an edge does not.
+
+### Does the gate actually see what the model says?
+
+Every other number here is conditional on a claim **reaching** the gate. A value the model
+asserts in prose that the extractor never turns into a claim is protected by nothing. That
+denominator was unmeasured until now.
+
+`scripts/routing_coverage.py` measures it, and it deliberately asks the hard question. The
+domain benchmark asks the slot question directly — *"what is the pediatric dose of
+ibuprofen?"* — which is the easiest possible case for extraction and is not what anyone
+types. This asks four natural framings per fact, none naming the relation as a field:
+
+> *"A colleague asked me about the pediatric dose for ibuprofen. What should I tell them?"*
+
+and the value comes back buried in a paragraph. Four domains, `qwen2.5:14b`:
+
+| | |
+|---|---|
+| Answers that asserted a value | 127 |
+| **Adjudicated — reached the gate** | **126/127 = 99%** CI95 [96%, 100%] |
+| Bypassed — asserted, unguarded | 1/127 = 1% |
+| **Unguarded AND wrong** | **0/127 = 0%** CI95 [0%, 2.9%] |
+| Verified despite stating a wrong value | **0** |
+
+**Unguarded and wrong** is the number that decides real-world risk: a figure differing from
+the document, stated in prose, with nothing in its way. Ground truth is computed from the
+fact set, not judged by a model, and the wrong-value test fires only on a number that
+*provably* differs under the declared unit — a paraphrase or an omission is never counted
+as an error.
+
+The first run of this measurement found two things. A model answering *"a four-hour
+observation period"* — the correct value, spelled out — was **bypassed entirely**, because
+the digit never appears and grounding failed. A bypass is worse than a hold: a hold tells
+the user to check, a bypass tells them nothing. Number words are now substituted before
+grounding. It also found that the harness itself had scored a correct answer as
+unguarded-and-wrong by attributing another slot's figure to it; fixing that moved the
+headline the *wrong* way for the story and the right way for the truth.
 
 ### Measured behaviour
 
@@ -359,7 +396,7 @@ python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -e .
 ./.venv/Scripts/python.exe -m pip install -e ../rck   # path to your local RCK checkout
 
-# run the test suite (778 tests, no network, <10s)
+# run the test suite (786 tests, no network, <10s)
 ./.venv/Scripts/python.exe -m pytest tests/ -q
 
 # reproduce the headline guarantee measurement (N=1500/class against the live KB)
