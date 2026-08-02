@@ -16,9 +16,12 @@ bug it exists to find.
 from __future__ import annotations
 
 import argparse
+import os
 import pathlib
+import shutil
 import subprocess
 import sys
+import tempfile
 import time
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
@@ -127,19 +130,43 @@ def main() -> int:
 
     if not a.quick:
         print("\nMUTATION -- each proof must CATCH a deliberately broken defence")
-        for name, rel, old, new in MUTANTS:
-            p = REPO / rel
-            original = p.read_text(encoding="utf-8")
-            if old not in original:
-                check(f"mutant: {name}", False, "anchor not found -- the code moved")
-                continue
-            p.write_text(original.replace(old, new, 1), encoding="utf-8")
-            try:
-                r = run([PY, "-m", "pytest", "tests/", "-q", "-x"], timeout=1200)
-            finally:
-                p.write_text(original, encoding="utf-8")
-            check(f"mutant caught: {name}", r.returncode != 0,
-                  "SURVIVED -- no test covers this defence" if r.returncode == 0 else "")
+        # Mutants run in an isolated COPY of the repository.
+        #
+        # The first version edited the working tree in place and restored it afterwards,
+        # which meant that for about a minute the repository on disk was DELIBERATELY
+        # BROKEN. An external reviewer ran the README's own proving command during that
+        # window, saw ten failures and one hang, and reported -- correctly -- that the
+        # proofs do not reproduce. A harness that corrupts the tree it is checking cannot
+        # establish anything, and a kill signal mid-mutation would have left the corruption
+        # behind for good.
+        workspace = pathlib.Path(tempfile.mkdtemp(prefix="factgate_mutants_"))
+        copy = workspace / "repo"
+        shutil.copytree(REPO, copy, ignore=shutil.ignore_patterns(
+            ".venv", ".git", "__pycache__", "*.pyc", ".pytest_cache", "results", "demo"))
+        env = {**os.environ, "PYTHONPATH": str(copy), "PYTHONIOENCODING": "utf-8"}
+        before = {rel: (REPO / rel).read_bytes() for _, rel, _, _ in MUTANTS}
+        try:
+            for name, rel, anchor, broken in MUTANTS:
+                target = copy / rel
+                original = target.read_text(encoding="utf-8")
+                if anchor not in original:
+                    check(f"mutant: {name}", False, "anchor not found -- the code moved")
+                    continue
+                target.write_text(original.replace(anchor, broken, 1), encoding="utf-8")
+                try:
+                    r = subprocess.run(
+                        [PY, "-m", "pytest", "tests/", "-q", "-x"], cwd=copy,
+                        capture_output=True, text=True, timeout=1200, env=env,
+                        encoding="utf-8", errors="replace")
+                finally:
+                    target.write_text(original, encoding="utf-8")
+                check(f"mutant caught: {name}", r.returncode != 0,
+                      "SURVIVED -- no test covers this defence" if r.returncode == 0 else "")
+        finally:
+            shutil.rmtree(workspace, ignore_errors=True)
+        untouched = all((REPO / rel).read_bytes() == blob for rel, blob in before.items())
+        check("working tree untouched by mutation testing", untouched,
+              "" if untouched else "SOURCE MODIFIED -- the harness corrupted the repo")
 
     failed = [n for n, ok, _ in RESULTS if not ok]
     print()
