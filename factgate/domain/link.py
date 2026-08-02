@@ -109,13 +109,40 @@ def mentioned_entities(text: str, fs: FactSet) -> set[str]:
     # names as "fluid-\nresuscitation", where the hyphen belongs. Nothing local can tell
     # which, so both readings are tried and either may match.
     readings = (_norm_surface(text), _norm_surface(_dehyphenate(text)))
+    # A multi-word name is often split across the sentence that uses it. A tariff declaring
+    # "Summer On-Peak Energy" is answered as "During the Summer Season ... the On-Peak
+    # Energy rate is 14.2 cents per kWh" -- every word present, never contiguous. Measured:
+    # six of thirteen remaining bypasses were this, and a bypass emits no verdict at all.
+    #
+    # Scoped to ONE SENTENCE rather than the whole text, so the words have to co-occur where
+    # a reader would take them as one name. Attaching a claim to the wrong entity is the
+    # worst thing this function can do, and a whole-document window would invite it.
+    windows = [_norm_surface(s) for s in sentences(text)] + [_norm_surface(text)]
     found = set()
     for canon, aliases in fs.entities.items():
         for surface in (canon, *aliases):
             if any(_surface_matches(surface, low) for low in readings):
                 found.add(canon)
                 break
+            if any(_all_words_present(surface, w) for w in windows):
+                found.add(canon)
+                break
     return found
+
+
+_STOPWORDS = frozenset({"the", "a", "an", "of", "and", "or", "for", "to", "in", "on"})
+
+
+def _all_words_present(surface: str, sentence: str) -> bool:
+    """Every significant word of a multi-word name, inside one sentence.
+
+    Requires at least two significant words, so a single common noun can never resolve an
+    entity on its own -- the guard that keeps "energy" from matching every tariff row.
+    """
+    words = [w for w in _norm_surface(surface).split() if w not in _STOPWORDS]
+    if len(words) < 2 or not sentence:
+        return False
+    return all(re.search(rf"\b{re.escape(w)}\b", sentence) for w in words)
 
 
 def _dehyphenate(s: str) -> str:

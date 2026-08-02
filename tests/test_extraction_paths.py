@@ -294,3 +294,43 @@ def test_reporting_unresolved_does_not_change_what_is_claimed(monkeypatch):
     claims, unresolved = link.link_targeted(passage, fs, "m", report_unresolved=True)
     assert plain == claims == [("acetaminophen", "dose", "7.5 mg/kg")]
     assert unresolved == []
+
+
+# ------------------------------------------- multi-word names split across a sentence
+def _tariff():
+    return FactSet.from_dict({
+        "domain": "t",
+        "entities": {"Summer On-Peak Energy": [], "Winter On-Peak Energy": [],
+                     "Customer Charge": []},
+        "relations": {"rate": {"kind": "quantity"}},
+        "facts": [{"s": "Summer On-Peak Energy", "r": "rate", "o": "14.2 cents per kWh",
+                   "source": "The Summer On-Peak Energy rate is 14.2 cents per kWh."},
+                  {"s": "Winter On-Peak Energy", "r": "rate", "o": "11.5 cents per kWh",
+                   "source": "The Winter On-Peak Energy rate is 11.5 cents per kWh."},
+                  {"s": "Customer Charge", "r": "rate", "o": "$45.00 per month",
+                   "source": "The Customer Charge is $45.00 per month."}]})
+
+
+def test_a_name_split_across_its_sentence_still_resolves():
+    """MEASURED: six of thirteen remaining bypasses were this. A tariff declaring "Summer
+    On-Peak Energy" is answered as "During the Summer Season ... the On-Peak Energy rate is
+    14.2 cents per kWh" -- every word present, never contiguous. No entity matched, so no
+    slot was queried, so no verdict was emitted at all."""
+    answer = ("During the Summer Season from June 1 to September 30, the On-Peak Energy "
+              "rate is charged at 14.2 cents per kWh.")
+    assert mentioned_entities(answer, _tariff()) == {"Summer On-Peak Energy"}
+
+
+def test_a_split_name_does_not_resolve_the_wrong_season():
+    """The danger of a wider window: attaching a claim to the wrong entity is the worst
+    thing this function can do. The words must co-occur in ONE sentence."""
+    answer = "During the Winter Season, the On-Peak Energy rate is 11.5 cents per kWh."
+    assert mentioned_entities(answer, _tariff()) == {"Winter On-Peak Energy"}
+
+
+@pytest.mark.parametrize("answer", ["Energy is charged monthly.", "A charge applies.",
+                                    "Peak usage is discouraged."])
+def test_one_common_word_never_resolves_an_entity(answer):
+    """At least two significant words are required, so a single common noun cannot resolve
+    a multi-word name on its own."""
+    assert mentioned_entities(answer, _tariff()) == set()
