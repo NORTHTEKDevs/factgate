@@ -77,11 +77,20 @@ def states_a_different_value(answer: str, fact, fs: FactSet) -> bool:
     """
     declared_nums = {m.group(0).replace(",", "") for m in _NUM.finditer(fact.o)}
     unit = re.sub(r"^[-+]?[0-9][0-9,.]*\s*", "", fact.o).strip()
+    # Only numbers this slot could plausibly own. Without this the harness attributed
+    # ANOTHER slot's figure to this one and reported a correct answer as unguarded-wrong:
+    # an epinephrine answer stating "0.01 mg/kg IM and a four-hour observation period" was
+    # scored wrong for the OBSERVATION PERIOD because 0.01 differs from 4. A measurement
+    # that mislabels a correct answer overstates exactly the risk it exists to quantify.
+    other_values = {o for f in fs.facts
+                    if (f.s, f.r) != (fact.s, fact.r) for o in _NUM.findall(f.o)}
     for m in _NUM.finditer(answer):
         raw = m.group(0)
         if raw.replace(",", "") in declared_nums:
             return False                     # the declared figure is present; not wrong
     for m in _NUM.finditer(answer):
+        if m.group(0).replace(",", "") in other_values:
+            continue                          # this figure belongs to a different slot
         candidate = f"{m.group(0)} {unit}".strip()
         if compare_values(fact.o, candidate) == DIFFER:
             return True

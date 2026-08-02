@@ -265,6 +265,42 @@ def respell_from_passage(value: str, passage: str) -> str:
     return recovered if re.sub(r"\s+", "", recovered).lower() == flat.lower() else value
 
 
+# Numbers written as WORDS. Measured on a real routing run: asked about an observation
+# period declared as "4 hours", the model answered "a four-hour observation period" -- the
+# correct value, spelled out. The digit never appears, so grounding failed, no claim was
+# produced, and a correct clinical statement reached the user with nothing adjudicating it.
+# That is a BYPASS, which is worse than a hold: the user is not even told to check.
+#
+# Substitution is exact and bounded, and it happens only on the extracted VALUE so that a
+# claim can reach the gate. Nothing new verifies: the gate still compares what it is given.
+_WORD_NUMBERS = {
+    "zero": "0", "one": "1", "two": "2", "three": "3", "four": "4", "five": "5",
+    "six": "6", "seven": "7", "eight": "8", "nine": "9", "ten": "10", "eleven": "11",
+    "twelve": "12", "thirteen": "13", "fourteen": "14", "fifteen": "15",
+    "sixteen": "16", "seventeen": "17", "eighteen": "18", "nineteen": "19",
+    "twenty": "20", "thirty": "30", "forty": "40", "fifty": "50", "sixty": "60",
+    "seventy": "70", "eighty": "80", "ninety": "90", "hundred": "100",
+}
+_WORD_NUMBER_RE = re.compile(
+    r"\b(" + "|".join(sorted(_WORD_NUMBERS, key=len, reverse=True)) + r")\b",
+    re.IGNORECASE)
+
+
+def digits_for_words(text: str) -> str:
+    """Rewrite number words as digits. Returns the text unchanged if it contains none.
+
+    Deliberately NOT applied to the passage or to a declared value -- only to a model's
+    answer, and only so the claim it contains can be adjudicated rather than silently
+    skipped. "twenty-four" becomes "20-4" under this table rather than "24", which is
+    wrong-looking but harmless: it fails to parse and the claim is held, which is the same
+    outcome as before the substitution. Compound words are a known gap, recorded rather
+    than guessed at.
+    """
+    if not text:
+        return text
+    return _WORD_NUMBER_RE.sub(lambda m: _WORD_NUMBERS[m.group(1).lower()], str(text))
+
+
 def value_is_grounded(value: str, passage: str, fs: FactSet | None = None) -> bool:
     """Is this extracted value actually present in the passage it came from?
 
@@ -298,6 +334,10 @@ def value_is_grounded(value: str, passage: str, fs: FactSet | None = None) -> bo
     if not value or not passage:
         return False
     low = " ".join(passage.lower().split())
+    # A passage may spell its numbers ("a four-hour period"); the value will not.
+    spelled = " ".join(digits_for_words(passage).lower().split())
+    if spelled != low and value_is_grounded(value, spelled, fs):
+        return True     # terminates: digits_for_words(spelled) == spelled
     q = parse_quantity(value)
     if q is None:
         # Trailing punctuation ("$79(download)") stops the value parsing, but its numeric
@@ -461,6 +501,14 @@ def link_targeted(text: str, fs: FactSet, model: str,
             declared_o = declared_fact.o if declared_fact else next(
                 (v.o for v in fs.variants(entity, relation)), None)
             value = normalise_slot_answer(answer, fs, declared_o)
+            # The answer may spell its number. Substituting digits is what lets the claim
+            # reach the gate at all; without it the value is ungrounded and silently
+            # dropped, which is a BYPASS -- worse than a hold, because the user is not even
+            # told to check.
+            if value is not None and value != digits_for_words(value):
+                spelled_out = digits_for_words(value)
+                if value_is_grounded(spelled_out, text, fs):
+                    value = spelled_out
             if value is not None:
                 value = respell_from_passage(value, text)
             # The extractor emitted a word the passage does not contain. Ask ONCE more,

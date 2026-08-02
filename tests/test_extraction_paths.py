@@ -227,3 +227,36 @@ def test_a_refusal_never_becomes_a_value(refusal):
                                    "12-16 weeks", "92%"])
 def test_a_real_value_survives_the_shape_filter(value):
     assert normalise_slot_answer(value) == value
+
+
+# --------------------------------------------------- numbers spelled as words
+@pytest.mark.parametrize("spelled,digits", [
+    ("a four-hour observation period", "a 4-hour observation period"),
+    ("twelve weeks", "12 weeks"),
+    ("observe for six hours", "observe for 6 hours"),
+])
+def test_number_words_become_digits(spelled, digits):
+    """MEASURED ON A ROUTING RUN, and the reason routing coverage was not 100%: asked about
+    an observation period declared as "4 hours", the model answered "a four-hour observation
+    period" -- the correct value, spelled out. The digit never appears, grounding failed, no
+    claim was produced, and a correct clinical statement reached the user with NOTHING
+    adjudicating it. A bypass is worse than a hold: the user is not even told to check."""
+    from factgate.domain.link import digits_for_words
+    assert digits_for_words(spelled) == digits
+
+
+@pytest.mark.parametrize("text", ["money and honey", "someone atoned", "a stone wall",
+                                  "no numbers here"])
+def test_a_number_word_inside_another_word_is_not_substituted(text):
+    """Without word boundaries "money" became "m1y". The substitution is bounded on both
+    sides, so only a whole word counts."""
+    from factgate.domain.link import digits_for_words
+    assert digits_for_words(text) == text
+
+
+def test_a_spelled_number_is_grounded_but_a_wrong_one_still_is_not():
+    """Coverage rises; nothing new verifies. The claim reaches the gate, where it is
+    adjudicated on its merits."""
+    answer = "the dose is 0.01 mg/kg IM and requires a four-hour observation period"
+    assert value_is_grounded("4 hours", answer) is True
+    assert value_is_grounded("9 hours", answer) is False
