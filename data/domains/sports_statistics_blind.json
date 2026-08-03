@@ -1,0 +1,206 @@
+{
+  "domain": "sports-statistics-blind",
+  "corpus": "CASCADIA AMATEUR SPORTS LEAGUE -- 2025 SEASON STATISTICS SHEET\n\nThe Portland Wolverines finished the 2025 regular season with a record of 34-12, the best mark in the Western Division. In the playoffs, the Wolverines went 8-2 on their way to the league championship. Across the championship game, the Wolverines controlled the ball for a possession percentage of 54%, the highest of any team in the postseason.\n\nThe Denver Falcons finished the 2025 regular season with a record of 28-18, good enough for the second seed in the Western Division. In the championship game, the Falcons managed a possession percentage of 46% against the Wolverines' full-court pressure.\n\nThe Seattle Harbor Seals closed out the 2025 baseball season with a record of 22-14, topping the Cascadia baseball standings. The Boise Thunder finished the 2025 baseball season with a record of 19-17, good for third place in the division.\n\nThe 2025 Championship Game between the Wolverines and the Falcons ended with a final score of 108-97 in favor of Portland. The 2025 Championship Game drew an attendance of 42,315 fans, a new league record for a single postseason game.\n\nMarcus Hale, the Wolverines' starting point guard, averaged 34:12 of playing time per game across the 2025 season. Hale's base salary for the 2025 season was $8.2 million, the largest on the Wolverines' roster.\n\nJamal Pierce, the Falcons' starting forward, averaged 29:47 of playing time per game across the 2025 season. Pierce wears jersey number 11 for the Falcons.\n\nSofia Reyes, the Thunder's starting shortstop, finished the 2025 season with a batting average of 0.315, the best mark on the Thunder roster.\n\nElena Cross, the Harbor Seals' starting pitcher, finished the 2025 season with an earned run average of 3.42 across 28 starts. Cross's base salary for the 2025 season was $2.4 million.\n\nAll win-loss records, scores, and salary figures reflect final 2025 season totals as reported by the league office.",
+  "entities": {
+    "portland-wolverines": [
+      "Portland Wolverines",
+      "the Wolverines",
+      "Wolverines"
+    ],
+    "denver-falcons": [
+      "Denver Falcons",
+      "the Falcons",
+      "Falcons"
+    ],
+    "seattle-harbor-seals": [
+      "Seattle Harbor Seals",
+      "the Harbor Seals",
+      "Harbor Seals"
+    ],
+    "boise-thunder": [
+      "Boise Thunder",
+      "the Thunder",
+      "Thunder"
+    ],
+    "marcus-hale": [
+      "Marcus Hale",
+      "Hale"
+    ],
+    "jamal-pierce": [
+      "Jamal Pierce",
+      "Pierce"
+    ],
+    "sofia-reyes": [
+      "Sofia Reyes",
+      "Reyes"
+    ],
+    "elena-cross": [
+      "Elena Cross",
+      "Cross"
+    ],
+    "2025-championship-game": [
+      "2025 Championship Game",
+      "the Championship Game",
+      "the title game"
+    ]
+  },
+  "relations": {
+    "season_record": {
+      "kind": "text",
+      "question": "what is the season win-loss record of {entity}?"
+    },
+    "final_score": {
+      "kind": "text",
+      "question": "what was the final score of {entity}?"
+    },
+    "batting_average": {
+      "kind": "quantity",
+      "question": "what is the batting average of {entity}?"
+    },
+    "era": {
+      "kind": "quantity",
+      "question": "what is the earned run average of {entity}?"
+    },
+    "possession_percentage": {
+      "kind": "quantity",
+      "question": "what is the possession percentage of {entity}?"
+    },
+    "minutes_played": {
+      "kind": "text",
+      "question": "what are the average minutes played per game by {entity}?"
+    },
+    "salary": {
+      "kind": "quantity",
+      "question": "what is the base salary of {entity}?"
+    },
+    "jersey_number": {
+      "kind": "quantity",
+      "question": "what is the jersey number of {entity}?"
+    },
+    "attendance": {
+      "kind": "quantity",
+      "question": "what was the attendance of {entity}?"
+    }
+  },
+  "conditions": [
+    "game_type"
+  ],
+  "value_qualifiers": [
+    "the best mark in the Western Division",
+    "good enough for the second seed in the Western Division",
+    "topping the Cascadia baseball standings",
+    "good for third place in the division",
+    "in favor of Portland",
+    "a new league record for a single postseason game",
+    "the largest on the Wolverines' roster",
+    "the best mark on the Thunder roster",
+    "across 28 starts"
+  ],
+  "unit_aliases": {
+    "%": "percent"
+  },
+  "facts": [
+    {
+      "s": "portland-wolverines",
+      "r": "season_record",
+      "o": "34-12",
+      "source": "The Portland Wolverines finished the 2025 regular season with a record of 34-12, the best mark in the Western Division.",
+      "when": {
+        "game_type": "regular_season"
+      }
+    },
+    {
+      "s": "portland-wolverines",
+      "r": "season_record",
+      "o": "8-2",
+      "source": "In the playoffs, the Wolverines went 8-2 on their way to the league championship.",
+      "when": {
+        "game_type": "playoffs"
+      }
+    },
+    {
+      "s": "denver-falcons",
+      "r": "season_record",
+      "o": "28-18",
+      "source": "The Denver Falcons finished the 2025 regular season with a record of 28-18, good enough for the second seed in the Western Division."
+    },
+    {
+      "s": "seattle-harbor-seals",
+      "r": "season_record",
+      "o": "22-14",
+      "source": "The Seattle Harbor Seals closed out the 2025 baseball season with a record of 22-14, topping the Cascadia baseball standings."
+    },
+    {
+      "s": "boise-thunder",
+      "r": "season_record",
+      "o": "19-17",
+      "source": "The Boise Thunder finished the 2025 baseball season with a record of 19-17, good for third place in the division."
+    },
+    {
+      "s": "2025-championship-game",
+      "r": "final_score",
+      "o": "108-97",
+      "source": "The 2025 Championship Game between the Wolverines and the Falcons ended with a final score of 108-97 in favor of Portland."
+    },
+    {
+      "s": "2025-championship-game",
+      "r": "attendance",
+      "o": "42,315",
+      "source": "The 2025 Championship Game drew an attendance of 42,315 fans, a new league record for a single postseason game."
+    },
+    {
+      "s": "sofia-reyes",
+      "r": "batting_average",
+      "o": "0.315",
+      "source": "Sofia Reyes, the Thunder's starting shortstop, finished the 2025 season with a batting average of 0.315, the best mark on the Thunder roster."
+    },
+    {
+      "s": "elena-cross",
+      "r": "era",
+      "o": "3.42",
+      "source": "Elena Cross, the Harbor Seals' starting pitcher, finished the 2025 season with an earned run average of 3.42 across 28 starts."
+    },
+    {
+      "s": "portland-wolverines",
+      "r": "possession_percentage",
+      "o": "54%",
+      "source": "Across the championship game, the Wolverines controlled the ball for a possession percentage of 54%, the highest of any team in the postseason."
+    },
+    {
+      "s": "denver-falcons",
+      "r": "possession_percentage",
+      "o": "46%",
+      "source": "In the championship game, the Falcons managed a possession percentage of 46% against the Wolverines' full-court pressure."
+    },
+    {
+      "s": "marcus-hale",
+      "r": "minutes_played",
+      "o": "34:12",
+      "source": "Marcus Hale, the Wolverines' starting point guard, averaged 34:12 of playing time per game across the 2025 season."
+    },
+    {
+      "s": "jamal-pierce",
+      "r": "minutes_played",
+      "o": "29:47",
+      "source": "Jamal Pierce, the Falcons' starting forward, averaged 29:47 of playing time per game across the 2025 season."
+    },
+    {
+      "s": "marcus-hale",
+      "r": "salary",
+      "o": "$8.2 million",
+      "source": "Hale's base salary for the 2025 season was $8.2 million, the largest on the Wolverines' roster."
+    },
+    {
+      "s": "elena-cross",
+      "r": "salary",
+      "o": "$2.4 million",
+      "source": "Cross's base salary for the 2025 season was $2.4 million."
+    },
+    {
+      "s": "jamal-pierce",
+      "r": "jersey_number",
+      "o": "11",
+      "source": "Pierce wears jersey number 11 for the Falcons."
+    }
+  ]
+}

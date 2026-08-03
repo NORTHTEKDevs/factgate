@@ -1,0 +1,185 @@
+{
+  "domain": "network-config-blind",
+  "corpus": "NETWORK INFRASTRUCTURE SPECIFICATION - BRANCH OFFICE DEPLOYMENT\n\nThis document describes the addressing, switching, routing, and WAN configuration for the branch office network build-out.\n\nCore Switch CS-4000 (core-sw1) is provisioned with a management IP address of 10.0.0.1/24 on VLAN 1. The core switch supports a maximum transmission unit of 9216 bytes for jumbo frame forwarding. Aggregate backplane bandwidth on the core switch is rated at up to 40 Gbps.\n\nDistribution Switch DS-2200 (dist-sw1) is assigned an IP address of 10.0.1.1/24. The distribution switch operates with a standard MTU of 1500 bytes on all access ports. Uplinks from the distribution switch to the core are provisioned at up to 10 Gbps. The distribution switch trunk port carries VLAN 10 and VLAN 20 to downstream access switches.\n\nEdge Router ER-100 (edge-rtr1) terminates the primary WAN circuit at an IP address of 203.0.113.1/30. Round-trip latency measured from edge-rtr1 to the regional peering point is approximately 12 ms. The WAN-facing interface on edge-rtr1 has a hardware address of 00:1A:2B:3C:4D:5E.\n\nEdge Router ER-200 (edge-rtr2) serves as the secondary WAN path and is configured with an IP address of 203.0.113.5/30.\n\nFirewall FW-Sentinel (fw1) sits at the network edge with an interface IP address of 10.0.0.254/24.\n\nVLAN 10, designated for the Engineering department, is configured with VLAN ID 10. VLAN 20, designated for Guest wireless access, is configured with VLAN ID 20.\n\nThe WAN Uplink Circuit (wan-link1) connecting the branch office to the regional hub is provisioned at up to 1 Gbps during off-peak hours. During peak business hours, available bandwidth on the WAN Uplink Circuit is reduced to approximately 0.5 Gbps due to shared carrier capacity.",
+  "entities": {
+    "core_sw1": [
+      "Core Switch CS-4000",
+      "core-sw1",
+      "CS-4000"
+    ],
+    "dist_sw1": [
+      "Distribution Switch DS-2200",
+      "dist-sw1",
+      "DS-2200"
+    ],
+    "edge_rtr1": [
+      "Edge Router ER-100",
+      "edge-rtr1",
+      "ER-100"
+    ],
+    "edge_rtr2": [
+      "Edge Router ER-200",
+      "edge-rtr2",
+      "ER-200"
+    ],
+    "fw1": [
+      "Firewall FW-Sentinel",
+      "fw1",
+      "FW-Sentinel"
+    ],
+    "vlan10": [
+      "VLAN 10",
+      "Engineering VLAN"
+    ],
+    "vlan20": [
+      "VLAN 20",
+      "Guest VLAN"
+    ],
+    "wan_link1": [
+      "WAN Uplink Circuit",
+      "wan-link1"
+    ]
+  },
+  "relations": {
+    "ip_address": {
+      "kind": "text",
+      "question": "what is the IP address of {entity}?"
+    },
+    "mtu": {
+      "kind": "quantity",
+      "question": "what is the MTU of {entity}?"
+    },
+    "bandwidth": {
+      "kind": "quantity",
+      "question": "what is the bandwidth of {entity}?"
+    },
+    "mac_address": {
+      "kind": "text",
+      "question": "what is the MAC address of {entity}?"
+    },
+    "latency": {
+      "kind": "quantity",
+      "question": "what is the round-trip latency of {entity}?"
+    },
+    "vlan_id": {
+      "kind": "text",
+      "question": "what is the VLAN ID of {entity}?"
+    },
+    "trunked_vlans": {
+      "kind": "text",
+      "question": "which VLANs are trunked on {entity}?"
+    }
+  },
+  "conditions": [
+    "utilization_period"
+  ],
+  "value_qualifiers": [
+    "up to",
+    "approximately"
+  ],
+  "unit_aliases": {},
+  "facts": [
+    {
+      "s": "core_sw1",
+      "r": "ip_address",
+      "o": "10.0.0.1/24",
+      "source": "Core Switch CS-4000 (core-sw1) is provisioned with a management IP address of 10.0.0.1/24 on VLAN 1."
+    },
+    {
+      "s": "core_sw1",
+      "r": "mtu",
+      "o": "9216 bytes",
+      "source": "The core switch supports a maximum transmission unit of 9216 bytes for jumbo frame forwarding."
+    },
+    {
+      "s": "core_sw1",
+      "r": "bandwidth",
+      "o": "40 Gbps",
+      "source": "Aggregate backplane bandwidth on the core switch is rated at up to 40 Gbps."
+    },
+    {
+      "s": "dist_sw1",
+      "r": "ip_address",
+      "o": "10.0.1.1/24",
+      "source": "Distribution Switch DS-2200 (dist-sw1) is assigned an IP address of 10.0.1.1/24."
+    },
+    {
+      "s": "dist_sw1",
+      "r": "mtu",
+      "o": "1500 bytes",
+      "source": "The distribution switch operates with a standard MTU of 1500 bytes on all access ports."
+    },
+    {
+      "s": "dist_sw1",
+      "r": "bandwidth",
+      "o": "10 Gbps",
+      "source": "Uplinks from the distribution switch to the core are provisioned at up to 10 Gbps."
+    },
+    {
+      "s": "dist_sw1",
+      "r": "trunked_vlans",
+      "o": "VLAN 10 and VLAN 20",
+      "source": "The distribution switch trunk port carries VLAN 10 and VLAN 20 to downstream access switches."
+    },
+    {
+      "s": "edge_rtr1",
+      "r": "ip_address",
+      "o": "203.0.113.1/30",
+      "source": "Edge Router ER-100 (edge-rtr1) terminates the primary WAN circuit at an IP address of 203.0.113.1/30."
+    },
+    {
+      "s": "edge_rtr1",
+      "r": "latency",
+      "o": "12 ms",
+      "source": "Round-trip latency measured from edge-rtr1 to the regional peering point is approximately 12 ms."
+    },
+    {
+      "s": "edge_rtr1",
+      "r": "mac_address",
+      "o": "00:1A:2B:3C:4D:5E",
+      "source": "The WAN-facing interface on edge-rtr1 has a hardware address of 00:1A:2B:3C:4D:5E."
+    },
+    {
+      "s": "edge_rtr2",
+      "r": "ip_address",
+      "o": "203.0.113.5/30",
+      "source": "Edge Router ER-200 (edge-rtr2) serves as the secondary WAN path and is configured with an IP address of 203.0.113.5/30."
+    },
+    {
+      "s": "fw1",
+      "r": "ip_address",
+      "o": "10.0.0.254/24",
+      "source": "Firewall FW-Sentinel (fw1) sits at the network edge with an interface IP address of 10.0.0.254/24."
+    },
+    {
+      "s": "vlan10",
+      "r": "vlan_id",
+      "o": "10",
+      "source": "VLAN 10, designated for the Engineering department, is configured with VLAN ID 10."
+    },
+    {
+      "s": "vlan20",
+      "r": "vlan_id",
+      "o": "20",
+      "source": "VLAN 20, designated for Guest wireless access, is configured with VLAN ID 20."
+    },
+    {
+      "s": "wan_link1",
+      "r": "bandwidth",
+      "o": "1 Gbps",
+      "when": {
+        "utilization_period": "off-peak hours"
+      },
+      "source": "The WAN Uplink Circuit (wan-link1) connecting the branch office to the regional hub is provisioned at up to 1 Gbps during off-peak hours."
+    },
+    {
+      "s": "wan_link1",
+      "r": "bandwidth",
+      "o": "0.5 Gbps",
+      "when": {
+        "utilization_period": "peak business hours"
+      },
+      "source": "During peak business hours, available bandwidth on the WAN Uplink Circuit is reduced to approximately 0.5 Gbps due to shared carrier capacity."
+    }
+  ]
+}

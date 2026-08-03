@@ -1,0 +1,173 @@
+{
+  "domain": "legal-citation-blind",
+  "corpus": "Rourke v. Talbot Freight Co., 188 F.3d 402 (7th Cir. 1999), arose from a highway collision involving a Talbot Freight tractor-trailer. The jury returned a verdict of $340,000 in damages. On the negligence claim, the court applied a 2-year limitations period; on the accompanying breach-of-contract claim arising from the shipping agreement, the court applied a 6-year limitations period. The jury voted 10-2 to find liability. A party seeking rehearing must file within 14 days of judgment.\n\nState v. Denholm, 271 Kan. 88 (2001), concerned a conviction for aggravated burglary under Kan. Stat. Ann. 21-3716. The Kansas Supreme Court held that the trial court's jury instruction on intent was proper. Denholm was sentenced to 7 years of imprisonment.\n\nYaeger v. Pinegrove School District, 402 U.S. 219 (1971), addressed a due process challenge to a student's suspension without a hearing. The district court had awarded Yaeger $12,500 in damages. The claim was brought under 42 U.S.C. 1983.\n\nMatter of Castellan Trust, 55 N.Y.2d 310 (1982), involved a dispute over trustee compensation before the surrogate's court. The Court of Appeals held that a trustee's commission is calculated on principal actually received or paid out, not on unrealized appreciation.\n\nBriarwood Cooperative v. Halvorsen, 19 Cal. App. 4th 660 (1993), concerned a cooperative's authority to evict a shareholder-tenant for nuisance. The trial court entered judgment for the cooperative and awarded $6,200 in attorney's fees. The jury deliberated and returned a verdict by a vote of 9-3.\n\nPeople v. Okafor, 33 Cal. 4th 517 (2004), reviewed a conviction for vehicular manslaughter under Cal. Penal Code 192(c). Okafor was sentenced to 6 years in state prison.",
+  "entities": {
+    "Rourke v. Talbot Freight Co.": [
+      "Rourke v. Talbot Freight Co.",
+      "Rourke"
+    ],
+    "State v. Denholm": [
+      "State v. Denholm",
+      "Denholm"
+    ],
+    "Yaeger v. Pinegrove School District": [
+      "Yaeger v. Pinegrove School District",
+      "Yaeger"
+    ],
+    "Matter of Castellan Trust": [
+      "Matter of Castellan Trust",
+      "Castellan Trust"
+    ],
+    "Briarwood Cooperative v. Halvorsen": [
+      "Briarwood Cooperative v. Halvorsen",
+      "Briarwood"
+    ],
+    "People v. Okafor": [
+      "People v. Okafor",
+      "Okafor"
+    ]
+  },
+  "relations": {
+    "citation": {
+      "kind": "text",
+      "question": "What is the citation of {entity}?"
+    },
+    "damages_awarded": {
+      "kind": "quantity",
+      "question": "What damages were awarded in {entity}?"
+    },
+    "limitations_period": {
+      "kind": "quantity",
+      "question": "What limitations period applied in {entity}?"
+    },
+    "jury_vote": {
+      "kind": "text",
+      "question": "What was the jury vote in {entity}?"
+    },
+    "appeal_deadline": {
+      "kind": "quantity",
+      "question": "What is the deadline to appeal in {entity}?"
+    },
+    "statute_cited": {
+      "kind": "text",
+      "question": "What statute was cited in {entity}?"
+    },
+    "sentence_length": {
+      "kind": "quantity",
+      "question": "What sentence was imposed in {entity}?"
+    }
+  },
+  "conditions": [
+    "claim_type"
+  ],
+  "value_qualifiers": [],
+  "unit_aliases": {
+    "yr": "years",
+    "yrs": "years",
+    "day": "days"
+  },
+  "facts": [
+    {
+      "s": "Rourke v. Talbot Freight Co.",
+      "r": "citation",
+      "o": "188 F.3d 402 (7th Cir. 1999)",
+      "source": "188 F.3d 402 (7th Cir. 1999)"
+    },
+    {
+      "s": "Rourke v. Talbot Freight Co.",
+      "r": "damages_awarded",
+      "o": "$340,000",
+      "source": "The jury returned a verdict of $340,000 in damages."
+    },
+    {
+      "s": "Rourke v. Talbot Freight Co.",
+      "r": "limitations_period",
+      "o": "2 years",
+      "when": {
+        "claim_type": "negligence"
+      },
+      "source": "On the negligence claim, the court applied a 2-year limitations period"
+    },
+    {
+      "s": "Rourke v. Talbot Freight Co.",
+      "r": "limitations_period",
+      "o": "6 years",
+      "when": {
+        "claim_type": "contract"
+      },
+      "source": "on the accompanying breach-of-contract claim arising from the shipping agreement, the court applied a 6-year limitations period."
+    },
+    {
+      "s": "Rourke v. Talbot Freight Co.",
+      "r": "jury_vote",
+      "o": "10-2",
+      "source": "The jury voted 10-2 to find liability."
+    },
+    {
+      "s": "Rourke v. Talbot Freight Co.",
+      "r": "appeal_deadline",
+      "o": "14 days",
+      "source": "A party seeking rehearing must file within 14 days of judgment."
+    },
+    {
+      "s": "State v. Denholm",
+      "r": "citation",
+      "o": "271 Kan. 88 (2001)",
+      "source": "271 Kan. 88 (2001)"
+    },
+    {
+      "s": "State v. Denholm",
+      "r": "statute_cited",
+      "o": "Kan. Stat. Ann. 21-3716",
+      "source": "Kan. Stat. Ann. 21-3716"
+    },
+    {
+      "s": "State v. Denholm",
+      "r": "sentence_length",
+      "o": "7 years",
+      "source": "Denholm was sentenced to 7 years of imprisonment."
+    },
+    {
+      "s": "Yaeger v. Pinegrove School District",
+      "r": "citation",
+      "o": "402 U.S. 219 (1971)",
+      "source": "402 U.S. 219 (1971)"
+    },
+    {
+      "s": "Yaeger v. Pinegrove School District",
+      "r": "damages_awarded",
+      "o": "$12,500",
+      "source": "The district court had awarded Yaeger $12,500 in damages."
+    },
+    {
+      "s": "Yaeger v. Pinegrove School District",
+      "r": "statute_cited",
+      "o": "42 U.S.C. 1983",
+      "source": "The claim was brought under 42 U.S.C. 1983."
+    },
+    {
+      "s": "Matter of Castellan Trust",
+      "r": "citation",
+      "o": "55 N.Y.2d 310 (1982)",
+      "source": "55 N.Y.2d 310 (1982)"
+    },
+    {
+      "s": "Briarwood Cooperative v. Halvorsen",
+      "r": "jury_vote",
+      "o": "9-3",
+      "source": "The jury deliberated and returned a verdict by a vote of 9-3."
+    },
+    {
+      "s": "Briarwood Cooperative v. Halvorsen",
+      "r": "damages_awarded",
+      "o": "$6,200",
+      "source": "The trial court entered judgment for the cooperative and awarded $6,200 in attorney's fees."
+    },
+    {
+      "s": "People v. Okafor",
+      "r": "sentence_length",
+      "o": "6 years",
+      "source": "Okafor was sentenced to 6 years in state prison."
+    }
+  ]
+}

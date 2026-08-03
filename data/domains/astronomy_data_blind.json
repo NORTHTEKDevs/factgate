@@ -1,0 +1,199 @@
+{
+  "domain": "astronomy-data-blind",
+  "_disclaimer": "SYNTHETIC ILLUSTRATIVE DATA. Authored as a BLIND vocabulary declaration for the bounded-domain gate: entities, relations, value_qualifiers and question phrasings below were written from priors before any benchmark run and were not revised in response to gate behaviour. Not a real observatory's log.",
+  "corpus": "NORTHTEK OBSERVATORY -- VISUAL AND SPECTROSCOPIC LOG (SYNTHETIC, ILLUSTRATIVE ONLY). Session 14, night of March 22, instrument 0.6-meter reflector, seeing 2.1 arcsec.\n\nEntry 01. Sirius A was acquired at right ascension 06:45:09 and held in the crosshairs for photometry. The apparent magnitude of Sirius A was logged at -1.46, the brightest point source of the session.\n\nEntry 02. Betelgeuse rose late and was tracked to declination +07:24:25. The apparent magnitude of Betelgeuse was recorded at 0.50, consistent with its known slow variability.\n\nEntry 03. Proxima Centauri required the longest exposure of the night given its faintness. The distance to Proxima Centauri was confirmed at 4.24 light years from the parallax cross-check. The spectral type of Proxima Centauri was classified as M5.5V from the reduced spectrum.\n\nEntry 04. Vega was centered at right ascension 18:36:56 for calibration purposes. The distance to Vega was logged at 7.68 parsecs, matching the calibration catalog.\n\nEntry 05. The Andromeda Galaxy filled the wide-field frame entirely. The distance to the Andromeda Galaxy was recorded at 2500000 light years, per the reduction pipeline. The redshift of the Andromeda Galaxy was measured at -0.001001, one of the few blueshifted targets of the survey.\n\nEntry 06. Polaris was tracked to declination +89:15:51 for the pole alignment check. The apparent magnitude of Polaris was recorded at 1.98, dimmer than expected under thin cirrus.\n\nEntry 07. Messier 87 was captured in the deep-sky queue. The redshift of Messier 87 was measured at 0.00436. The distance to Messier 87 was logged at 53500000 light years, consistent with the Virgo Cluster distance ladder.\n\nEntry 08. Kepler-186f data was pulled from the archive for cross-reference. The orbital period of Kepler-186f was logged at 129.9 days. The distance to Kepler-186f was recorded at 582 light years from the archived parallax solution.\n\nEnd of session 14 log.",
+  "entities": {
+    "Sirius A": [
+      "Sirius"
+    ],
+    "Betelgeuse": [
+      "Alpha Orionis"
+    ],
+    "Proxima Centauri": [
+      "Proxima"
+    ],
+    "Vega": [
+      "Alpha Lyrae"
+    ],
+    "Andromeda Galaxy": [
+      "M31",
+      "Andromeda"
+    ],
+    "Polaris": [
+      "North Star",
+      "Alpha Ursae Minoris"
+    ],
+    "Messier 87": [
+      "M87",
+      "Virgo A"
+    ],
+    "Kepler-186f": [
+      "Kepler 186f"
+    ]
+  },
+  "relations": {
+    "right_ascension": {
+      "kind": "text",
+      "description": "the right ascension coordinate at which the object was acquired, in sexagesimal HH:MM:SS",
+      "question": "what is the right ascension of {entity}?"
+    },
+    "declination": {
+      "kind": "text",
+      "description": "the declination coordinate at which the object was tracked, signed degrees:arcmin:arcsec",
+      "question": "what is the declination of {entity}?"
+    },
+    "apparent_magnitude": {
+      "kind": "quantity",
+      "description": "the apparent visual magnitude recorded during the session",
+      "question": "what is the apparent magnitude of {entity}?"
+    },
+    "distance_ly": {
+      "kind": "quantity",
+      "description": "the distance to the object in light years",
+      "question": "what is the distance to {entity} in light years?"
+    },
+    "distance_pc": {
+      "kind": "quantity",
+      "description": "the distance to the object in parsecs",
+      "question": "what is the distance to {entity} in parsecs?"
+    },
+    "redshift": {
+      "kind": "quantity",
+      "description": "the measured redshift (z) of the object",
+      "question": "what is the redshift of {entity}?"
+    },
+    "spectral_type": {
+      "kind": "text",
+      "description": "the spectral classification of the object",
+      "question": "what is the spectral type of {entity}?"
+    },
+    "orbital_period": {
+      "kind": "quantity",
+      "description": "the orbital period of the object in days",
+      "question": "what is the orbital period of {entity}?"
+    }
+  },
+  "conditions": [],
+  "value_qualifiers": [
+    "approximately",
+    "about",
+    "roughly",
+    "measured at",
+    "logged at",
+    "recorded at",
+    "confirmed at",
+    "classified as",
+    "centered at",
+    "tracked to",
+    "up to",
+    "at least",
+    "no more than",
+    "per the reduction pipeline",
+    "from the parallax cross-check",
+    "from the reduced spectrum"
+  ],
+  "unit_aliases": {
+    "ly": "light years",
+    "pc": "parsecs",
+    "yr": "years",
+    "d": "days"
+  },
+  "facts": [
+    {
+      "s": "Sirius A",
+      "r": "right_ascension",
+      "o": "06:45:09",
+      "source": "Sirius A was acquired at right ascension 06:45:09 and held in the crosshairs for photometry."
+    },
+    {
+      "s": "Sirius A",
+      "r": "apparent_magnitude",
+      "o": "-1.46",
+      "source": "The apparent magnitude of Sirius A was logged at -1.46, the brightest point source of the session."
+    },
+    {
+      "s": "Betelgeuse",
+      "r": "declination",
+      "o": "+07:24:25",
+      "source": "Betelgeuse rose late and was tracked to declination +07:24:25."
+    },
+    {
+      "s": "Betelgeuse",
+      "r": "apparent_magnitude",
+      "o": "0.50",
+      "source": "The apparent magnitude of Betelgeuse was recorded at 0.50, consistent with its known slow variability."
+    },
+    {
+      "s": "Proxima Centauri",
+      "r": "distance_ly",
+      "o": "4.24 light years",
+      "source": "The distance to Proxima Centauri was confirmed at 4.24 light years from the parallax cross-check."
+    },
+    {
+      "s": "Proxima Centauri",
+      "r": "spectral_type",
+      "o": "M5.5V",
+      "source": "The spectral type of Proxima Centauri was classified as M5.5V from the reduced spectrum."
+    },
+    {
+      "s": "Vega",
+      "r": "right_ascension",
+      "o": "18:36:56",
+      "source": "Vega was centered at right ascension 18:36:56 for calibration purposes."
+    },
+    {
+      "s": "Vega",
+      "r": "distance_pc",
+      "o": "7.68 parsecs",
+      "source": "The distance to Vega was logged at 7.68 parsecs, matching the calibration catalog."
+    },
+    {
+      "s": "Andromeda Galaxy",
+      "r": "distance_ly",
+      "o": "2500000 light years",
+      "source": "The distance to the Andromeda Galaxy was recorded at 2500000 light years, per the reduction pipeline."
+    },
+    {
+      "s": "Andromeda Galaxy",
+      "r": "redshift",
+      "o": "-0.001001",
+      "source": "The redshift of the Andromeda Galaxy was measured at -0.001001, one of the few blueshifted targets of the survey."
+    },
+    {
+      "s": "Polaris",
+      "r": "declination",
+      "o": "+89:15:51",
+      "source": "Polaris was tracked to declination +89:15:51 for the pole alignment check."
+    },
+    {
+      "s": "Polaris",
+      "r": "apparent_magnitude",
+      "o": "1.98",
+      "source": "The apparent magnitude of Polaris was recorded at 1.98, dimmer than expected under thin cirrus."
+    },
+    {
+      "s": "Messier 87",
+      "r": "redshift",
+      "o": "0.00436",
+      "source": "The redshift of Messier 87 was measured at 0.00436."
+    },
+    {
+      "s": "Messier 87",
+      "r": "distance_ly",
+      "o": "53500000 light years",
+      "source": "The distance to Messier 87 was logged at 53500000 light years, consistent with the Virgo Cluster distance ladder."
+    },
+    {
+      "s": "Kepler-186f",
+      "r": "orbital_period",
+      "o": "129.9 days",
+      "source": "The orbital period of Kepler-186f was logged at 129.9 days."
+    },
+    {
+      "s": "Kepler-186f",
+      "r": "distance_ly",
+      "o": "582 light years",
+      "source": "The distance to Kepler-186f was recorded at 582 light years from the archived parallax solution."
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "domain": "chemistry-safety-blind",
+  "corpus": "SAFETY DATA SHEET COMPENDIUM -- LABORATORY REAGENTS, REV 2\n\nThis compendium summarizes hazard and physical property data for five reagents held in the general chemistry stockroom: Sulfuric Acid, Acetone, Toluene, Methanol, and Sodium Hydroxide Solution. Data below are drawn from supplier certificates of analysis and are not a substitute for the full safety data sheet.\n\nSulfuric Acid is a dense, corrosive liquid supplied at 98% concentration by weight. The CAS number of Sulfuric Acid is 7664-93-9. The molecular formula of Sulfuric Acid is H2SO4. The boiling point of Sulfuric Acid is 337 °C at atmospheric pressure. The occupational exposure limit for Sulfuric Acid is 1 mg/m3 as an 8-hour time-weighted average.\n\nAcetone is a volatile, flammable solvent with the molecular formula C3H6O, used for glassware rinsing. The CAS number of Acetone is 67-64-1. The flash point of Acetone is -20 °C, well below room temperature. The vapour pressure of Acetone at 20 °C is 185 mmHg. The vapour pressure of Acetone at 25 °C is 231 mmHg.\n\nToluene is a clear aromatic solvent with the molecular formula C7H8, stored in the flammables cabinet. The CAS number of Toluene is 108-88-3. The occupational exposure limit for Toluene is 50 ppm as an 8-hour time-weighted average.\n\nMethanol is a toxic, flammable alcohol with the molecular formula CH4O, used as a chromatography mobile phase. The CAS number of Methanol is 67-56-1. The boiling point of Methanol is 64.7 °C. The oral LD50 of Methanol in rats is 5628 mg/kg.\n\nSodium Hydroxide Solution is a caustic aqueous preparation supplied at 50% concentration by weight. The CAS number of Sodium Hydroxide Solution is 1310-73-2. A 50% aqueous solution of Sodium Hydroxide has a pH of 14. A standard solution of Sodium Hydroxide is prepared at 0.1 M for titration use.\n\nAll concentrations above are expressed by weight unless stated otherwise. Vapour pressures are reported at the stated reference temperature only and should not be extrapolated to other conditions. None of the numeric identifiers in this compendium, including CAS registry numbers and molecular formula subscripts, should be combined arithmetically with the physical property values reported alongside them.",
+  "entities": {
+    "Sulfuric Acid": [
+      "sulfuric acid",
+      "the acid"
+    ],
+    "Acetone": [
+      "acetone",
+      "the acetone"
+    ],
+    "Toluene": [
+      "toluene",
+      "the toluene"
+    ],
+    "Methanol": [
+      "methanol",
+      "the methanol"
+    ],
+    "Sodium Hydroxide Solution": [
+      "sodium hydroxide solution",
+      "sodium hydroxide",
+      "the caustic solution"
+    ]
+  },
+  "relations": {
+    "cas_number": {
+      "kind": "text",
+      "question": "what is the CAS number of {entity}?"
+    },
+    "molecular_formula": {
+      "kind": "text",
+      "question": "what is the molecular formula of {entity}?"
+    },
+    "boiling_point": {
+      "kind": "quantity",
+      "question": "what is the boiling point of {entity}?"
+    },
+    "flash_point": {
+      "kind": "quantity",
+      "question": "what is the flash point of {entity}?"
+    },
+    "vapour_pressure": {
+      "kind": "quantity",
+      "question": "what is the vapour pressure of {entity}?"
+    },
+    "exposure_limit": {
+      "kind": "quantity",
+      "question": "what is the occupational exposure limit of {entity}?"
+    },
+    "oral_ld50": {
+      "kind": "quantity",
+      "question": "what is the oral LD50 of {entity} in rats?"
+    },
+    "ph": {
+      "kind": "quantity",
+      "question": "what is the pH of {entity}?"
+    },
+    "molar_concentration": {
+      "kind": "quantity",
+      "question": "what is the molar concentration of the standard {entity} solution?"
+    }
+  },
+  "conditions": [
+    "temperature"
+  ],
+  "value_qualifiers": [
+    "at atmospheric pressure",
+    "well below room temperature",
+    "as an 8-hour time-weighted average",
+    "in rats",
+    "for titration use"
+  ],
+  "unit_aliases": {
+    "C": "°C",
+    "mm Hg": "mmHg"
+  },
+  "facts": [
+    {
+      "s": "Sulfuric Acid",
+      "r": "cas_number",
+      "o": "7664-93-9",
+      "source": "The CAS number of Sulfuric Acid is 7664-93-9."
+    },
+    {
+      "s": "Sulfuric Acid",
+      "r": "molecular_formula",
+      "o": "H2SO4",
+      "source": "The molecular formula of Sulfuric Acid is H2SO4."
+    },
+    {
+      "s": "Sulfuric Acid",
+      "r": "boiling_point",
+      "o": "337 °C",
+      "source": "The boiling point of Sulfuric Acid is 337 °C at atmospheric pressure."
+    },
+    {
+      "s": "Sulfuric Acid",
+      "r": "exposure_limit",
+      "o": "1 mg/m3",
+      "source": "The occupational exposure limit for Sulfuric Acid is 1 mg/m3 as an 8-hour time-weighted average."
+    },
+    {
+      "s": "Acetone",
+      "r": "cas_number",
+      "o": "67-64-1",
+      "source": "The CAS number of Acetone is 67-64-1."
+    },
+    {
+      "s": "Acetone",
+      "r": "flash_point",
+      "o": "-20 °C",
+      "source": "The flash point of Acetone is -20 °C, well below room temperature."
+    },
+    {
+      "s": "Acetone",
+      "r": "vapour_pressure",
+      "o": "185 mmHg",
+      "source": "The vapour pressure of Acetone at 20 °C is 185 mmHg.",
+      "when": {
+        "temperature": "20 °C"
+      }
+    },
+    {
+      "s": "Acetone",
+      "r": "vapour_pressure",
+      "o": "231 mmHg",
+      "source": "The vapour pressure of Acetone at 25 °C is 231 mmHg.",
+      "when": {
+        "temperature": "25 °C"
+      }
+    },
+    {
+      "s": "Toluene",
+      "r": "cas_number",
+      "o": "108-88-3",
+      "source": "The CAS number of Toluene is 108-88-3."
+    },
+    {
+      "s": "Toluene",
+      "r": "exposure_limit",
+      "o": "50 ppm",
+      "source": "The occupational exposure limit for Toluene is 50 ppm as an 8-hour time-weighted average."
+    },
+    {
+      "s": "Methanol",
+      "r": "cas_number",
+      "o": "67-56-1",
+      "source": "The CAS number of Methanol is 67-56-1."
+    },
+    {
+      "s": "Methanol",
+      "r": "boiling_point",
+      "o": "64.7 °C",
+      "source": "The boiling point of Methanol is 64.7 °C."
+    },
+    {
+      "s": "Methanol",
+      "r": "oral_ld50",
+      "o": "5628 mg/kg",
+      "source": "The oral LD50 of Methanol in rats is 5628 mg/kg."
+    },
+    {
+      "s": "Sodium Hydroxide Solution",
+      "r": "cas_number",
+      "o": "1310-73-2",
+      "source": "The CAS number of Sodium Hydroxide Solution is 1310-73-2."
+    },
+    {
+      "s": "Sodium Hydroxide Solution",
+      "r": "ph",
+      "o": "14",
+      "source": "A 50% aqueous solution of Sodium Hydroxide has a pH of 14."
+    },
+    {
+      "s": "Sodium Hydroxide Solution",
+      "r": "molar_concentration",
+      "o": "0.1 M",
+      "source": "A standard solution of Sodium Hydroxide is prepared at 0.1 M for titration use."
+    }
+  ]
+}

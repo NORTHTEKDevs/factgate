@@ -1,0 +1,169 @@
+{
+  "domain": "music-production-blind",
+  "corpus": "Cedar Hollow Studio session log, Northwind Sessions track sheet, revision 3, engineer R. Voss.\n\nAmber Static was tracked at 128 BPM in 4/4 time. Amber Static sits in the key of A minor. Amber Static was captured at a sample rate of 48 kHz. Amber Static was tracked at a bit depth of 24 bit. For the streaming release, Amber Static is mastered to -14 LUFS. For the club release, Amber Static is mastered to -8 LUFS.\n\nGlass Tide is written in 7/8 time. The tempo of Glass Tide runs 92-96 BPM across the bridge section. Glass Tide settles in the key of F# minor. Glass Tide was captured at a sample rate of 96 kHz. The multitrack session for Glass Tide spans 42 tracks.\n\nLow Orbit uses a high-pass filter set at 80 Hz. The final take of Low Orbit runs 4:37 before the fade.\n\nPaper Lanterns clocks in at 140 BPM. Paper Lanterns sits in the key of C major.",
+  "entities": {
+    "Amber Static": [
+      "Amber Static Session",
+      "Track Amber Static"
+    ],
+    "Glass Tide": [
+      "Glass Tide Session",
+      "Track Glass Tide"
+    ],
+    "Low Orbit": [
+      "Low Orbit Session",
+      "Track Low Orbit"
+    ],
+    "Paper Lanterns": [
+      "Paper Lanterns Session",
+      "Track Paper Lanterns"
+    ]
+  },
+  "relations": {
+    "tempo": {
+      "kind": "quantity",
+      "question": "what is the tempo of {entity}?"
+    },
+    "time_signature": {
+      "kind": "text",
+      "question": "what is the time signature of {entity}?"
+    },
+    "key": {
+      "kind": "text",
+      "question": "what is the key of {entity}?"
+    },
+    "sample_rate": {
+      "kind": "quantity",
+      "question": "what is the sample rate of {entity}?"
+    },
+    "bit_depth": {
+      "kind": "quantity",
+      "question": "what is the bit depth of {entity}?"
+    },
+    "loudness": {
+      "kind": "quantity",
+      "question": "what is the loudness target of {entity}?"
+    },
+    "track_count": {
+      "kind": "quantity",
+      "question": "how many tracks does the multitrack session of {entity} span?"
+    },
+    "highpass_frequency": {
+      "kind": "quantity",
+      "question": "what is the high-pass filter frequency of {entity}?"
+    },
+    "session_length": {
+      "kind": "text",
+      "question": "what is the length of the final take of {entity}?"
+    }
+  },
+  "conditions": [
+    "master_target"
+  ],
+  "value_qualifiers": [],
+  "unit_aliases": {},
+  "facts": [
+    {
+      "s": "Amber Static",
+      "r": "tempo",
+      "o": "128 BPM",
+      "source": "Amber Static was tracked at 128 BPM in 4/4 time."
+    },
+    {
+      "s": "Amber Static",
+      "r": "time_signature",
+      "o": "4/4",
+      "source": "Amber Static was tracked at 128 BPM in 4/4 time."
+    },
+    {
+      "s": "Amber Static",
+      "r": "key",
+      "o": "A minor",
+      "source": "Amber Static sits in the key of A minor."
+    },
+    {
+      "s": "Amber Static",
+      "r": "sample_rate",
+      "o": "48 kHz",
+      "source": "Amber Static was captured at a sample rate of 48 kHz."
+    },
+    {
+      "s": "Amber Static",
+      "r": "bit_depth",
+      "o": "24 bit",
+      "source": "Amber Static was tracked at a bit depth of 24 bit."
+    },
+    {
+      "s": "Amber Static",
+      "r": "loudness",
+      "o": "-14 LUFS",
+      "source": "For the streaming release, Amber Static is mastered to -14 LUFS.",
+      "when": {
+        "master_target": "streaming"
+      }
+    },
+    {
+      "s": "Amber Static",
+      "r": "loudness",
+      "o": "-8 LUFS",
+      "source": "For the club release, Amber Static is mastered to -8 LUFS.",
+      "when": {
+        "master_target": "club"
+      }
+    },
+    {
+      "s": "Glass Tide",
+      "r": "time_signature",
+      "o": "7/8",
+      "source": "Glass Tide is written in 7/8 time."
+    },
+    {
+      "s": "Glass Tide",
+      "r": "tempo",
+      "o": "92-96 BPM",
+      "source": "The tempo of Glass Tide runs 92-96 BPM across the bridge section."
+    },
+    {
+      "s": "Glass Tide",
+      "r": "key",
+      "o": "F# minor",
+      "source": "Glass Tide settles in the key of F# minor."
+    },
+    {
+      "s": "Glass Tide",
+      "r": "sample_rate",
+      "o": "96 kHz",
+      "source": "Glass Tide was captured at a sample rate of 96 kHz."
+    },
+    {
+      "s": "Glass Tide",
+      "r": "track_count",
+      "o": "42 tracks",
+      "source": "The multitrack session for Glass Tide spans 42 tracks."
+    },
+    {
+      "s": "Low Orbit",
+      "r": "highpass_frequency",
+      "o": "80 Hz",
+      "source": "Low Orbit uses a high-pass filter set at 80 Hz."
+    },
+    {
+      "s": "Low Orbit",
+      "r": "session_length",
+      "o": "4:37",
+      "source": "The final take of Low Orbit runs 4:37 before the fade."
+    },
+    {
+      "s": "Paper Lanterns",
+      "r": "tempo",
+      "o": "140 BPM",
+      "source": "Paper Lanterns clocks in at 140 BPM."
+    },
+    {
+      "s": "Paper Lanterns",
+      "r": "key",
+      "o": "C major",
+      "source": "Paper Lanterns sits in the key of C major."
+    }
+  ]
+}
