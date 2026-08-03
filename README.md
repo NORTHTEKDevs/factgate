@@ -195,19 +195,27 @@ A realistic cold-chain vaccine storage sheet (dual-unit temperature ranges, sub-
 excursion allowances, conditional in-use windows), 26 natural questions, a local model and
 the real extractor in the loop:
 
+**Four documents, four authors — three of them first-time users given only the public
+authoring guide** (an HR leave policy, a food-safety SOP, a gym membership agreement, and a
+cold-chain vaccine sheet):
+
 | | |
 |---|---|
-| Questions the model answered | 25 |
-| **VERIFIED — gate settled it, every one confirmed correct by review** | **16** |
-| Held, handed to the reviewer | 9 |
+| Supervised answers across four documents | 110 |
+| **VERIFIED — every single one confirmed correct by hand** | **64** |
+| Held, handed to the reviewer | 46 |
+| Blocked | 0 |
 | **Trust breaches — a wrong value confirmed** | **0** |
-| Reviewer load reduction, first pass | **64%** (→ ~72% after a two-word vocabulary edit the tool proposed) |
+| Mean reviewer load reduction | **58%** (33–68% by document) |
 
-Every VERIFIED was read against the document by hand and matched it; every HELD was a
-legitimate fail-closed hold, either genuine ambiguity the document created (two values stated
-together) or an undeclared qualifier `suggest_qualifiers` names in one line. **Not one wrong
-answer reached the user as confirmed** — the only outcome that fails a deployment. It is field
-evidence, not a certification: one document, one model, one reviewer.
+All three first-time authors produced fact sets that were **clean on their first check run**
+— the authoring cost outside the maintainer's hands was one iteration of the documented
+loop. Every VERIFIED was read against its document by hand and matched; every HELD was a
+legitimate fail-closed hold — genuine ambiguity the document created, an undeclared
+qualifier the tool names in one line, or a conditional slot correctly awaiting its context.
+Conditional-heavy documents hold more, by design: the HR policy settled 33% while the SOP
+settled 68%. **Not one wrong answer reached a user as confirmed, in 110 answers.** Field
+evidence, not certification: synthetic documents, agent authors, one reviewer.
 
 ### How this was reached, and what it does not claim
 

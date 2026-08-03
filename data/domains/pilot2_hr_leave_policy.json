@@ -1,0 +1,173 @@
+{
+  "domain": "pilot2-hr-leave-policy",
+  "corpus": "Section 6: Time Off and Leave Policy\n\n6.1 Annual (Vacation) Leave\nFull-time employees accrue annual leave based on tenure. Employees with less than 2 years of service accrue 15 days per year. Employees with 2 to 5 years of service accrue 20 days per year. Employees with more than 5 years of service accrue 25 days per year. Part-time employees accrue a prorated amount based on scheduled hours.\n\n6.2 Sick Leave\nAll full-time employees receive 10 sick days per year, credited on January 1. Unused sick leave may be carried over up to a maximum of 5 days into the following year. Sick leave beyond 3 consecutive days requires a doctor's note.\n\n6.3 Parental Leave\nBirth parents are eligible for 12 weeks of paid parental leave. Non-birth parents, including adoptive and foster parents, are eligible for 6 weeks of paid parental leave. Parental leave must be taken within 12 months of the birth or placement date.\n\n6.4 Notice Periods\nEmployees must submit annual leave requests at least 10 business days in advance for absences of 3 or more consecutive days. For single-day absences, 2 business days of notice is required. Sick leave has no advance notice requirement, but the absence must be reported to a manager by 9:00 AM on the day of absence.\n\n6.5 Carry-Over\nEmployees may carry over up to 5 unused annual leave days into the next calendar year. Any annual leave balance beyond 5 days as of December 31 is forfeited, except where local law requires otherwise.\n\n6.6 Payout on Exit\nUpon separation from the company, employees are paid out for unused annual leave at their final base rate of pay, up to a maximum of 10 days. Sick leave is not paid out upon exit under any circumstance.",
+  "entities": {
+    "annual_leave": [
+      "annual leave",
+      "vacation leave"
+    ],
+    "sick_leave": [
+      "sick leave",
+      "sick days"
+    ],
+    "parental_leave": [
+      "parental leave"
+    ]
+  },
+  "relations": {
+    "accrual_rate": {
+      "kind": "quantity",
+      "description": "how many days of leave accrue per year",
+      "question": "how many days does {entity} accrue per year?"
+    },
+    "carryover_limit": {
+      "kind": "quantity",
+      "description": "maximum days that may be carried over into the next year",
+      "question": "what is the carry-over limit for {entity}?"
+    },
+    "doctor_note_threshold": {
+      "kind": "quantity",
+      "description": "the length of absence after which a doctor's note is required",
+      "question": "after how many days of {entity} is a doctor's note required?"
+    },
+    "duration_weeks": {
+      "kind": "quantity",
+      "description": "the number of weeks of paid leave provided",
+      "question": "how many weeks of {entity} are provided?"
+    },
+    "leave_window": {
+      "kind": "quantity",
+      "description": "the window within which the leave must be taken",
+      "question": "within how many months must {entity} be taken?"
+    },
+    "notice_period": {
+      "kind": "quantity",
+      "description": "advance notice required to request the leave",
+      "question": "how much advance notice is required to request {entity}?"
+    },
+    "payout_on_exit": {
+      "kind": "quantity",
+      "description": "days paid out upon separation",
+      "question": "how many days of {entity} are paid out upon separation?"
+    },
+    "sick_payout_policy": {
+      "kind": "text",
+      "description": "whether the leave is paid out upon separation",
+      "question": "is {entity} paid out upon separation?"
+    }
+  },
+  "conditions": [
+    "tenure_band",
+    "parent_type",
+    "absence_length"
+  ],
+  "value_qualifiers": [],
+  "unit_aliases": {},
+  "facts": [
+    {
+      "s": "annual_leave",
+      "r": "accrual_rate",
+      "o": "15 days per year",
+      "when": {
+        "tenure_band": "under_2_years"
+      },
+      "source": "Employees with less than 2 years of service accrue 15 days per year."
+    },
+    {
+      "s": "annual_leave",
+      "r": "accrual_rate",
+      "o": "20 days per year",
+      "when": {
+        "tenure_band": "2_to_5_years"
+      },
+      "source": "Employees with 2 to 5 years of service accrue 20 days per year."
+    },
+    {
+      "s": "annual_leave",
+      "r": "accrual_rate",
+      "o": "25 days per year",
+      "when": {
+        "tenure_band": "over_5_years"
+      },
+      "source": "Employees with more than 5 years of service accrue 25 days per year."
+    },
+    {
+      "s": "sick_leave",
+      "r": "accrual_rate",
+      "o": "10 days per year",
+      "source": "All full-time employees receive 10 sick days per year, credited on January 1."
+    },
+    {
+      "s": "sick_leave",
+      "r": "carryover_limit",
+      "o": "5 days",
+      "source": "Unused sick leave may be carried over up to a maximum of 5 days into the following year."
+    },
+    {
+      "s": "sick_leave",
+      "r": "doctor_note_threshold",
+      "o": "3 consecutive days",
+      "source": "Sick leave beyond 3 consecutive days requires a doctor's note."
+    },
+    {
+      "s": "parental_leave",
+      "r": "duration_weeks",
+      "o": "12 weeks",
+      "when": {
+        "parent_type": "birth_parent"
+      },
+      "source": "Birth parents are eligible for 12 weeks of paid parental leave."
+    },
+    {
+      "s": "parental_leave",
+      "r": "duration_weeks",
+      "o": "6 weeks",
+      "when": {
+        "parent_type": "non_birth_parent"
+      },
+      "source": "Non-birth parents, including adoptive and foster parents, are eligible for 6 weeks of paid parental leave."
+    },
+    {
+      "s": "parental_leave",
+      "r": "leave_window",
+      "o": "12 months",
+      "source": "Parental leave must be taken within 12 months of the birth or placement date."
+    },
+    {
+      "s": "annual_leave",
+      "r": "notice_period",
+      "o": "10 business days",
+      "when": {
+        "absence_length": "multi_day"
+      },
+      "source": "Employees must submit annual leave requests at least 10 business days in advance for absences of 3 or more consecutive days."
+    },
+    {
+      "s": "annual_leave",
+      "r": "notice_period",
+      "o": "2 business days",
+      "when": {
+        "absence_length": "single_day"
+      },
+      "source": "For single-day absences, 2 business days of notice is required."
+    },
+    {
+      "s": "annual_leave",
+      "r": "carryover_limit",
+      "o": "5 days",
+      "source": "Employees may carry over up to 5 unused annual leave days into the next calendar year."
+    },
+    {
+      "s": "annual_leave",
+      "r": "payout_on_exit",
+      "o": "10 days",
+      "source": "Upon separation from the company, employees are paid out for unused annual leave at their final base rate of pay, up to a maximum of 10 days."
+    },
+    {
+      "s": "sick_leave",
+      "r": "sick_payout_policy",
+      "o": "not paid out",
+      "source": "Sick leave is not paid out upon exit under any circumstance."
+    }
+  ]
+}

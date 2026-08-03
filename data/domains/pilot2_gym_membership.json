@@ -1,0 +1,238 @@
+{
+  "domain": "pilot2-gym-membership",
+  "corpus": "IRONPEAK FITNESS MEMBERSHIP AGREEMENT\nEffective January 1, 2026\n\nWelcome to Ironpeak Fitness. This agreement (\"Agreement\") governs your membership at any Ironpeak Fitness location and applies to all tiers described below.\n\n1. MEMBERSHIP TIERS AND FEES\n\nIronpeak offers three membership tiers. The Basic tier costs $39 per month and includes access to the gym floor and cardio equipment at your home club only. The Premium tier costs $69 per month and adds access to group fitness classes and the sauna. The All-Access tier costs $99 per month and includes everything in Premium plus access to every Ironpeak location statewide.\n\nA one-time joining fee of $75 applies to new members enrolling in the Basic or Premium tier. New members enrolling in the All-Access tier pay a joining fee of $100.\n\n2. GUEST PASSES\n\nBasic members do not receive guest passes. Premium members receive 2 guest passes per month. All-Access members receive 4 guest passes per month. Unused guest passes do not roll over to the following month.\n\n3. CANCELLATION\n\nTo cancel your membership, you must provide the Club with 30 days written notice prior to your desired cancellation date. Notice must be submitted through the member portal or in person at the front desk. Cancellations submitted with less notice will be billed for one additional month at the applicable tier rate.\n\n4. MEMBERSHIP FREEZES\n\nMembers in good standing may freeze their membership for up to 3 months per calendar year. A freeze request must be submitted at least 5 days before the desired freeze start date. Freezes may not be applied retroactively.\n\n5. CLASS BOOKING\n\nGroup fitness classes may be booked up to 7 days in advance through the Ironpeak app. Bookings close 2 hours before the scheduled class start time and no walk-in registration is available after that point. Members may cancel a class booking without penalty up to 4 hours before the scheduled start time.\n\n6. LATE CANCELLATION AND NO-SHOW FEES\n\nCanceling a standard class less than 4 hours before its start time is a late cancellation and incurs a $10 fee. Canceling a specialty class (cycling, HIIT, or reformer pilates) less than 4 hours before its start time incurs a fee of $15 to $20, depending on instructor. Failing to attend a booked class of any kind without canceling is a no-show and incurs a $15 fee regardless of class type.\n\n7. MINIMUM AGE\n\nMembers must be at least 18 years of age to join without a parent or guardian. A prospective member who is at least 14 years of age may join with a signed parental consent form on file, provided a parent or guardian remains reachable during the visit.\n\nBy signing below, you acknowledge that you have read and agree to the terms of this Agreement.",
+  "entities": {
+    "basic": [
+      "Basic",
+      "Basic tier",
+      "Basic membership",
+      "Basic members"
+    ],
+    "premium": [
+      "Premium",
+      "Premium tier",
+      "Premium membership",
+      "Premium members"
+    ],
+    "all_access": [
+      "All-Access",
+      "All-Access tier",
+      "All-Access membership",
+      "All-Access members"
+    ],
+    "membership": [
+      "membership",
+      "your membership",
+      "the membership",
+      "Ironpeak membership"
+    ],
+    "class_booking": [
+      "class booking",
+      "class bookings",
+      "group fitness classes",
+      "a class booking"
+    ]
+  },
+  "relations": {
+    "monthly_fee": {
+      "kind": "quantity",
+      "description": "the recurring monthly membership fee for this tier",
+      "question": "what is the monthly fee for {entity}?"
+    },
+    "joining_fee": {
+      "kind": "quantity",
+      "description": "the one-time fee charged when joining this tier",
+      "question": "what is the joining fee for {entity}?"
+    },
+    "guest_passes_per_month": {
+      "kind": "quantity",
+      "description": "the number of guest passes included per month for this tier",
+      "question": "how many guest passes per month does {entity} include?"
+    },
+    "cancellation_notice": {
+      "kind": "quantity",
+      "description": "the written notice required before cancelling",
+      "question": "how much notice is required to cancel {entity}?"
+    },
+    "freeze_allowance_per_year": {
+      "kind": "quantity",
+      "description": "how long a membership may be frozen per calendar year",
+      "question": "how long can {entity} be frozen per year?"
+    },
+    "freeze_notice": {
+      "kind": "quantity",
+      "description": "how far in advance a freeze request must be submitted",
+      "question": "how much notice is required to freeze {entity}?"
+    },
+    "minimum_age": {
+      "kind": "quantity",
+      "description": "the minimum age to join, with or without parental consent",
+      "question": "what is the minimum age to join {entity}?"
+    },
+    "booking_window": {
+      "kind": "quantity",
+      "description": "how far in advance a class may be booked",
+      "question": "how far in advance can a class be booked for {entity}?"
+    },
+    "booking_close": {
+      "kind": "quantity",
+      "description": "how long before class start bookings close",
+      "question": "when do bookings close for {entity}?"
+    },
+    "cancel_window": {
+      "kind": "quantity",
+      "description": "how long before class start a booking may be cancelled without penalty",
+      "question": "how long before start can {entity} be cancelled without penalty?"
+    },
+    "late_cancel_fee": {
+      "kind": "quantity",
+      "description": "the fee charged for cancelling a class less than 4 hours before start",
+      "question": "what is the late cancellation fee for {entity}?"
+    },
+    "no_show_fee": {
+      "kind": "quantity",
+      "description": "the fee charged for not attending a booked class",
+      "question": "what is the no-show fee for {entity}?"
+    }
+  },
+  "conditions": [
+    "consent",
+    "class_type"
+  ],
+  "value_qualifiers": [],
+  "unit_aliases": {},
+  "facts": [
+    {
+      "s": "basic",
+      "r": "monthly_fee",
+      "o": "$39",
+      "source": "The Basic tier costs $39 per month and includes access to the gym floor and cardio equipment at your home club only."
+    },
+    {
+      "s": "premium",
+      "r": "monthly_fee",
+      "o": "$69",
+      "source": "The Premium tier costs $69 per month and adds access to group fitness classes and the sauna."
+    },
+    {
+      "s": "all_access",
+      "r": "monthly_fee",
+      "o": "$99",
+      "source": "The All-Access tier costs $99 per month and includes everything in Premium plus access to every Ironpeak location statewide."
+    },
+    {
+      "s": "basic",
+      "r": "joining_fee",
+      "o": "$75",
+      "source": "A one-time joining fee of $75 applies to new members enrolling in the Basic or Premium tier."
+    },
+    {
+      "s": "premium",
+      "r": "joining_fee",
+      "o": "$75",
+      "source": "A one-time joining fee of $75 applies to new members enrolling in the Basic or Premium tier."
+    },
+    {
+      "s": "all_access",
+      "r": "joining_fee",
+      "o": "$100",
+      "source": "New members enrolling in the All-Access tier pay a joining fee of $100."
+    },
+    {
+      "s": "basic",
+      "r": "guest_passes_per_month",
+      "o": "0 guest passes",
+      "source": "Basic members do not receive guest passes."
+    },
+    {
+      "s": "premium",
+      "r": "guest_passes_per_month",
+      "o": "2 guest passes",
+      "source": "Premium members receive 2 guest passes per month."
+    },
+    {
+      "s": "all_access",
+      "r": "guest_passes_per_month",
+      "o": "4 guest passes",
+      "source": "All-Access members receive 4 guest passes per month."
+    },
+    {
+      "s": "membership",
+      "r": "cancellation_notice",
+      "o": "30 days",
+      "source": "you must provide the Club with 30 days written notice prior to your desired cancellation date"
+    },
+    {
+      "s": "membership",
+      "r": "freeze_allowance_per_year",
+      "o": "3 months",
+      "source": "Members in good standing may freeze their membership for up to 3 months per calendar year."
+    },
+    {
+      "s": "membership",
+      "r": "freeze_notice",
+      "o": "5 days+",
+      "source": "A freeze request must be submitted at least 5 days before the desired freeze start date."
+    },
+    {
+      "s": "membership",
+      "r": "minimum_age",
+      "o": "18 years+",
+      "when": {
+        "consent": "none"
+      },
+      "source": "Members must be at least 18 years of age to join without a parent or guardian."
+    },
+    {
+      "s": "membership",
+      "r": "minimum_age",
+      "o": "14 years+",
+      "when": {
+        "consent": "parental"
+      },
+      "source": "A prospective member who is at least 14 years of age may join with a signed parental consent form on file, provided a parent or guardian remains reachable during the visit."
+    },
+    {
+      "s": "class_booking",
+      "r": "booking_window",
+      "o": "7 days",
+      "source": "Group fitness classes may be booked up to 7 days in advance through the Ironpeak app."
+    },
+    {
+      "s": "class_booking",
+      "r": "booking_close",
+      "o": "2 hours",
+      "source": "Bookings close 2 hours before the scheduled class start time and no walk-in registration is available after that point."
+    },
+    {
+      "s": "class_booking",
+      "r": "cancel_window",
+      "o": "4 hours",
+      "source": "Members may cancel a class booking without penalty up to 4 hours before the scheduled start time."
+    },
+    {
+      "s": "class_booking",
+      "r": "late_cancel_fee",
+      "o": "$10",
+      "when": {
+        "class_type": "standard"
+      },
+      "source": "Canceling a standard class less than 4 hours before its start time is a late cancellation and incurs a $10 fee."
+    },
+    {
+      "s": "class_booking",
+      "r": "late_cancel_fee",
+      "o": "$15-20",
+      "when": {
+        "class_type": "specialty"
+      },
+      "source": "Canceling a specialty class (cycling, HIIT, or reformer pilates) less than 4 hours before its start time incurs a fee of $15 to $20, depending on instructor."
+    },
+    {
+      "s": "class_booking",
+      "r": "no_show_fee",
+      "o": "$15",
+      "source": "Failing to attend a booked class of any kind without canceling is a no-show and incurs a $15 fee regardless of class type."
+    }
+  ]
+}

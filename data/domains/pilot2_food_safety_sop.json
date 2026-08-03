@@ -1,0 +1,206 @@
+{
+  "domain": "pilot2-food-safety-sop",
+  "corpus": "Food Safety Standard Operating Procedure - Cold Storage, Hot Holding, Cooling, Reheating, and Sanitation Section 1: Refrigeration and Freezer Temperatures. All walk-in cooler units must hold food at 36 to 40 degrees F. Digital probes are checked at the start of every shift and logged on the temp log clipboard by the walk-in door. The reach-in prep cooler on the line, used for cold-hold of prepped ingredients during service, must not exceed 41 degrees F. Anything found above 41 degrees F for more than 4 hours must be discarded, not just cooled back down. The walk-in freezer must run at 0 degrees F or below; frost buildup on the door gasket is a sign the unit is cycling above that and should be reported to the kitchen manager immediately. Section 2: Hot Holding. Once cooked, potentially hazardous foods held on the steam line or in the soup well must stay at 135 degrees F or above at all times. Chicken and other poultry items held in the hot box for catering must be checked with a calibrated thermometer every two hours; if a check reveals a temperature below 135 degrees F, the item has to be reheated to 165 degrees F within two hours or discarded, it cannot just go back on the line as-is. Section 3: Cooling. Cooked food that will be cooled for later use, including soups, stocks, braises, and rice, must drop from 135 degrees F to 70 degrees F within 2 hours. It must then drop from 70 degrees F down to 41 degrees F or below within an additional 4 hours, which is 6 hours total from hot to cold. Large batches, meaning stockpots over 4 gallons, should be portioned into shallow pans before cooling starts; a pot left whole routinely misses the 2 hour window and has to be thrown out per health code. Section 4: Reheating. Any previously cooked and cooled food being reheated for hot holding, including leftover braises, soups pulled from the walk-in, and sauces, must reach 165 degrees F for at least 15 seconds within 2 hours of the reheat starting. Microwave reheating for immediate service, as opposed to hot holding, must also reach 165 degrees F throughout, with a standing time after heating before checking. Reheating on the steam table itself is not acceptable; the steam table maintains temperature, it does not raise it fast enough to be food safe. Section 5: Handwashing. Handwashing at the line and prep sinks must take at least 20 seconds of scrubbing with soap after wetting, not counting rinse time. Staff coming from raw poultry handling to any other task must wash for the full 20 second minimum before touching ready-to-eat food, gloves, or equipment. Section 6: Sanitizer Concentration. The three-compartment sink sanitizing basin uses chlorine sanitizer mixed to 50 to 100 ppm, tested with chlorine test strips before each set-up and re-checked hourly during dish pit operation. The quat sanitizer used in spray bottles for wiping down prep tables and cutting boards during service must be mixed to 200 to 400 ppm per the quat test strip color chart; anything reading under 200 ppm must be remixed, not topped off. Section 7: Storage Shelf Life. Raw poultry stored in the walk-in cooler is good for 1 to 2 days before it must be used or frozen. Raw ground meat, whether beef or pork, has the same 1 to 2 day cooler shelf life. Raw whole cuts of beef or pork can hold for 3 to 5 days in the walk-in before use. Fresh fish and shellfish must be used within 1 to 2 days of delivery. Cut leafy greens and other prepped produce are good for 3 to 4 days in the walk-in once cut. Cooked leftovers pulled from service, such as rice, pasta, and cooked proteins, must be labeled, dated, and discarded after 4 days in the cooler regardless of how they look or smell.",
+  "entities": {
+    "walk_in_cooler": [
+      "walk-in cooler",
+      "walk-in"
+    ],
+    "reach_in_prep_cooler": [
+      "reach-in prep cooler"
+    ],
+    "walk_in_freezer": [
+      "walk-in freezer",
+      "freezer"
+    ],
+    "hot_holding_line": [
+      "steam line",
+      "soup well",
+      "hot box"
+    ],
+    "cooked_food_cooling": [
+      "cooked food",
+      "cooling"
+    ],
+    "cooked_leftovers": [
+      "cooked leftovers",
+      "leftovers"
+    ],
+    "handwashing": [
+      "handwashing"
+    ],
+    "chlorine_sanitizer": [
+      "chlorine sanitizer",
+      "three-compartment sink sanitizing basin"
+    ],
+    "quat_sanitizer": [
+      "quat sanitizer"
+    ],
+    "raw_poultry": [
+      "raw poultry",
+      "poultry"
+    ],
+    "raw_ground_meat": [
+      "raw ground meat",
+      "ground meat"
+    ],
+    "raw_whole_cuts": [
+      "raw whole cuts",
+      "whole cuts"
+    ],
+    "fish_shellfish": [
+      "fish and shellfish",
+      "fish",
+      "shellfish"
+    ],
+    "cut_leafy_greens": [
+      "cut leafy greens",
+      "leafy greens"
+    ]
+  },
+  "relations": {
+    "cooler_temp_range": {
+      "kind": "quantity",
+      "description": "the safe holding temperature range for this storage unit",
+      "question": "what temperature range is {entity} held at?"
+    },
+    "max_temp": {
+      "kind": "quantity",
+      "description": "the maximum temperature this unit or holding area may reach",
+      "question": "what is the maximum temperature for {entity}?"
+    },
+    "min_temp": {
+      "kind": "quantity",
+      "description": "the minimum temperature this holding area must stay at or above",
+      "question": "what is the minimum temperature for {entity}?"
+    },
+    "cooling_stage1_window": {
+      "kind": "quantity",
+      "description": "time allowed to cool from 135 degrees F to 70 degrees F",
+      "question": "how long does {entity} have to cool from 135 degrees F to 70 degrees F?"
+    },
+    "cooling_stage2_window": {
+      "kind": "quantity",
+      "description": "time allowed to cool from 70 degrees F down to 41 degrees F or below",
+      "question": "how long does {entity} have to cool from 70 degrees F to 41 degrees F or below?"
+    },
+    "reheat_target": {
+      "kind": "quantity",
+      "description": "the internal temperature reheated food must reach",
+      "question": "what temperature must {entity} be reheated to?"
+    },
+    "handwash_min_duration": {
+      "kind": "quantity",
+      "description": "the minimum scrubbing time required for handwashing",
+      "question": "what is the minimum duration for {entity}?"
+    },
+    "sanitizer_concentration_range": {
+      "kind": "quantity",
+      "description": "the acceptable sanitizer concentration range in ppm",
+      "question": "what concentration is {entity} mixed to?"
+    },
+    "cooler_shelf_life": {
+      "kind": "quantity",
+      "description": "how long this food may be stored in the walk-in cooler before use or disposal",
+      "question": "what is the cooler shelf life of {entity}?"
+    }
+  },
+  "facts": [
+    {
+      "s": "walk_in_cooler",
+      "r": "cooler_temp_range",
+      "o": "36-40 F",
+      "source": "All walk-in cooler units must hold food at 36 to 40 degrees F."
+    },
+    {
+      "s": "reach_in_prep_cooler",
+      "r": "max_temp",
+      "o": "41 F",
+      "source": "The reach-in prep cooler on the line, used for cold-hold of prepped ingredients during service, must not exceed 41 degrees F."
+    },
+    {
+      "s": "walk_in_freezer",
+      "r": "max_temp",
+      "o": "0 F",
+      "source": "The walk-in freezer must run at 0 degrees F or below"
+    },
+    {
+      "s": "hot_holding_line",
+      "r": "min_temp",
+      "o": "135 F",
+      "source": "potentially hazardous foods held on the steam line or in the soup well must stay at 135 degrees F or above at all times."
+    },
+    {
+      "s": "cooked_food_cooling",
+      "r": "cooling_stage1_window",
+      "o": "2 hours",
+      "source": "must drop from 135 degrees F to 70 degrees F within 2 hours."
+    },
+    {
+      "s": "cooked_food_cooling",
+      "r": "cooling_stage2_window",
+      "o": "4 hours",
+      "source": "It must then drop from 70 degrees F down to 41 degrees F or below within an additional 4 hours"
+    },
+    {
+      "s": "cooked_leftovers",
+      "r": "reheat_target",
+      "o": "165 F",
+      "source": "must reach 165 degrees F for at least 15 seconds within 2 hours of the reheat starting."
+    },
+    {
+      "s": "handwashing",
+      "r": "handwash_min_duration",
+      "o": "20 seconds",
+      "source": "Handwashing at the line and prep sinks must take at least 20 seconds of scrubbing with soap after wetting, not counting rinse time."
+    },
+    {
+      "s": "chlorine_sanitizer",
+      "r": "sanitizer_concentration_range",
+      "o": "50-100 ppm",
+      "source": "chlorine sanitizer mixed to 50 to 100 ppm"
+    },
+    {
+      "s": "quat_sanitizer",
+      "r": "sanitizer_concentration_range",
+      "o": "200-400 ppm",
+      "source": "must be mixed to 200 to 400 ppm per the quat test strip color chart"
+    },
+    {
+      "s": "raw_poultry",
+      "r": "cooler_shelf_life",
+      "o": "1-2 days",
+      "source": "Raw poultry stored in the walk-in cooler is good for 1 to 2 days before it must be used or frozen."
+    },
+    {
+      "s": "raw_ground_meat",
+      "r": "cooler_shelf_life",
+      "o": "1-2 days",
+      "source": "Raw ground meat, whether beef or pork, has the same 1 to 2 day cooler shelf life."
+    },
+    {
+      "s": "raw_whole_cuts",
+      "r": "cooler_shelf_life",
+      "o": "3-5 days",
+      "source": "Raw whole cuts of beef or pork can hold for 3 to 5 days in the walk-in before use."
+    },
+    {
+      "s": "fish_shellfish",
+      "r": "cooler_shelf_life",
+      "o": "1-2 days",
+      "source": "Fresh fish and shellfish must be used within 1 to 2 days of delivery."
+    },
+    {
+      "s": "cut_leafy_greens",
+      "r": "cooler_shelf_life",
+      "o": "3-4 days",
+      "source": "Cut leafy greens and other prepped produce are good for 3 to 4 days in the walk-in once cut."
+    },
+    {
+      "s": "cooked_leftovers",
+      "r": "cooler_shelf_life",
+      "o": "4 days",
+      "source": "Cooked leftovers pulled from service, such as rice, pasta, and cooked proteins, must be labeled, dated, and discarded after 4 days in the cooler regardless of how they look or smell."
+    }
+  ]
+}

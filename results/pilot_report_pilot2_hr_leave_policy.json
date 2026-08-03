@@ -1,0 +1,293 @@
+{
+  "domain": "pilot2-hr-leave-policy",
+  "model": "qwen2.5:14b",
+  "counts": {
+    "VERIFIED": 7,
+    "BLOCK": 0,
+    "HELD": 14,
+    "no-answer": 7
+  },
+  "breaches": 0,
+  "records": [
+    {
+      "entity": "annual_leave",
+      "relation": "accrual_rate",
+      "declared": "15 days per year",
+      "source": "Employees with less than 2 years of service accrue 15 days per year.",
+      "question": "A colleague asked me about the accrual rate for annual_leave. What should I tell them?",
+      "answer": "For full-time employees, the annual leave accrual rate is based on tenure: those with less than 2 years of service get 15 days per year, employees with 2 to 5 years receive 20 days annually, and those with more than 5 years earn 25 days each year. Part-time employees accumulate a prorated amount according to their scheduled hours.",
+      "verdict": "no-answer",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "accrual_rate",
+      "declared": "15 days per year",
+      "source": "Employees with less than 2 years of service accrue 15 days per year.",
+      "question": "Summarise what this document says about the accrual rate of annual_leave.",
+      "answer": "The document states that full-time employees accrue annual leave based on their tenure with the company: those with less than 2 years of service get 15 days per year, employees with 2 to 5 years receive 20 days annually, and those with more than 5 years earn 25 days each year. Part-time employees accumulate a prorated amount based on their scheduled hours.",
+      "verdict": "no-answer",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "accrual_rate",
+      "declared": "20 days per year",
+      "source": "Employees with 2 to 5 years of service accrue 20 days per year.",
+      "question": "A colleague asked me about the accrual rate for annual_leave. What should I tell them?",
+      "answer": "For full-time employees, the annual leave accrual rate is based on tenure: those with less than 2 years of service get 15 days per year, employees with 2 to 5 years receive 20 days annually, and those with more than 5 years earn 25 days each year. Part-time employees accumulate a prorated amount according to their scheduled hours.",
+      "verdict": "no-answer",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "accrual_rate",
+      "declared": "20 days per year",
+      "source": "Employees with 2 to 5 years of service accrue 20 days per year.",
+      "question": "Summarise what this document says about the accrual rate of annual_leave.",
+      "answer": "The document states that full-time employees accrue annual leave based on their tenure with the company: those with less than 2 years of service get 15 days per year, employees with 2 to 5 years receive 20 days annually, and those with more than 5 years earn 25 days each year. Part-time employees accumulate a prorated amount based on their scheduled hours.",
+      "verdict": "no-answer",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "accrual_rate",
+      "declared": "25 days per year",
+      "source": "Employees with more than 5 years of service accrue 25 days per year.",
+      "question": "A colleague asked me about the accrual rate for annual_leave. What should I tell them?",
+      "answer": "For full-time employees, the annual leave accrual rate is based on tenure: those with less than 2 years of service get 15 days per year, employees with 2 to 5 years receive 20 days annually, and those with more than 5 years earn 25 days each year. Part-time employees accumulate a prorated amount according to their scheduled hours.",
+      "verdict": "no-answer",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "accrual_rate",
+      "declared": "25 days per year",
+      "source": "Employees with more than 5 years of service accrue 25 days per year.",
+      "question": "Summarise what this document says about the accrual rate of annual_leave.",
+      "answer": "The document states that full-time employees accrue annual leave based on their tenure with the company: those with less than 2 years of service get 15 days per year, employees with 2 to 5 years receive 20 days annually, and those with more than 5 years earn 25 days each year. Part-time employees accumulate a prorated amount based on their scheduled hours.",
+      "verdict": "no-answer",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "sick_leave",
+      "relation": "accrual_rate",
+      "declared": "10 days per year",
+      "source": "All full-time employees receive 10 sick days per year, credited on January 1.",
+      "question": "A colleague asked me about the accrual rate for sick_leave. What should I tell them?",
+      "answer": "All full-time employees receive 10 sick days per year, which are credited on January 1. Unused sick leave can be carried over up to a maximum of 5 days into the following year, but any unused sick leave beyond this limit is not paid out upon separation from the company.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "sick_leave",
+      "relation": "accrual_rate",
+      "declared": "10 days per year",
+      "source": "All full-time employees receive 10 sick days per year, credited on January 1.",
+      "question": "Summarise what this document says about the accrual rate of sick_leave.",
+      "answer": "All full-time employees receive 10 sick days per year, which are credited on January 1. Unused sick leave can be carried over to the following year but is limited to a maximum of 5 additional days.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "sick_leave",
+      "relation": "carryover_limit",
+      "declared": "5 days",
+      "source": "Unused sick leave may be carried over up to a maximum of 5 days into the following year.",
+      "question": "A colleague asked me about the carryover limit for sick_leave. What should I tell them?",
+      "answer": "There is no carry-over limit specified for sick leave; unused sick leave can be carried over up to a maximum of 5 days into the following year, but beyond that, there's no further mention of limits in the provided document.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "sick_leave",
+      "relation": "carryover_limit",
+      "declared": "5 days",
+      "source": "Unused sick leave may be carried over up to a maximum of 5 days into the following year.",
+      "question": "Summarise what this document says about the carryover limit of sick_leave.",
+      "answer": "The document does not specify a carry-over limit for sick leave; unused sick leave may be carried over up to a maximum of 5 days into the following year. Any additional unused sick leave beyond this limit is not carried over or paid out upon separation from the company.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "sick_leave",
+      "relation": "doctor_note_threshold",
+      "declared": "3 consecutive days",
+      "source": "Sick leave beyond 3 consecutive days requires a doctor's note.",
+      "question": "A colleague asked me about the doctor note threshold for sick_leave. What should I tell them?",
+      "answer": "For sick leave beyond three consecutive days, employees are required to provide a doctor's note. This documentation ensures that extended absences due to illness are verified by a medical professional.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "sick_leave",
+      "relation": "doctor_note_threshold",
+      "declared": "3 consecutive days",
+      "source": "Sick leave beyond 3 consecutive days requires a doctor's note.",
+      "question": "Summarise what this document says about the doctor note threshold of sick_leave.",
+      "answer": "The document states that all full-time employees receive 10 sick days per year, and a doctor's note is required for sick leaves beyond 3 consecutive days.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "parental_leave",
+      "relation": "duration_weeks",
+      "declared": "12 weeks",
+      "source": "Birth parents are eligible for 12 weeks of paid parental leave.",
+      "question": "A colleague asked me about the duration weeks for parental_leave. What should I tell them?",
+      "answer": "For birth parents, the duration of parental leave is 12 weeks, while non-birth parents, including those who adopt or foster, are eligible for 6 weeks of paid leave.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "parental_leave",
+      "relation": "duration_weeks",
+      "declared": "12 weeks",
+      "source": "Birth parents are eligible for 12 weeks of paid parental leave.",
+      "question": "Summarise what this document says about the duration weeks of parental_leave.",
+      "answer": "The document states that birth parents are eligible for 12 weeks of paid parental leave, while non-birth parents, including adoptive and foster parents, are eligible for 6 weeks of paid parental leave.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "parental_leave",
+      "relation": "duration_weeks",
+      "declared": "6 weeks",
+      "source": "Non-birth parents, including adoptive and foster parents, are eligible for 6 weeks of paid parental leave.",
+      "question": "A colleague asked me about the duration weeks for parental_leave. What should I tell them?",
+      "answer": "For birth parents, the duration of parental leave is 12 weeks, while non-birth parents, including those who adopt or foster, are eligible for 6 weeks of paid leave.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "parental_leave",
+      "relation": "duration_weeks",
+      "declared": "6 weeks",
+      "source": "Non-birth parents, including adoptive and foster parents, are eligible for 6 weeks of paid parental leave.",
+      "question": "Summarise what this document says about the duration weeks of parental_leave.",
+      "answer": "The document states that birth parents are eligible for 12 weeks of paid parental leave, while non-birth parents, including adoptive and foster parents, are eligible for 6 weeks of paid parental leave.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "parental_leave",
+      "relation": "leave_window",
+      "declared": "12 months",
+      "source": "Parental leave must be taken within 12 months of the birth or placement date.",
+      "question": "A colleague asked me about the leave window for parental_leave. What should I tell them?",
+      "answer": "Your colleague can take 12 weeks of paid parental leave if they are the birth parent, and 6 weeks if they are a non-birth parent such as an adoptive or foster parent. This leave must be taken within 12 months of the child's birth or placement date.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "parental_leave",
+      "relation": "leave_window",
+      "declared": "12 months",
+      "source": "Parental leave must be taken within 12 months of the birth or placement date.",
+      "question": "Summarise what this document says about the leave window of parental_leave.",
+      "answer": "Employees are eligible for parental leave within 12 months of the birth or placement date, with birth parents receiving 12 weeks of paid leave and non-birth parents (including adoptive and foster parents) receiving 6 weeks of paid leave.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "notice_period",
+      "declared": "10 business days",
+      "source": "Employees must submit annual leave requests at least 10 business days in advance for absences of 3 or more consecutive days.",
+      "question": "A colleague asked me about the notice period for annual_leave. What should I tell them?",
+      "answer": "For annual leave requests of 3 or more consecutive days, employees must submit their requests at least 10 business days in advance. For single-day absences, a 2-business day notice is required.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "notice_period",
+      "declared": "10 business days",
+      "source": "Employees must submit annual leave requests at least 10 business days in advance for absences of 3 or more consecutive days.",
+      "question": "Summarise what this document says about the notice period of annual_leave.",
+      "answer": "Employees must submit requests for annual leave at least 10 business days in advance if they plan to be absent for 3 or more consecutive days, and at least 2 business days in advance for single-day absences.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "notice_period",
+      "declared": "2 business days",
+      "source": "For single-day absences, 2 business days of notice is required.",
+      "question": "A colleague asked me about the notice period for annual_leave. What should I tell them?",
+      "answer": "For annual leave requests of 3 or more consecutive days, employees must submit their requests at least 10 business days in advance. For single-day absences, a 2-business day notice is required.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "notice_period",
+      "declared": "2 business days",
+      "source": "For single-day absences, 2 business days of notice is required.",
+      "question": "Summarise what this document says about the notice period of annual_leave.",
+      "answer": "Employees must submit requests for annual leave at least 10 business days in advance if they plan to be absent for 3 or more consecutive days, and at least 2 business days in advance for single-day absences.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "carryover_limit",
+      "declared": "5 days",
+      "source": "Employees may carry over up to 5 unused annual leave days into the next calendar year.",
+      "question": "A colleague asked me about the carryover limit for annual_leave. What should I tell them?",
+      "answer": "Employees may carry over up to 5 unused annual leave days into the next calendar year, but any balance beyond that as of December 31 is forfeited, except where local law requires otherwise.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "carryover_limit",
+      "declared": "5 days",
+      "source": "Employees may carry over up to 5 unused annual leave days into the next calendar year.",
+      "question": "Summarise what this document says about the carryover limit of annual_leave.",
+      "answer": "Employees may carry over up to 5 unused annual leave days into the next calendar year, with any excess beyond 5 days as of December 31 being forfeited, except where local law mandates otherwise.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "payout_on_exit",
+      "declared": "10 days",
+      "source": "Upon separation from the company, employees are paid out for unused annual leave at their final base rate of pay, up to a maximum of 10 days.",
+      "question": "A colleague asked me about the payout on exit for annual_leave. What should I tell them?",
+      "answer": "Upon separation from the company, employees are paid out for up to 10 days of unused annual leave at their final base rate of pay. Any unused annual leave beyond this amount is not eligible for payout.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "annual_leave",
+      "relation": "payout_on_exit",
+      "declared": "10 days",
+      "source": "Upon separation from the company, employees are paid out for unused annual leave at their final base rate of pay, up to a maximum of 10 days.",
+      "question": "Summarise what this document says about the payout on exit of annual_leave.",
+      "answer": "Upon separation from the company, employees are paid for up to 10 days of unused annual leave at their final base rate of pay. Any additional unused annual leave beyond this amount is not paid out.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "sick_leave",
+      "relation": "sick_payout_policy",
+      "declared": "not paid out",
+      "source": "Sick leave is not paid out upon exit under any circumstance.",
+      "question": "A colleague asked me about the sick payout policy for sick_leave. What should I tell them?",
+      "answer": "According to our company's Time Off and Leave Policy, unused sick leave is not paid out to employees when they separate from the company under any circumstances.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "sick_leave",
+      "relation": "sick_payout_policy",
+      "declared": "not paid out",
+      "source": "Sick leave is not paid out upon exit under any circumstance.",
+      "question": "Summarise what this document says about the sick payout policy of sick_leave.",
+      "answer": "The document states that upon separation from the company, employees do not receive any payment for unused sick leave; it is not paid out under any circumstances.",
+      "verdict": "no-answer",
+      "states_wrong_value": false
+    }
+  ]
+}

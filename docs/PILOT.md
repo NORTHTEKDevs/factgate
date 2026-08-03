@@ -89,3 +89,58 @@ non-expert under time pressure, nor how the numbers move across many documents i
 workflow. Those are the next pilots. But the load-bearing claim — *a reviewer can trust a
 VERIFIED verdict, and the rest is a bounded, safe queue* — held up the first time it was run
 against a document as if it were live.
+
+
+---
+
+# Pilot 2: three documents, three first-time authors
+
+The first pilot held one variable fixed that a real deployment cannot: the fact set was
+authored by someone who knows the codebase. Pilot 2 removes it. Three authors role-playing
+busy professionals were given **only [`AUTHORING.md`](AUTHORING.md)** — forbidden from
+reading the source or running the gate — and asked to write an everyday document (an HR
+leave policy, a restaurant food-safety SOP, a gym membership agreement) and declare its
+facts, iterating only the documented check loop.
+
+## The authoring result
+
+**All three were clean on their first check run.** Zero validation errors, zero lint
+errors, across 50 facts — the friction the validators were built to absorb never appeared.
+Their feedback was documentation, not defects: say explicitly that a declared value need
+not be a substring of its source, that a relation's `kind` is fixed per name, and show a
+failing example. The first two are now in the guide.
+
+## The supervised runs
+
+Same protocol as pilot 1: natural questions, a model answering in prose, the real extractor
+and gate, every verdict reviewed by hand against the document.
+
+| document | answered | VERIFIED | held | blocked | trust breaches | load reduction |
+|---|---|---|---|---|---|---|
+| HR leave policy | 21 | 7 | 14 | 0 | **0** | 33% |
+| Food-safety SOP | 31 | 21 | 10 | 0 | **0** | 68% |
+| Gym membership | 33 | 20 | 13 | 0 | **0** | 61% |
+| *(pilot 1: cold chain)* | *25* | *16* | *9* | *0* | ***0*** | *64%* |
+| **total, four documents** | **110** | **64** | **46** | **0** | **0** | **58%** |
+
+I read all 48 new VERIFIED verdicts against their documents. **Every one is correct** —
+including the ones my own first-pass scan flagged, which turned out to be the answer
+writing `1-2 days` as *"1 to 2 days"* and `3` as *"three"*, notation the gate equates and a
+naive reviewer script does not.
+
+The HR outlier (33%) is worth understanding rather than smoothing over: that author used
+conditional facts heavily — accrual by tenure band, leave by parent type — and a model
+asked "how many days does annual leave accrue?" answers with **all the bands**, which the
+gate correctly refuses to pick between. Conditional-heavy documents hold more, by design.
+The queue is larger; it is still never wrong.
+
+## What four documents and four authors now show
+
+Zero trust breaches in 110 supervised answers across four documents in four genres, three
+of them authored by first-time users of the public guide, all verdicts human-confirmed. The
+authoring cost outside the maintainer's hands was, on this evidence, **one clean check run**
+— and the residual cost is the held queue, at a mean 58% load reduction.
+
+Still not shown: performance under a non-synthetic workload, adversarial users, or fact
+sets authored by people (rather than careful agents) under real time pressure. Field
+evidence continues to be evidence, not certification.

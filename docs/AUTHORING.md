@@ -33,6 +33,13 @@ Load it with `FactSet.from_json(path)`; check it with `fs.validate_sources(corpu
 
 ## Fields
 
+**A note first-time authors ask about:** a fact's `o` (the value) does **not** need to be a
+literal substring of its `source` — declare it in the grammar below (`"15 mg/kg"`,
+`"1-2 days"`) even if the sentence writes it another way. Only the `source` sentence itself
+must appear verbatim in the corpus. And a relation's `kind` is fixed per relation name:
+every fact using that relation shares it, so a slot cannot be quantity for one fact and
+text for another.
+
 **`corpus`** — the source text the facts came from. Every fact's `source` must appear in it
 verbatim (whitespace-normalised), or `validate_sources` reports the fact as unquoted. This
 is what stops a wrong fact entering the set unnoticed.

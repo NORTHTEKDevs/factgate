@@ -1,0 +1,333 @@
+{
+  "domain": "pilot2-food-safety-sop",
+  "model": "qwen2.5:14b",
+  "counts": {
+    "VERIFIED": 21,
+    "BLOCK": 0,
+    "HELD": 10,
+    "no-answer": 1
+  },
+  "breaches": 0,
+  "records": [
+    {
+      "entity": "walk_in_cooler",
+      "relation": "cooler_temp_range",
+      "declared": "36-40 F",
+      "source": "All walk-in cooler units must hold food at 36 to 40 degrees F.",
+      "question": "A colleague asked me about the cooler temp range for walk_in_cooler. What should I tell them?",
+      "answer": "The temperature range for the walk-in cooler units should be maintained between 36 to 40 degrees Fahrenheit to ensure food safety standards are met. Digital probes must be checked and logged at the start of every shift to monitor compliance with these temperatures.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "walk_in_cooler",
+      "relation": "cooler_temp_range",
+      "declared": "36-40 F",
+      "source": "All walk-in cooler units must hold food at 36 to 40 degrees F.",
+      "question": "Summarise what this document says about the cooler temp range of walk_in_cooler.",
+      "answer": "The document specifies that all walk-in cooler units must maintain a temperature between 36 to 40 degrees Fahrenheit to ensure food safety. Digital probes are used to check these temperatures at the start of every shift, and the readings are logged on a clipboard near the walk-in door.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "reach_in_prep_cooler",
+      "relation": "max_temp",
+      "declared": "41 F",
+      "source": "The reach-in prep cooler on the line, used for cold-hold of prepped ingredients during service, must not exceed 41 degrees F.",
+      "question": "A colleague asked me about the max temp for reach_in_prep_cooler. What should I tell them?",
+      "answer": "The maximum temperature for the reach-in prep cooler is 41 degrees F, and anything found above this temperature for more than 4 hours must be discarded immediately.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "reach_in_prep_cooler",
+      "relation": "max_temp",
+      "declared": "41 F",
+      "source": "The reach-in prep cooler on the line, used for cold-hold of prepped ingredients during service, must not exceed 41 degrees F.",
+      "question": "Summarise what this document says about the max temp of reach_in_prep_cooler.",
+      "answer": "The reach-in prep cooler used for cold-holding prepped ingredients during service must not exceed 41 degrees Fahrenheit. If any food item in this cooler reaches above 41 degrees F and stays there for more than 4 hours, it must be discarded immediately and cannot be cooled back down for use.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "walk_in_freezer",
+      "relation": "max_temp",
+      "declared": "0 F",
+      "source": "The walk-in freezer must run at 0 degrees F or below",
+      "question": "A colleague asked me about the max temp for walk_in_freezer. What should I tell them?",
+      "answer": "The maximum temperature for the walk-in freezer should be 0 degrees F or below. If there is any frost buildup on the door gasket, it indicates that the unit may be cycling above this temperature and needs to be reported to the kitchen manager immediately.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "walk_in_freezer",
+      "relation": "max_temp",
+      "declared": "0 F",
+      "source": "The walk-in freezer must run at 0 degrees F or below",
+      "question": "Summarise what this document says about the max temp of walk_in_freezer.",
+      "answer": "The document specifies that the walk-in freezer must operate at 0 degrees F or below. If there is frost buildup on the door gasket, it indicates that the unit may be cycling above this temperature and should be reported to the kitchen manager immediately.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "hot_holding_line",
+      "relation": "min_temp",
+      "declared": "135 F",
+      "source": "potentially hazardous foods held on the steam line or in the soup well must stay at 135 degrees F or above at all times.",
+      "question": "A colleague asked me about the min temp for hot_holding_line. What should I tell them?",
+      "answer": "The minimum temperature for the hot holding line is 135 degrees F; potentially hazardous foods must be kept at this temperature or above at all times to ensure food safety.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "hot_holding_line",
+      "relation": "min_temp",
+      "declared": "135 F",
+      "source": "potentially hazardous foods held on the steam line or in the soup well must stay at 135 degrees F or above at all times.",
+      "question": "Summarise what this document says about the min temp of hot_holding_line.",
+      "answer": "The document specifies that potentially hazardous foods held on the hot holding line must maintain a temperature of 135 degrees F or above at all times. Chicken and other poultry items held in the hot box for catering must be checked with a calibrated thermometer every two hours, and if found below 135 degrees F, they need to be reheated to 165 degrees F within two hours or discarded.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "cooked_food_cooling",
+      "relation": "cooling_stage1_window",
+      "declared": "2 hours",
+      "source": "must drop from 135 degrees F to 70 degrees F within 2 hours.",
+      "question": "A colleague asked me about the cooling stage1 window for cooked_food_cooling. What should I tell them?",
+      "answer": "For cooked food that needs to be cooled for later use, it must drop from 135 degrees F to 70 degrees F within 2 hours and then further cool down to 41 degrees F or below within an additional 4 hours, totaling a 6-hour window from hot to cold. Large batches should be portioned into shallow pans before cooling starts to ensure they meet this time requirement.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "cooked_food_cooling",
+      "relation": "cooling_stage1_window",
+      "declared": "2 hours",
+      "source": "must drop from 135 degrees F to 70 degrees F within 2 hours.",
+      "question": "Summarise what this document says about the cooling stage1 window of cooked_food_cooling.",
+      "answer": "According to the document, cooked food that needs to be cooled for later use must drop from 135 degrees F to 70 degrees F within 2 hours and then further cool down to 41 degrees F or below within an additional 4 hours, totaling a 6-hour window from hot to cold. For large batches over 4 gallons, the food should be portioned into shallow pans before cooling begins to ensure it meets this temperature timeline; otherwise, it risks being discarded due to non-compliance with health codes.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "cooked_food_cooling",
+      "relation": "cooling_stage2_window",
+      "declared": "4 hours",
+      "source": "It must then drop from 70 degrees F down to 41 degrees F or below within an additional 4 hours",
+      "question": "A colleague asked me about the cooling stage2 window for cooked_food_cooling. What should I tell them?",
+      "answer": "For cooked food that needs to be cooled for later use, it must drop from 135 degrees F to 70 degrees F within 2 hours and then further cool down to 41 degrees F or below within an additional 4 hours, totaling a 6-hour window from hot to cold. Large batches should be portioned into shallow pans before cooling starts to ensure they meet this requirement.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "cooked_food_cooling",
+      "relation": "cooling_stage2_window",
+      "declared": "4 hours",
+      "source": "It must then drop from 70 degrees F down to 41 degrees F or below within an additional 4 hours",
+      "question": "Summarise what this document says about the cooling stage2 window of cooked_food_cooling.",
+      "answer": "According to the document, cooked food that needs to be cooled for later use must drop from 135 degrees F to 70 degrees F within 2 hours and then further cool down to 41 degrees F or below within an additional 4 hours, totaling a 6-hour window from hot to cold. For large batches over 4 gallons, the food should be portioned into shallow pans before cooling begins to ensure it meets this temperature timeline; otherwise, it risks being discarded due to non-compliance with health codes.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "cooked_leftovers",
+      "relation": "reheat_target",
+      "declared": "165 F",
+      "source": "must reach 165 degrees F for at least 15 seconds within 2 hours of the reheat starting.",
+      "question": "A colleague asked me about the reheat target for cooked_leftovers. What should I tell them?",
+      "answer": "For any previously cooked and cooled food being reheated, including leftovers like rice, pasta, and cooked proteins, it must reach an internal temperature of 165 degrees F for at least 15 seconds within 2 hours of the reheat process starting to ensure food safety.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "cooked_leftovers",
+      "relation": "reheat_target",
+      "declared": "165 F",
+      "source": "must reach 165 degrees F for at least 15 seconds within 2 hours of the reheat starting.",
+      "question": "Summarise what this document says about the reheat target of cooked_leftovers.",
+      "answer": "According to the document, previously cooked and cooled food being reheated for hot holding must reach an internal temperature of 165 degrees F for at least 15 seconds within 2 hours of starting the reheating process. This ensures that any bacteria present are eliminated, making the food safe for consumption.",
+      "verdict": "no-answer",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "handwashing",
+      "relation": "handwash_min_duration",
+      "declared": "20 seconds",
+      "source": "Handwashing at the line and prep sinks must take at least 20 seconds of scrubbing with soap after wetting, not counting rinse time.",
+      "question": "A colleague asked me about the handwash min duration for handwashing. What should I tell them?",
+      "answer": "According to our Food Safety Standard Operating Procedure, handwashing at the line and prep sinks must take a minimum of 20 seconds of scrubbing with soap after wetting, not including rinse time. Staff must wash their hands for this full duration before touching ready-to-eat food, gloves, or equipment if they have been handling raw poultry.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "handwashing",
+      "relation": "handwash_min_duration",
+      "declared": "20 seconds",
+      "source": "Handwashing at the line and prep sinks must take at least 20 seconds of scrubbing with soap after wetting, not counting rinse time.",
+      "question": "Summarise what this document says about the handwash min duration of handwashing.",
+      "answer": "The document specifies that handwashing at the line and prep sinks must take a minimum of 20 seconds of scrubbing with soap after wetting, not including rinse time. Staff who have handled raw poultry must wash their hands for this full 20-second duration before touching ready-to-eat food, gloves, or equipment for any other task.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "chlorine_sanitizer",
+      "relation": "sanitizer_concentration_range",
+      "declared": "50-100 ppm",
+      "source": "chlorine sanitizer mixed to 50 to 100 ppm",
+      "question": "A colleague asked me about the sanitizer concentration range for chlorine_sanitizer. What should I tell them?",
+      "answer": "The chlorine sanitizer used in the three-compartment sink sanitizing basin should be mixed to a concentration of 50 to 100 ppm, as tested with chlorine test strips before each set-up and re-checked hourly during dish pit operation.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "chlorine_sanitizer",
+      "relation": "sanitizer_concentration_range",
+      "declared": "50-100 ppm",
+      "source": "chlorine sanitizer mixed to 50 to 100 ppm",
+      "question": "Summarise what this document says about the sanitizer concentration range of chlorine_sanitizer.",
+      "answer": "The document specifies that the chlorine sanitizer used in the three-compartment sink sanitizing basin must be mixed to a concentration of 50 to 100 parts per million (ppm), and this concentration is tested with chlorine test strips before each set-up and re-checked hourly during dish pit operation.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "quat_sanitizer",
+      "relation": "sanitizer_concentration_range",
+      "declared": "200-400 ppm",
+      "source": "must be mixed to 200 to 400 ppm per the quat test strip color chart",
+      "question": "A colleague asked me about the sanitizer concentration range for quat_sanitizer. What should I tell them?",
+      "answer": "The quat sanitizer used for wiping down prep tables and cutting boards during service must be mixed to a concentration of 200 to 400 ppm, as per the quat test strip color chart. If the concentration falls below 200 ppm, it needs to be remixed rather than topped up.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "quat_sanitizer",
+      "relation": "sanitizer_concentration_range",
+      "declared": "200-400 ppm",
+      "source": "must be mixed to 200 to 400 ppm per the quat test strip color chart",
+      "question": "Summarise what this document says about the sanitizer concentration range of quat_sanitizer.",
+      "answer": "The document specifies that the quat sanitizer used for wiping down prep tables and cutting boards must be mixed to a concentration of 200 to 400 ppm, as determined by a quat test strip color chart. If the concentration falls below 200 ppm, it must be remixed rather than topped up.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "raw_poultry",
+      "relation": "cooler_shelf_life",
+      "declared": "1-2 days",
+      "source": "Raw poultry stored in the walk-in cooler is good for 1 to 2 days before it must be used or frozen.",
+      "question": "A colleague asked me about the cooler shelf life for raw_poultry. What should I tell them?",
+      "answer": "Raw poultry stored in the walk-in cooler has a shelf life of 1 to 2 days before it must be used or frozen, according to the Food Safety Standard Operating Procedure.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "raw_poultry",
+      "relation": "cooler_shelf_life",
+      "declared": "1-2 days",
+      "source": "Raw poultry stored in the walk-in cooler is good for 1 to 2 days before it must be used or frozen.",
+      "question": "Summarise what this document says about the cooler shelf life of raw_poultry.",
+      "answer": "The document states that raw poultry stored in the walk-in cooler has a shelf life of 1 to 2 days before it must be used or frozen.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "raw_ground_meat",
+      "relation": "cooler_shelf_life",
+      "declared": "1-2 days",
+      "source": "Raw ground meat, whether beef or pork, has the same 1 to 2 day cooler shelf life.",
+      "question": "A colleague asked me about the cooler shelf life for raw_ground_meat. What should I tell them?",
+      "answer": "Raw ground meat, whether it's beef or pork, has a cooler shelf life of 1 to 2 days before it must be used or frozen according to our food safety standards.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "raw_ground_meat",
+      "relation": "cooler_shelf_life",
+      "declared": "1-2 days",
+      "source": "Raw ground meat, whether beef or pork, has the same 1 to 2 day cooler shelf life.",
+      "question": "Summarise what this document says about the cooler shelf life of raw_ground_meat.",
+      "answer": "The document states that raw ground meat, whether beef or pork, has a cooler shelf life of 1 to 2 days before it must be used or frozen.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "raw_whole_cuts",
+      "relation": "cooler_shelf_life",
+      "declared": "3-5 days",
+      "source": "Raw whole cuts of beef or pork can hold for 3 to 5 days in the walk-in before use.",
+      "question": "A colleague asked me about the cooler shelf life for raw_whole_cuts. What should I tell them?",
+      "answer": "Raw whole cuts of beef or pork can be stored in the walk-in cooler for 3 to 5 days before they need to be used or frozen, according to our food safety standards.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "raw_whole_cuts",
+      "relation": "cooler_shelf_life",
+      "declared": "3-5 days",
+      "source": "Raw whole cuts of beef or pork can hold for 3 to 5 days in the walk-in before use.",
+      "question": "Summarise what this document says about the cooler shelf life of raw_whole_cuts.",
+      "answer": "The document states that raw whole cuts of beef or pork can be stored for 3 to 5 days in the walk-in cooler before they need to be used.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "fish_shellfish",
+      "relation": "cooler_shelf_life",
+      "declared": "1-2 days",
+      "source": "Fresh fish and shellfish must be used within 1 to 2 days of delivery.",
+      "question": "A colleague asked me about the cooler shelf life for fish_shellfish. What should I tell them?",
+      "answer": "Fresh fish and shellfish must be used within 1 to 2 days of delivery according to our food safety standards. Anything beyond that needs to be discarded to ensure freshness and safety.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "fish_shellfish",
+      "relation": "cooler_shelf_life",
+      "declared": "1-2 days",
+      "source": "Fresh fish and shellfish must be used within 1 to 2 days of delivery.",
+      "question": "Summarise what this document says about the cooler shelf life of fish_shellfish.",
+      "answer": "The document states that fresh fish and shellfish must be used within 1 to 2 days of delivery to ensure freshness and safety.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "cut_leafy_greens",
+      "relation": "cooler_shelf_life",
+      "declared": "3-4 days",
+      "source": "Cut leafy greens and other prepped produce are good for 3 to 4 days in the walk-in once cut.",
+      "question": "A colleague asked me about the cooler shelf life for cut_leafy_greens. What should I tell them?",
+      "answer": "Cut leafy greens and other prepped produce are good for 3 to 4 days in the walk-in cooler once they are cut, so make sure to use or discard them within that timeframe.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "cut_leafy_greens",
+      "relation": "cooler_shelf_life",
+      "declared": "3-4 days",
+      "source": "Cut leafy greens and other prepped produce are good for 3 to 4 days in the walk-in once cut.",
+      "question": "Summarise what this document says about the cooler shelf life of cut_leafy_greens.",
+      "answer": "The document states that cut leafy greens and other prepped produce stored in the walk-in cooler have a shelf life of 3 to 4 days before they must be discarded, regardless of their appearance or smell.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "cooked_leftovers",
+      "relation": "cooler_shelf_life",
+      "declared": "4 days",
+      "source": "Cooked leftovers pulled from service, such as rice, pasta, and cooked proteins, must be labeled, dated, and discarded after 4 days in the cooler regardless of how they look or smell.",
+      "question": "A colleague asked me about the cooler shelf life for cooked_leftovers. What should I tell them?",
+      "answer": "Cooked leftovers pulled from service, such as rice, pasta, and cooked proteins, must be labeled, dated, and discarded after 4 days in the cooler regardless of how they look or smell.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "cooked_leftovers",
+      "relation": "cooler_shelf_life",
+      "declared": "4 days",
+      "source": "Cooked leftovers pulled from service, such as rice, pasta, and cooked proteins, must be labeled, dated, and discarded after 4 days in the cooler regardless of how they look or smell.",
+      "question": "Summarise what this document says about the cooler shelf life of cooked_leftovers.",
+      "answer": "The document states that cooked leftovers pulled from service, such as rice, pasta, and cooked proteins, must be labeled and dated. They must be discarded after 4 days in the cooler, regardless of their appearance or smell.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    }
+  ]
+}
