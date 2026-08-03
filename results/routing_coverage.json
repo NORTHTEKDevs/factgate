@@ -2,10 +2,10 @@
   "model": "qwen2.5:14b",
   "totals": {
     "asserted": 151,
-    "adjudicated": 142,
-    "held_unresolved": 9,
-    "bypassed": 9,
-    "declined": 9
+    "adjudicated": 149,
+    "held_unresolved": 16,
+    "declined": 9,
+    "bypassed": 2
   },
   "rows": [
     {
@@ -883,8 +883,10 @@
       "answer": "This document outlines the uptime guarantees for a SaaS platform, offering different levels of service credits based on the Monthly Uptime Percentage. If the Service falls below the guaranteed 99.9% but remains above 95%, customers receive partial refunds ranging from 10% to 50% of their monthly fee",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
     },
     {
       "domain": "saas-contract-blind",
@@ -961,8 +963,10 @@
       "answer": "This document outlines the uptime guarantees for a SaaS platform, offering different levels of service credits based on the Monthly Uptime Percentage. If the Service falls below the guaranteed 99.9% but remains above 95%, customers receive partial refunds ranging from 10% to 50% of their monthly fee",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
     },
     {
       "domain": "saas-contract-blind",
@@ -1455,8 +1459,10 @@
       "answer": "Norvectra Insulin Solution for Injection should be stored refrigerated between 2 and 8 degrees Celsius before initial use and must not be frozen. After the vial is opened, it can remain stable at either 2 to 8 degrees Celsius or up to 25 degrees Celsius for a period of 28 days.",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
     },
     {
       "domain": "pharma-stability-blind",
@@ -1469,8 +1475,10 @@
       "answer": "Norvectra Insulin Solution for Injection should be stored under refrigeration at a temperature between 2 and 8 degrees Celsius prior to its first use, and it must never be frozen. Once opened, the solution remains stable for up to 28 days if kept within this temperature range or at controlled room t",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
     },
     {
       "domain": "pharma-stability-blind",
@@ -1607,8 +1615,10 @@
       "answer": "You should inform your colleague that the assay acceptance criteria for Norvectra Insulin Solution for Injection require its potency to be within 95.0 to 105.0 percent of the label claim throughout its shelf life.",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
     },
     {
       "domain": "pharma-stability-blind",
@@ -1637,8 +1647,10 @@
       "answer": "The document states that the assay acceptance criteria for Norvectra Insulin Solution require its potency to be within 95.0 to 105.0 percent of the label claim throughout its shelf life, ensuring consistent efficacy and safety.",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
     },
     {
       "domain": "pharma-stability-blind",
@@ -1651,8 +1663,10 @@
       "answer": "Before proceeding, it's important to know that the assay acceptance criteria for Norvectra Insulin Solution for Injection require its potency to be within 95.0 to 105.0 percent of the label claim throughout its shelf life, ensuring its efficacy and safety.",
       "asserted": true,
       "states_wrong_value": false,
-      "adjudicated": false,
-      "verdicts": []
+      "adjudicated": true,
+      "verdicts": [
+        "HELD (unresolved)"
+      ]
     },
     {
       "domain": "nutrition-spec-blind",

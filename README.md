@@ -205,8 +205,8 @@ so the value comes back buried in a paragraph. **Ten domains**, `qwen2.5:14b`:
 | | |
 |---|---|
 | Answers that asserted a value | 151 |
-| **Adjudicated — reached the gate** | **142/151 = 94%** CI95 [89%, 97%] |
-| Bypassed — asserted, unguarded | 9/151 = 6% |
+| **Adjudicated — reached the gate** | **149/151 = 99%** CI95 [95%, 100%] |
+| Bypassed — asserted, unguarded | 2/151 = 1% |
 | **Unguarded AND wrong** | **0/151 = 0%** CI95 [0%, 2.5%] |
 | Verified despite stating a wrong value | **0** |
 
@@ -216,12 +216,13 @@ fact set, not judged by a model, and the wrong-value test fires only on a number
 *provably* differs **under the declared unit** — a paraphrase, an omission, or a figure
 belonging to another slot is never counted as an error.
 
-**An earlier version of this section reported 99%, on four domains.** That was a selection
-effect, not a measurement. Widening to ten gave 85%, and the correction is recorded here
-rather than quietly replaced, because 99% is the number that would have been quoted. Fixing
-what the wider run exposed took it 85% → 91% → 94%.
+**This number was 99% once before, on four domains — and that was a selection effect, not
+a measurement.** Widening to ten dropped it to 85%. Fixing what the wider run exposed took
+it 85% → 91% → 94% → **99%**, and this time the figure is earned across all ten. The arc is
+recorded rather than replaced because the endpoint alone would be indistinguishable from
+the selection effect it started as.
 
-Four defects surfaced from running this, each fixed and each reflected in the table above:
+Five defects surfaced from running this, each fixed and each reflected in the table above:
 
 - A model answering *"a four-hour observation period"* — the correct value, **spelled out**
   — was bypassed entirely, because the digit never appears and grounding failed.
@@ -235,9 +236,18 @@ Four defects surfaced from running this, each fixed and each reflected in the ta
   succeeds when every significant word appears in **one sentence** — scoped to a sentence,
   because attaching a claim to the wrong entity is the worst thing that function can do.
   That took 91% → 94%.
+- The model's slot answer often contained the declared value **wrapped in prose it copied
+  from its own sentence** — *"refrigerated between 2 and 8 degrees Celsius before initial
+  use"*. The shape filter rightly refuses to distill that into a value; it then went
+  *silent*. Those slots are now surfaced and become HELD. That took 94% → 99%.
 - Twice, the harness itself scored a correct answer as unguarded-and-wrong by attributing
   another slot's figure to it. A measurement that flatters the danger is as useless as one
   that flatters the product.
+
+The two remaining bypasses are one shape, documented rather than patched: the model
+misspelling the entity name (*"Nornectra"* for *"Norvectra"*). Fuzzy matching would close
+them and is refused on purpose — attaching a claim to a nearly-right name is the wrong-drug
+failure, and one letter is exactly the distance between real drug names.
 
 ### Measured behaviour
 
