@@ -130,6 +130,13 @@ _ORACLE_UNITS = {
     "min": ("time", Fraction(60)), "hrs": ("time", Fraction(3600)),
     "hr": ("time", Fraction(3600)), "hours": ("time", Fraction(3600)),
     "iu": ("activity", Fraction(1)),
+    # Temperature scales, added after a blind reviewer found {"F":"C"} leaking. Sizes are
+    # identity sentinels, not conversion factors -- the scales are affine -- so the oracle
+    # can prove two DIFFERENT scales are not the same unit, which is all the config proof
+    # needs. It does not attempt to convert across them.
+    "c": ("temperature-c", Fraction(1)), "celsius": ("temperature-c", Fraction(1)),
+    "f": ("temperature-f", Fraction(1)), "fahrenheit": ("temperature-f", Fraction(1)),
+    "k": ("temperature-k", Fraction(1)), "kelvin": ("temperature-k", Fraction(1)),
 }
 
 
@@ -309,6 +316,7 @@ _ALIAS_POOL = [
     {"mcg": "mg"}, {"mL": "mg"}, {"lbs": "kg"}, {"fl oz": "oz"}, {"gal": "l"},
     {"mcg": "iu"}, {"%": "percent of label claim"}, {"gal": "US gallons"},
     {"ft": "m"}, {"hrs": "min"}, {"mL": "millilitre"}, {"lbs": "pounds"},
+    {"F": "C"}, {"K": "C"}, {"C": "celsius"},
 ]
 _QUALIFIER_POOL = [
     [], ["approximately"], ["per day"], ["PO"], ["or more"], ["monthly"],
@@ -320,6 +328,7 @@ _PAIRS = [
     ("45%", "45 percent of label claim"), ("5 mg", "5 mg"), ("5 mg", "9 mg"),
     ("92 percent", "92%"), ("5 mg", "5 mg approximately"), ("10 mg", "10 mg per day"),
     ("$5", "5 dollars"), ("3 hrs", "3 hours"), ("3 hrs", "3 min"),
+    ("100 C", "100 F"), ("100 C", "100 K"), ("100 C", "100 celsius"), ("100 C", "100 C"),
 ]
 
 
@@ -416,5 +425,5 @@ def test_the_config_proof_fails_when_the_defence_is_removed():
         f"the config proof caught only {len(caught)} leaks with the defence removed, so "
         f"passing it with the defence in place proves little")
     found = {a for a, _, _ in caught}
-    for expected in (("mcg", "mg"), ("mL", "mg"), ("fl oz", "oz")):
+    for expected in (("mcg", "mg"), ("mL", "mg"), ("fl oz", "oz"), ("F", "C")):
         assert (expected,) in found, f"{expected} not caught; the proof has a blind spot"

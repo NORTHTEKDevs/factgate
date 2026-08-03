@@ -546,3 +546,32 @@ def test_a_range_is_never_read_as_a_ratio():
     assert compare_values("5 to 10 mg", "1 to 2 mg") == "DIFFER"
     # And the quotient they share must never make them equal.
     assert compare_values("5 to 10", "1 to 2", True) != "MATCH"
+
+
+# ------------------------------- blind round: hyphen-joined compound is not a contradiction
+def test_a_hyphenated_compound_matches_its_spaced_form():
+    """FOUND BY A BLIND REVIEWER against post-proof HEAD. A declared "Board Certified"
+    reported the faithful claim "board-certified" as BLOCK -- the gate telling a clinician
+    a correct certification contradicts the record. The dash-glyph fold already normalised
+    en/em dashes to "-" but did not treat a hyphen between letters as a word joiner."""
+    def text_fs(o, src):
+        return FactSet.from_dict({
+            "domain": "d", "entities": {"e": ["e"]},
+            "relations": {"p": {"kind": "text"}},
+            "facts": [{"s": "e", "r": "p", "o": o, "source": src}]})
+    for declared, claimed in [("Board Certified", "board-certified"),
+                              ("well being", "well-being"),
+                              ("x ray", "x-ray"),
+                              ("fluid resuscitation", "fluid-resuscitation")]:
+        fs = text_fs(declared, f"The record states {declared}.")
+        assert gate_claim(fs, "e", "p", claimed).status == VERIFIED, (declared, claimed)
+
+
+def test_the_hyphen_fold_does_not_touch_a_numeric_range():
+    """The fold is scoped to hyphens BETWEEN LETTERS, so a range keeps its hyphen and is
+    still parsed as a range long before the text path is reached."""
+    from factgate.domain.quantity import DIFFER, MATCH, compare_values
+    # The range still parses as a range and matches itself -- the fold never reaches it.
+    assert compare_values("5-10 mg", "5-10 mg", True) == MATCH
+    # A point outside the range is still a provable difference (the hyphen survived).
+    assert compare_values("5-10 mg", "20 mg", True) == DIFFER

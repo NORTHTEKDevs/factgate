@@ -242,9 +242,18 @@ def _text_key(s: str) -> str:
     both sides symmetrically, so it can make two spellings of one value equal but can never
     make two different values equal: no character is dropped except zero-width marks, which
     render as nothing.
+
+    A HYPHEN BETWEEN TWO LETTERS is a word joiner, and a compound written with it means the
+    same as the spaced form. Found by a blind reviewer: a declared "Board Certified"
+    reported the faithful claim "board-certified" as a BLOCK -- the gate telling a clinician
+    that a correct certification contradicts the record. The dash-glyph fold already
+    normalised en/em dashes to "-"; it did not treat that "-" as a separator. It does now,
+    only between word characters, so "5-10" is untouched (it is a range, parsed long before
+    this text path, and its hyphen sits between digits regardless).
     """
-    return " ".join(unicodedata.normalize("NFC", str(s))
-                    .translate(_PUNCT_FOLD).lower().split())
+    joined = re.sub(r"(?<=[^\W\d_])-(?=[^\W\d_])", " ",
+                    unicodedata.normalize("NFC", str(s)).translate(_PUNCT_FOLD))
+    return " ".join(joined.lower().split())
 
 MATCH, DIFFER, INCOMPARABLE = "MATCH", "DIFFER", "INCOMPARABLE"
 

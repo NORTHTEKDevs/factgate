@@ -807,3 +807,43 @@ def test_a_phrase_containing_a_known_unit_is_not_a_spelling_of_it(alias, canon, 
         "relations": {"p": {"kind": "quantity"}}, "unit_aliases": {alias: canon},
         "facts": [{"s": "x", "r": "p", "o": "5 mg", "source": "It is 5 mg."}]})
     assert [p for p in fs.lint() if p["level"] == "error"], f"{alias} -> {canon}: {why}"
+
+
+@pytest.mark.parametrize("alias,canon", [
+    ("F", "C"), ("C", "F"), ("fahrenheit", "celsius"), ("K", "C"), ("F", "K"),
+])
+def test_lint_refuses_a_temperature_scale_alias(alias, canon):
+    """FOUND BY A BLIND REVIEWER against post-proof HEAD, and a real LEAK: temperature was
+    absent from the dimension table, so {"F": "C"} passed lint clean and made "100 F" VERIFY
+    against a declared "100 C" -- values 62 degrees apart. Cold-chain and pharmaceutical
+    domains carry temperature in safety-critical contexts."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"x": []},
+        "relations": {"p": {"kind": "quantity"}}, "unit_aliases": {alias: canon},
+        "facts": [{"s": "x", "r": "p", "o": "100 C", "source": "It is 100 C."}]})
+    assert [p for p in fs.lint() if p["level"] == "error"], f"{alias}->{canon} accepted"
+
+
+@pytest.mark.parametrize("alias,canon", [
+    ("C", "degrees celsius"), ("C", "celsius"), ("°C", "degrees celsius"),
+])
+def test_a_temperature_spelling_is_still_accepted(alias, canon):
+    """The scale check must fire only between DIFFERENT scales. A spelling of one scale --
+    which real domains ship -- must pass, or adding temperature would break them."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"x": []},
+        "relations": {"p": {"kind": "quantity"}}, "unit_aliases": {alias: canon},
+        "facts": [{"s": "x", "r": "p", "o": "100 C", "source": "It is 100 C."}]})
+    assert [p for p in fs.lint() if p["level"] == "error"] == []
+
+
+@pytest.mark.parametrize("alias,canon", [("bar", "psi"), ("mph", "kph"), ("atm", "bar")])
+def test_an_untabulated_dimension_alias_is_flagged(alias, canon):
+    """The backstop for a dimension the table does not know -- the next temperature. Two
+    short unit tokens with no abbreviation relationship are two different units, and either
+    the SI-prefix scale check or the short-token guard flags them."""
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"x": []},
+        "relations": {"p": {"kind": "quantity"}}, "unit_aliases": {alias: canon},
+        "facts": [{"s": "x", "r": "p", "o": "5 mg", "source": "It is 5 mg."}]})
+    assert [p for p in fs.lint() if p["level"] in ("error", "warning")]

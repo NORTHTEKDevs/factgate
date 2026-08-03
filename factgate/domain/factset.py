@@ -132,6 +132,16 @@ for _dim, _entries in {
                  (2.0, ["gbp", "sterling", "£"]),
                  (3.0, ["eur", "euro", "euros", "€"])],
     "ratio": [(1.0, ["%", "percent", "pct", "percentage"])],
+    # Temperature was absent, and a blind reviewer found the gap: an author declaring
+    # {"F": "C"} passed lint clean and made "100 F" VERIFY against a declared "100 C" --
+    # values 62 degrees apart. Cold-chain and pharmaceutical domains carry temperature in
+    # safety-critical contexts. The scales are affine, not multiplicative, so the factors
+    # here are IDENTITY SENTINELS -- distinct per scale so the same-dimension-different-unit
+    # check fires between them, equal within a scale so "C" and "celsius" are not flagged
+    # against each other. They are never used for conversion.
+    "temperature": [(1.0, ["c", "°c", "celsius", "centigrade"]),
+                    (2.0, ["f", "°f", "fahrenheit"]),
+                    (3.0, ["k", "kelvin"])],
 }.items():
     for _factor, _names in _entries:
         for _n in _names:
@@ -142,7 +152,36 @@ for _dim, _entries in {
 # short: "imperial" is absent because an imperial gallon is a different volume from a US
 # one, and "fluid" is absent because a fluid ounce is a different dimension from an ounce.
 _LOCALE_WORDS = frozenset({"us", "u", "s", "usa", "american", "uk", "gb", "british",
-                           "international", "standard", "spelt", "spelled"})
+                           "international", "standard", "spelt", "spelled",
+                           # Descriptor words that name HOW a unit is written without
+                           # changing the quantity: "degrees celsius" is celsius. Added
+                           # after temperature entered the table and the alias
+                           # {"C": "degrees celsius"} -- shipped in real domains -- began
+                           # tripping the known-to-unknown check on the word "degrees".
+                           "degrees", "degree", "deg", "of", "per"})
+
+
+def _stem(unit: str) -> str:
+    """Alphanumerics only, lowercased -- for comparing an abbreviation to its expansion."""
+    return re.sub(r"[^a-z0-9]", "", str(unit).lower())
+
+
+def _both_short_single_tokens(a: str, b: str) -> bool:
+    """Neither side has an internal space, and both are short. An expansion like
+    'thousand per microliter' fails this, so only two abbreviations reach the guard."""
+    return (" " not in a.strip() and " " not in b.strip()
+            and len(_stem(a)) <= 4 and len(_stem(b)) <= 4)
+
+
+def _abbreviates(a: str, b: str) -> bool:
+    """Is one stem a subsequence of the other? True for hr/hour, in/inch, C/celsius --
+    the signature of an abbreviation of the same unit, not a mapping between two units."""
+    sa, sb = _stem(a), _stem(b)
+    if not sa or not sb:
+        return True
+    short, long = (sa, sb) if len(sa) <= len(sb) else (sb, sa)
+    it = iter(long)
+    return all(ch in it for ch in short)
 
 
 @dataclass(frozen=True)
@@ -518,11 +557,16 @@ class FactSet:
             c_known = _KNOWN_UNITS.get(str(canon).strip().lower())
             if a_known and c_known and a_known != c_known:
                 same_dim = a_known[0] == c_known[0]
-                detail = (f"the same {a_known[0]} in different units, a factor of "
-                          f"{max(a_known[1], c_known[1]) / min(a_known[1], c_known[1]):g}"
-                          if same_dim else
-                          f"{a_known[0]} and {c_known[0]}, which are not even the same "
-                          f"kind of quantity")
+                # Temperature scales are affine, so a multiplicative "factor of X" is
+                # meaningless for them -- the factors are identity sentinels, not sizes.
+                if same_dim and a_known[0] == "temperature":
+                    detail = "two different temperature scales, which do not convert linearly"
+                elif same_dim:
+                    detail = (f"the same {a_known[0]} in different units, a factor of "
+                              f"{max(a_known[1], c_known[1]) / min(a_known[1], c_known[1]):g}")
+                else:
+                    detail = (f"{a_known[0]} and {c_known[0]}, which are not even the same "
+                              f"kind of quantity")
                 problems.append({
                     "level": "error",
                     "message": (f"unit_alias {alias!r} -> {canon!r} equates {detail}. "
@@ -590,6 +634,28 @@ class FactSet:
                                 f"{alias!r} would verify against a fact declared in "
                                 f"{canon!r}. Aliases reconcile spellings of one unit, "
                                 f"never two different units."),
+                })
+                continue
+            # LAST LINE OF DEFENCE for a dimension the table does not know. Temperature was
+            # the found gap; the next will be pressure, or energy, or some field unit nobody
+            # anticipated. A legitimate short alias is an ABBREVIATION of its target -- "hr"
+            # of "hour", "in" of "inch", "C" of "celsius" -- so the shorter side is a
+            # subsequence of the longer. Two short tokens that share no such relationship
+            # are two different units ("F" and "C", "bar" and "psi"). Bounded to short
+            # single tokens so expansions ("K/uL" -> "thousand per microliter") are never
+            # flagged: their canonical side is long or multi-word.
+            if (not a_known and not c_known
+                    and _both_short_single_tokens(a_txt, c_txt)
+                    and not _abbreviates(a_txt, c_txt)):
+                problems.append({
+                    "level": "warning",
+                    "message": (f"unit_alias {alias!r} -> {canon!r} joins two short unit "
+                                f"tokens with no abbreviation relationship, which is the "
+                                f"shape of two DIFFERENT units in a dimension this checker "
+                                f"does not tabulate (for example a temperature or pressure "
+                                f"scale). If they are genuinely one unit, ignore this; if "
+                                f"not, every claim in {alias!r} would verify against a fact "
+                                f"in {canon!r}, unconverted."),
                 })
 
         # ERROR: a slot with exactly ONE declared value that still carries a condition.
