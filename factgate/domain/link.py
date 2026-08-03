@@ -562,6 +562,25 @@ def link_targeted(text: str, fs: FactSet, model: str,
             #   unambiguous -- the passage must not carry a competing value for the slot
             #                  (the decoy attack: plant the declared value, state another)
             if value is None or not value_is_grounded(value, text, fs):
+                # The same defect the ambiguity branch below had, one branch earlier, and
+                # found the same way -- by replaying real bypasses. The slot answer
+                # CONTAINED the declared value wrapped in prose the shape filter rightly
+                # refuses to distill:
+                #
+                #   "refrigerated between 2 and 8 degrees Celsius before initial use"
+                #   "within 95.0 to 105.0 percent of the label claim throughout its ..."
+                #
+                # Refusing to distill is correct; going SILENT is not. When the answer is
+                # not a refusal and the passage states the declared value, the model did
+                # assert something about this slot and a human should see it. Reported as
+                # unresolved, which the caller turns into HELD. Never a claim: nothing here
+                # is confirmed, only surfaced.
+                first_line = next((l for l in (answer or "").splitlines() if l.strip()), "")
+                if (not _ABSENT.match(re.sub(r"^(?:value|answer)\s*:\s*", "",
+                                             first_line.strip(), flags=re.IGNORECASE))
+                        and declared_o
+                        and value_is_grounded(declared_o, text, fs)):
+                    unresolved.append((entity, relation, declared_o))
                 continue
             if ambiguous_candidates(value, text, fs, entity, relation):
                 # A value WAS seen for this slot and could not be resolved. Dropping it

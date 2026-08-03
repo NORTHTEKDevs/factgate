@@ -334,3 +334,52 @@ def test_one_common_word_never_resolves_an_entity(answer):
     """At least two significant words are required, so a single common noun cannot resolve
     a multi-word name on its own."""
     assert mentioned_entities(answer, _tariff()) == set()
+
+
+def test_a_prose_wrapped_declared_value_is_reported_not_swallowed(monkeypatch):
+    """FOUND BY REPLAYING REAL BYPASSES: the same silent-drop defect the ambiguity branch
+    had, one branch earlier. The model's slot answer contained the declared value wrapped
+    in prose -- "refrigerated between 2 and 8 degrees Celsius before initial use" -- which
+    the shape filter rightly refuses to distill into a value. Refusing is correct; going
+    SILENT was not. Three of the nine remaining routing bypasses were this."""
+    passage = ("The solution should be stored refrigerated between 2 and 8 degrees "
+               "Celsius before initial use and must not be frozen.")
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"the solution": []},
+        "relations": {"storage": {"kind": "quantity"}},
+        "facts": [{"s": "the solution", "r": "storage", "o": "2 to 8 degrees Celsius",
+                   "source": passage}]})
+    monkeypatch.setattr(link, "ollama", _scripted(
+        "Value: refrigerated between 2 and 8 degrees Celsius before initial use"))
+    claims, unresolved = link.link_targeted(passage, fs, "m", report_unresolved=True)
+    assert claims == []
+    assert unresolved == [("the solution", "storage", "2 to 8 degrees Celsius")]
+
+
+def test_a_refusal_is_not_reported_as_unresolved(monkeypatch):
+    """A refusal asserts nothing, so there is nothing to hold. Only an answer that engages
+    with the slot may surface it."""
+    passage = "The solution should be stored between 2 and 8 degrees Celsius."
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"the solution": []},
+        "relations": {"storage": {"kind": "quantity"}},
+        "facts": [{"s": "the solution", "r": "storage", "o": "2 to 8 degrees Celsius",
+                   "source": passage}]})
+    monkeypatch.setattr(link, "ollama", _scripted("Value: NONE"))
+    claims, unresolved = link.link_targeted(passage, fs, "m", report_unresolved=True)
+    assert claims == [] and unresolved == []
+
+
+def test_prose_about_an_absent_value_is_not_reported(monkeypatch):
+    """If the passage never states the declared value, the model's prose is not an
+    assertion of it -- surfacing that would hold every hedge against every slot."""
+    passage = "Storage guidance for the solution is discussed with your pharmacist."
+    fs = FactSet.from_dict({
+        "domain": "d", "entities": {"the solution": []},
+        "relations": {"storage": {"kind": "quantity"}},
+        "facts": [{"s": "the solution", "r": "storage", "o": "2 to 8 degrees Celsius",
+                   "source": "Store at 2 to 8 degrees Celsius."}]})
+    monkeypatch.setattr(link, "ollama", _scripted(
+        "Value: discussed with your pharmacist as needed over time"))
+    claims, unresolved = link.link_targeted(passage, fs, "m", report_unresolved=True)
+    assert claims == [] and unresolved == []
