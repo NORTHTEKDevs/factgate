@@ -1,0 +1,42 @@
+{
+  "domain": "pilot-cold-chain",
+  "_note": "Realistic composite cold-chain vaccine storage sheet for a supervised pilot. Ground truth for the pilot is this corpus text, exactly as it is for a real reviewer. Authored blind: the vocabulary was written from the document, not tuned against the gate.",
+  "corpus": "VACCINE STORAGE AND HANDLING SUMMARY. This summary describes storage, transport, and in-use conditions for three refrigerated and frozen products. Product A is a refrigerated inactivated vaccine. It must be stored at 2 to 8 degrees Celsius (36 to 46 degrees Fahrenheit) and must never be frozen; a vial that has been frozen at any point must be discarded. After the vial is first punctured, Product A is stable for 28 days when kept within the refrigerated range. A temperature excursion above 8 degrees Celsius is permitted for a cumulative total of no more than 72 hours over the product's life, after which the vial must not be used. The shelf life of an unopened vial is 24 months from the date of manufacture. Product B is a frozen mRNA vaccine. It must be stored frozen at -25 to -15 degrees Celsius for long-term storage, and may be held refrigerated at 2 to 8 degrees Celsius for up to 10 weeks before first use. Once thawed, Product B must not be refrozen. After dilution, Product B must be used within 6 hours and any unused portion discarded. Product C is an ultra-cold frozen vaccine stored at -90 to -60 degrees Celsius. In an ultra-cold freezer it is stable until the printed expiry. Once removed to refrigerated conditions of 2 to 8 degrees Celsius, Product C may be kept for up to 31 days. Relative humidity in the storage area should be maintained below 60 percent. The recommended minimum-maximum thermometer reading interval is every 30 minutes, and readings must be logged twice daily. A backup power supply must sustain the unit for at least 4 hours during an outage.",
+  "entities": {
+    "Product A": ["the refrigerated inactivated vaccine", "the inactivated vaccine"],
+    "Product B": ["the frozen mRNA vaccine", "the mRNA vaccine"],
+    "Product C": ["the ultra-cold frozen vaccine", "the ultra-cold vaccine"],
+    "storage area": ["the storage room", "the storage location"],
+    "monitoring": ["temperature monitoring", "the monitoring procedure"],
+    "backup power": ["the backup power supply", "emergency power"]
+  },
+  "relations": {
+    "storage_temperature": {"kind": "quantity", "question": "what is the storage temperature for {entity}?"},
+    "in_use_stability": {"kind": "quantity", "question": "what is the in-use stability of {entity}?"},
+    "excursion_allowance": {"kind": "quantity", "question": "what temperature excursion is allowed for {entity}?"},
+    "shelf_life": {"kind": "quantity", "question": "what is the shelf life of {entity}?"},
+    "refrigerated_hold": {"kind": "quantity", "question": "how long may {entity} be held refrigerated?"},
+    "post_dilution_use": {"kind": "quantity", "question": "how long after dilution may {entity} be used?"},
+    "freezing_rule": {"kind": "text", "question": "what is the freezing rule for {entity}?"},
+    "humidity_limit": {"kind": "quantity", "question": "what is the humidity limit for {entity}?"},
+    "reading_interval": {"kind": "quantity", "question": "what is the thermometer reading interval for {entity}?"},
+    "backup_duration": {"kind": "quantity", "question": "how long must {entity} sustain the unit?"}
+  },
+  "value_qualifiers": ["cumulative", "for long-term storage", "before first use", "from the date of manufacture", "over the product's life", "at any point"],
+  "unit_aliases": {"°C": "degrees Celsius", "°F": "degrees Fahrenheit"},
+  "facts": [
+    {"s": "Product A", "r": "storage_temperature", "o": "2 to 8 degrees Celsius", "source": "It must be stored at 2 to 8 degrees Celsius (36 to 46 degrees Fahrenheit) and must never be frozen; a vial that has been frozen at any point must be discarded."},
+    {"s": "Product A", "r": "in_use_stability", "o": "28 days", "source": "After the vial is first punctured, Product A is stable for 28 days when kept within the refrigerated range."},
+    {"s": "Product A", "r": "excursion_allowance", "o": "72 hours", "source": "A temperature excursion above 8 degrees Celsius is permitted for a cumulative total of no more than 72 hours over the product's life, after which the vial must not be used."},
+    {"s": "Product A", "r": "shelf_life", "o": "24 months", "source": "The shelf life of an unopened vial is 24 months from the date of manufacture."},
+    {"s": "Product A", "r": "freezing_rule", "o": "must never be frozen", "source": "It must be stored at 2 to 8 degrees Celsius (36 to 46 degrees Fahrenheit) and must never be frozen; a vial that has been frozen at any point must be discarded."},
+    {"s": "Product B", "r": "storage_temperature", "o": "-25 to -15 degrees Celsius", "source": "It must be stored frozen at -25 to -15 degrees Celsius for long-term storage, and may be held refrigerated at 2 to 8 degrees Celsius for up to 10 weeks before first use."},
+    {"s": "Product B", "r": "refrigerated_hold", "o": "10 weeks", "source": "It must be stored frozen at -25 to -15 degrees Celsius for long-term storage, and may be held refrigerated at 2 to 8 degrees Celsius for up to 10 weeks before first use."},
+    {"s": "Product B", "r": "post_dilution_use", "o": "6 hours", "source": "After dilution, Product B must be used within 6 hours and any unused portion discarded."},
+    {"s": "Product C", "r": "storage_temperature", "o": "-90 to -60 degrees Celsius", "source": "Product C is an ultra-cold frozen vaccine stored at -90 to -60 degrees Celsius."},
+    {"s": "Product C", "r": "refrigerated_hold", "o": "31 days", "source": "Once removed to refrigerated conditions of 2 to 8 degrees Celsius, Product C may be kept for up to 31 days."},
+    {"s": "storage area", "r": "humidity_limit", "o": "60 percent", "source": "Relative humidity in the storage area should be maintained below 60 percent."},
+    {"s": "monitoring", "r": "reading_interval", "o": "30 minutes", "source": "The recommended minimum-maximum thermometer reading interval is every 30 minutes, and readings must be logged twice daily."},
+    {"s": "backup power", "r": "backup_duration", "o": "4 hours", "source": "A backup power supply must sustain the unit for at least 4 hours during an outage."}
+  ]
+}
