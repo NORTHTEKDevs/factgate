@@ -12,7 +12,7 @@ for the exact boundary.
 
 ![License](https://img.shields.io/badge/license-Apache--2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.11%2B-blue)
-![Tests](https://img.shields.io/badge/tests-800%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-816%20passing-brightgreen)
 
 ## The idea
 
@@ -54,7 +54,7 @@ gate's own false-accept rate, not an observed hallucination rate of any model.
 | False-VERIFIED rate, absent facts (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | False-VERIFIED rate, corrupted claims (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
 | True-fact verify coverage (N=1500) | **34%** | [31.6%, 36.4%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| Test suite | **800 passed** | — | `pytest tests/ -q` |
+| Test suite | **816 passed** | — | `pytest tests/ -q` |
 
 **LLM-in-the-loop results.** Only these involved a running model. Note the sample size.
 
@@ -263,7 +263,7 @@ been measured on. All reproducible from a clone:
 Live soak across eighteen domains: 335 claims adjudicated, every safety invariant holding on
 every verdict a real model produced.
 
-### How this was reached
+### How this was reached, and what it does not claim
 
 Five rounds of adversarial review found defects one at a time, and by the fourth round most
 new leaks were **inside the previous round's fixes** -- the search was not converging, and
@@ -271,6 +271,21 @@ each notation added to reduce over-block created leak surface faster than review
 The proofs above replaced that process. They caught a false block on their first run, and
 the mutation gate immediately exposed two defects in the oracle itself while it appeared to
 pass. `docs/HALLUGATE.md` records every defect with its measured reproduction.
+
+**The proofs did not make the code leak-proof, and this is stated plainly.** A later round
+handed the code to reviewers with no history of what was fixed and asked them to attack from
+first principles. They found two more: a temperature `unit_alias` (`{"F": "C"}`) that passed
+lint and verified `100 F` against a declared `100 C`, and a hyphenated compound
+(`board-certified`) reported as contradicting a declared `Board Certified`. A leak and a
+false block -- the two categories that matter -- in code that had already survived five
+rounds and a proof suite.
+
+That is the honest boundary of what the method buys. It does **not** guarantee no undiscovered
+defect exists; a fresh perspective still finds them. What it guarantees is that **every defect,
+once found, cannot silently return** -- both of those are now in the value-grammar oracle and
+the mutation set, caught on every commit. The claim is "provably correct over what has been
+tested, and structurally unable to regress," not "provably correct over all inputs." The
+second would be false, and a reviewer proved it.
 
 **What is still not certified.** No deployment has run without a human reviewing the held
 queue. The three private evaluation documents are not in this repository, so two of the
@@ -425,7 +440,7 @@ python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install -e .
 ./.venv/Scripts/python.exe -m pip install -e ../rck   # path to your local RCK checkout
 
-# run the test suite (800 tests, no network, <10s)
+# run the test suite (816 tests, no network, <10s)
 ./.venv/Scripts/python.exe -m pytest tests/ -q
 
 # reproduce the headline guarantee measurement (N=1500/class against the live KB)

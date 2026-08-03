@@ -1072,6 +1072,33 @@ The proofs then found what five rounds of review had not: a false BLOCK on `"0.5
 minophen` matched nothing, making every fact about that drug silently
 unextractable.
 
+## 19. The blind round: what a fresh attacker found that the proofs did not
+
+The proof suite raised a question it could not answer itself: has the method converged, or
+has the hunt merely stopped? A proof catches regressions of KNOWN defects; it says nothing
+about defects nobody has thought of. So the code was handed to reviewers who were given the
+product claim and the source but DELIBERATELY NO HISTORY of what had already been fixed, and
+asked to attack from first principles.
+
+They found two, both reproduced independently, both the categories that matter:
+
+  LEAK -- temperature was absent from the unit-dimension table. {"F": "C"} passed lint clean
+  and "100 F" VERIFIED against a declared "100 C", values 62 degrees apart. The same class as
+  the mcg/mg and fl-oz/oz leaks, in a dimension the table simply did not cover.
+
+  FALSE BLOCK -- a declared "Board Certified" reported "board-certified" as a contradiction.
+  The typography fold normalised dash glyphs but never treated a hyphen between letters as a
+  word joiner.
+
+Both are fixed, and both now live in the value-grammar oracle and the mutation set. But the
+finding itself is the important result: five hardened rounds and a machine-checked proof
+suite did NOT make the code leak-proof against a fresh perspective. The honest claim is
+narrower than "provably correct" and stronger than "we stopped finding bugs": every defect,
+once found, cannot silently return -- and a blind attacker is how you find the ones the
+proofs do not yet cover. The general backstop added here (two short unit tokens with no
+abbreviation relationship are two different units) is an attempt to catch the NEXT untabulated
+dimension before a reviewer does, not instead of one.
+
 ## Reproduce
 
 ```bash
