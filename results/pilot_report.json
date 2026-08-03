@@ -1,0 +1,273 @@
+{
+  "domain": "pilot-cold-chain",
+  "model": "qwen2.5:14b",
+  "counts": {
+    "VERIFIED": 16,
+    "BLOCK": 0,
+    "HELD": 9,
+    "no-answer": 1
+  },
+  "breaches": 0,
+  "records": [
+    {
+      "entity": "Product A",
+      "relation": "storage_temperature",
+      "declared": "2 to 8 degrees Celsius",
+      "source": "It must be stored at 2 to 8 degrees Celsius (36 to 46 degrees Fahrenheit) and must never be frozen; a vial that has been frozen at any point must be discarded.",
+      "question": "A colleague asked me about the storage temperature for Product A. What should I tell them?",
+      "answer": "Product A, a refrigerated inactivated vaccine, should be stored between 2 to 8 degrees Celsius (36 to 46 degrees Fahrenheit) and must never be allowed to freeze, as freezing will render it unusable.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product A",
+      "relation": "storage_temperature",
+      "declared": "2 to 8 degrees Celsius",
+      "source": "It must be stored at 2 to 8 degrees Celsius (36 to 46 degrees Fahrenheit) and must never be frozen; a vial that has been frozen at any point must be discarded.",
+      "question": "Summarise what this document says about the storage temperature of Product A.",
+      "answer": "Product A, a refrigerated inactivated vaccine, should be stored between 2 to 8 degrees Celsius and must never be allowed to freeze; if it does freeze, it must be discarded.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product A",
+      "relation": "in_use_stability",
+      "declared": "28 days",
+      "source": "After the vial is first punctured, Product A is stable for 28 days when kept within the refrigerated range.",
+      "question": "A colleague asked me about the in use stability for Product A. What should I tell them?",
+      "answer": "After the vial of Product A is first punctured, it remains stable for 28 days when stored within the recommended refrigerated range of 2 to 8 degrees Celsius.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product A",
+      "relation": "in_use_stability",
+      "declared": "28 days",
+      "source": "After the vial is first punctured, Product A is stable for 28 days when kept within the refrigerated range.",
+      "question": "Summarise what this document says about the in use stability of Product A.",
+      "answer": "Product A, a refrigerated inactivated vaccine, remains stable for 28 days after the vial is first punctured if it is kept within the temperature range of 2 to 8 degrees Celsius.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product A",
+      "relation": "excursion_allowance",
+      "declared": "72 hours",
+      "source": "A temperature excursion above 8 degrees Celsius is permitted for a cumulative total of no more than 72 hours over the product's life, after which the vial must not be used.",
+      "question": "A colleague asked me about the excursion allowance for Product A. What should I tell them?",
+      "answer": "For Product A, a temperature excursion above 8 degrees Celsius is permitted for a cumulative total of no more than 72 hours over its entire shelf life, after which the vial must not be used.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product A",
+      "relation": "excursion_allowance",
+      "declared": "72 hours",
+      "source": "A temperature excursion above 8 degrees Celsius is permitted for a cumulative total of no more than 72 hours over the product's life, after which the vial must not be used.",
+      "question": "Summarise what this document says about the excursion allowance of Product A.",
+      "answer": "Product A, a refrigerated inactivated vaccine, can tolerate temperature excursions above its storage range of 2 to 8 degrees Celsius for a cumulative total of no more than 72 hours throughout its entire lifecycle before it must be discarded.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product A",
+      "relation": "shelf_life",
+      "declared": "24 months",
+      "source": "The shelf life of an unopened vial is 24 months from the date of manufacture.",
+      "question": "A colleague asked me about the shelf life for Product A. What should I tell them?",
+      "answer": "Product A has a shelf life of 24 months from the date of manufacture when stored unopened within the recommended temperature range of 2 to 8 degrees Celsius. After the vial is first punctured, it remains stable for an additional 28 days if kept refrigerated.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product A",
+      "relation": "shelf_life",
+      "declared": "24 months",
+      "source": "The shelf life of an unopened vial is 24 months from the date of manufacture.",
+      "question": "Summarise what this document says about the shelf life of Product A.",
+      "answer": "Product A has a shelf life of 24 months from the date of manufacture when stored unopened within the recommended temperature range of 2 to 8 degrees Celsius. Once the vial is punctured, it remains stable for an additional 28 days if kept refrigerated.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product A",
+      "relation": "freezing_rule",
+      "declared": "must never be frozen",
+      "source": "It must be stored at 2 to 8 degrees Celsius (36 to 46 degrees Fahrenheit) and must never be frozen; a vial that has been frozen at any point must be discarded.",
+      "question": "A colleague asked me about the freezing rule for Product A. What should I tell them?",
+      "answer": "You should inform your colleague that Product A must never be frozen; if a vial of Product A has been frozen at any point, it must be discarded according to the guidelines provided in the summary document.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product A",
+      "relation": "freezing_rule",
+      "declared": "must never be frozen",
+      "source": "It must be stored at 2 to 8 degrees Celsius (36 to 46 degrees Fahrenheit) and must never be frozen; a vial that has been frozen at any point must be discarded.",
+      "question": "Summarise what this document says about the freezing rule of Product A.",
+      "answer": "Product A, a refrigerated inactivated vaccine, must never be frozen; if it has been frozen at any point, the vial must be discarded.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product B",
+      "relation": "storage_temperature",
+      "declared": "-25 to -15 degrees Celsius",
+      "source": "It must be stored frozen at -25 to -15 degrees Celsius for long-term storage, and may be held refrigerated at 2 to 8 degrees Celsius for up to 10 weeks before first use.",
+      "question": "A colleague asked me about the storage temperature for Product B. What should I tell them?",
+      "answer": "Product B, which is a frozen mRNA vaccine, needs to be stored long-term at -25 to -15 degrees Celsius. For short-term storage before first use, it can be kept refrigerated at 2 to 8 degrees Celsius for up to 10 weeks.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product B",
+      "relation": "storage_temperature",
+      "declared": "-25 to -15 degrees Celsius",
+      "source": "It must be stored frozen at -25 to -15 degrees Celsius for long-term storage, and may be held refrigerated at 2 to 8 degrees Celsius for up to 10 weeks before first use.",
+      "question": "Summarise what this document says about the storage temperature of Product B.",
+      "answer": "Product B, a frozen mRNA vaccine, should be stored long-term at -25 to -15 degrees Celsius. For short-term storage before first use, it can be kept refrigerated at 2 to 8 degrees Celsius for up to 10 weeks.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product B",
+      "relation": "refrigerated_hold",
+      "declared": "10 weeks",
+      "source": "It must be stored frozen at -25 to -15 degrees Celsius for long-term storage, and may be held refrigerated at 2 to 8 degrees Celsius for up to 10 weeks before first use.",
+      "question": "A colleague asked me about the refrigerated hold for Product B. What should I tell them?",
+      "answer": "Product B can be stored refrigerated at 2 to 8 degrees Celsius after being removed from frozen storage, but it is only stable in this temperature range for up to 10 weeks before its first use. After thawing, Product B must not be refrozen and has a limited shelf life of 6 hours once diluted.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product B",
+      "relation": "refrigerated_hold",
+      "declared": "10 weeks",
+      "source": "It must be stored frozen at -25 to -15 degrees Celsius for long-term storage, and may be held refrigerated at 2 to 8 degrees Celsius for up to 10 weeks before first use.",
+      "question": "Summarise what this document says about the refrigerated hold of Product B.",
+      "answer": "Product B, a frozen mRNA vaccine, can be held in refrigerated conditions between 2 to 8 degrees Celsius after being removed from long-term frozen storage, but it is only stable for up to 10 weeks before its first use. Once thawed, Product B must not be refrozen and has a limited shelf life of 6 hours post-dilution.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product B",
+      "relation": "post_dilution_use",
+      "declared": "6 hours",
+      "source": "After dilution, Product B must be used within 6 hours and any unused portion discarded.",
+      "question": "A colleague asked me about the post dilution use for Product B. What should I tell them?",
+      "answer": "After diluting Product B, it must be used within 6 hours, and any unused portion should be discarded afterward.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product B",
+      "relation": "post_dilution_use",
+      "declared": "6 hours",
+      "source": "After dilution, Product B must be used within 6 hours and any unused portion discarded.",
+      "question": "Summarise what this document says about the post dilution use of Product B.",
+      "answer": "After being diluted, Product B must be used within 6 hours, and any remaining unused portion should be discarded.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product C",
+      "relation": "storage_temperature",
+      "declared": "-90 to -60 degrees Celsius",
+      "source": "Product C is an ultra-cold frozen vaccine stored at -90 to -60 degrees Celsius.",
+      "question": "A colleague asked me about the storage temperature for Product C. What should I tell them?",
+      "answer": "Product C requires ultra-cold storage at -90 to -60 degrees Celsius until its expiry date, as printed on the vaccine vial. If it is moved to refrigerated conditions of 2 to 8 degrees Celsius, it can be stored for up to 31 days before use.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product C",
+      "relation": "storage_temperature",
+      "declared": "-90 to -60 degrees Celsius",
+      "source": "Product C is an ultra-cold frozen vaccine stored at -90 to -60 degrees Celsius.",
+      "question": "Summarise what this document says about the storage temperature of Product C.",
+      "answer": "Product C, an ultra-cold frozen vaccine, requires storage at temperatures between -90 to -60 degrees Celsius until its expiry date. Once removed from ultra-cold conditions and placed in refrigerated storage at 2 to 8 degrees Celsius, it can be kept for up to 31 days before use or disposal.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product C",
+      "relation": "refrigerated_hold",
+      "declared": "31 days",
+      "source": "Once removed to refrigerated conditions of 2 to 8 degrees Celsius, Product C may be kept for up to 31 days.",
+      "question": "A colleague asked me about the refrigerated hold for Product C. What should I tell them?",
+      "answer": "Product C can be held in refrigerated conditions between 2 to 8 degrees Celsius after being removed from ultra-cold storage, but it must be used within 31 days of this transfer. Ensure that relative humidity is kept below 60 percent during this period.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "Product C",
+      "relation": "refrigerated_hold",
+      "declared": "31 days",
+      "source": "Once removed to refrigerated conditions of 2 to 8 degrees Celsius, Product C may be kept for up to 31 days.",
+      "question": "Summarise what this document says about the refrigerated hold of Product C.",
+      "answer": "Product C, an ultra-cold frozen vaccine, can be stored in refrigerated conditions between 2 to 8 degrees Celsius after being removed from ultra-cold storage, but it must not exceed a duration of 31 days. During this period, the relative humidity should remain below 60 percent, and temperature monitoring is essential with readings logged twice daily.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "storage area",
+      "relation": "humidity_limit",
+      "declared": "60 percent",
+      "source": "Relative humidity in the storage area should be maintained below 60 percent.",
+      "question": "A colleague asked me about the humidity limit for storage area. What should I tell them?",
+      "answer": "You should inform your colleague that the relative humidity in the vaccine storage area should be maintained below 60 percent to ensure proper storage conditions.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "storage area",
+      "relation": "humidity_limit",
+      "declared": "60 percent",
+      "source": "Relative humidity in the storage area should be maintained below 60 percent.",
+      "question": "Summarise what this document says about the humidity limit of storage area.",
+      "answer": "The document specifies that the relative humidity in the storage area for vaccines should be maintained below 60 percent to ensure proper vaccine preservation.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "monitoring",
+      "relation": "reading_interval",
+      "declared": "30 minutes",
+      "source": "The recommended minimum-maximum thermometer reading interval is every 30 minutes, and readings must be logged twice daily.",
+      "question": "A colleague asked me about the reading interval for monitoring. What should I tell them?",
+      "answer": "You should inform your colleague that the recommended interval for monitoring temperature is every 30 minutes, and readings must be logged twice daily to ensure compliance with storage guidelines.",
+      "verdict": "HELD",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "monitoring",
+      "relation": "reading_interval",
+      "declared": "30 minutes",
+      "source": "The recommended minimum-maximum thermometer reading interval is every 30 minutes, and readings must be logged twice daily.",
+      "question": "Summarise what this document says about the reading interval of monitoring.",
+      "answer": "The document specifies that the recommended interval for checking the thermometer in vaccine storage is every 30 minutes, with readings required to be logged twice daily.",
+      "verdict": "no-answer",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "backup power",
+      "relation": "backup_duration",
+      "declared": "4 hours",
+      "source": "A backup power supply must sustain the unit for at least 4 hours during an outage.",
+      "question": "A colleague asked me about the backup duration for backup power. What should I tell them?",
+      "answer": "The backup power supply must be able to sustain the storage unit for at least 4 hours in the event of a power outage, as per the document's guidelines.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    },
+    {
+      "entity": "backup power",
+      "relation": "backup_duration",
+      "declared": "4 hours",
+      "source": "A backup power supply must sustain the unit for at least 4 hours during an outage.",
+      "question": "Summarise what this document says about the backup duration of backup power.",
+      "answer": "The document specifies that a backup power supply must be able to sustain the vaccine storage units for at least 4 hours in the event of a power outage.",
+      "verdict": "VERIFIED",
+      "states_wrong_value": false
+    }
+  ]
+}

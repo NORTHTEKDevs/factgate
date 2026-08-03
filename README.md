@@ -185,6 +185,30 @@ been measured on. All reproducible from a clone:
 Live soak across eighteen domains: 335 claims adjudicated, every safety invariant holding on
 every verdict a real model produced.
 
+### A supervised pilot: run as if deployed, every verdict reviewed
+
+The measurements above are rates. A pilot is the gate run **as if deployed** on one document,
+with a human confirming every verdict against it — the question a deployment asks, not the
+leak rate. Full report: [`docs/PILOT.md`](docs/PILOT.md).
+
+A realistic cold-chain vaccine storage sheet (dual-unit temperature ranges, sub-zero storage,
+excursion allowances, conditional in-use windows), 26 natural questions, a local model and
+the real extractor in the loop:
+
+| | |
+|---|---|
+| Questions the model answered | 25 |
+| **VERIFIED — gate settled it, every one confirmed correct by review** | **16** |
+| Held, handed to the reviewer | 9 |
+| **Trust breaches — a wrong value confirmed** | **0** |
+| Reviewer load reduction, first pass | **64%** (→ ~72% after a two-word vocabulary edit the tool proposed) |
+
+Every VERIFIED was read against the document by hand and matched it; every HELD was a
+legitimate fail-closed hold, either genuine ambiguity the document created (two values stated
+together) or an undeclared qualifier `suggest_qualifiers` names in one line. **Not one wrong
+answer reached the user as confirmed** — the only outcome that fails a deployment. It is field
+evidence, not a certification: one document, one model, one reviewer.
+
 ### How this was reached, and what it does not claim
 
 Five rounds of adversarial review found defects one at a time, and by the fourth round most
