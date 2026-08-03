@@ -42,129 +42,51 @@ clean-clone acceptance check on every run.
 
 ## Measured results
 
-All numbers below are read directly from files in [`results/`](results/) — no number in
-this README is hand-typed without a source artifact backing it.
+Every number is read from a file in [`results/`](results/) and re-checked by
+`python scripts/harden.py`. The authoritative measurements are three, each with its own
+section below:
 
-**Gate decision-rule benchmark.** No LLM is involved in any row below: these call
-`verify_claim()` directly on pre-parsed `(subject, relation, object)` triples. They measure the
-gate's own false-accept rate, not an observed hallucination rate of any model.
+- **What is proven** — the machine-checked safety contract over the value grammar, author
+  config, and the two other verdict paths, with a mutation gate confirming each proof can
+  fail.
+- **Does the gate see what the model says** — routing coverage: **99%** of values a model
+  asserts in natural prose reach the gate, **0** wrong figures reach a user unguarded.
+- **Status** — the current per-domain leak and over-block rates, re-measured on every run:
+  **0/366 leak, 33/209 = 16% over-block** across fifteen domains, eleven authored blind.
 
-| Metric | Result | 95% CI | Source |
-|---|---|---|---|
-| False-VERIFIED rate, absent facts (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| False-VERIFIED rate, corrupted claims (N=1500) | **0.0%** | [0%, 0.26%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| True-fact verify coverage (N=1500) | **34%** | [31.6%, 36.4%] | [`results/guarantee_measurement.json`](results/guarantee_measurement.json) |
-| Test suite | **816 passed** | — | `pytest tests/ -q` |
+<details>
+<summary>Earlier architecture (RCK structured-triple backend)</summary>
 
-**LLM-in-the-loop results.** Only these involved a running model. Note the sample size.
-
-| Metric | Result | 95% CI | Source |
-|---|---|---|---|
-| Fine-tuned model tool-call rate, held-out prompts | **100%** (4/4) | — (N=4) | [`results/checkpoint_eval.json`](results/checkpoint_eval.json) |
-| Fine-tuned model gate leak (false-VERIFIED emitted) | **0** | — (N=4) | [`results/checkpoint_eval.json`](results/checkpoint_eval.json) |
-| End-to-end leak, live extraction, 15 domains | **0** (0/366) | [0%, 1.0%] | [`results/`](results/), reproducible via `scripts/run_domain_bench.py` |
-
-The gate never accepted a false claim as VERIFIED across 3,000 adversarial **structured-triple**
-trials (1,500 facts deliberately absent from the KB, 1,500 with a corrupted object). The cost of
-that guarantee is coverage: only 34% of genuinely true, stored facts clear the
-confidence threshold to VERIFY — the rest safely abstain (OUT_OF_KB / UNRESOLVED) rather
-than guess.
-
-Sample outputs from the fine-tuned checkpoint on prompts it never saw in training
-(`results/checkpoint_eval.json`) — it routes to the knowledge base instead of answering
-from its weights:
-
-```
-Q: "What category does foul_play belong to?"
--> <kb_q>{"s": "foul_play", "r": "isa", "unknown": "O"}</kb_q>
-
-Q: "What is bicycle capable of?"
--> <kb_q>{"s": "bicycle", "r": "can", "unknown": "O"}</kb_q>
-
-Q: "What category does octahedron belong to?"
--> <kb_q>{"s": "octahedron", "r": "isa", "unknown": "O"}</kb_q>
-```
-
-Full breakdown, including the gated-serving plumbing check (scripted inner, not a live model)
-and the recall-calibration fix that made the guarantee measurable, is in [`RESULTS.md`](RESULTS.md) and
-[`FINAL-REPORT.md`](FINAL-REPORT.md).
-
-## End-to-end gating on real model prose
-
-The measurements above adjudicate structured triples. Extending the gate to free prose was
-attempted, measured, and **failed for a structural reason** worth knowing before you build
-on this: a parameter-free verdict needs a canonical vocabulary on both sides, and free text
-does not have one. Two independent extractions of the same fact by the same model shared
-0 of 17 relation strings, so exact comparison is impossible.
-
-What does work is a **bounded domain**, where entities and relations are declared up front
-and extraction becomes linking rather than generation (`factgate/domain/`). Measured on 12
-declared facts with real model prose in both conditions:
-
-Extractor `qwen2.5:14b`, reproduced twice:
-
-| Metric | Result | 95% CI |
-|---|---|---|
-| Leak rate (wrong value reached the user as VERIFIED) | **0%** (0/24) | [0%, 14%] |
-| Over-block rate (correct value failed to verify) | **8%** (1/12) | [1%, 35%] |
-| Wrong values blocked with an explicit contradiction | **100%** (24/24) | — |
-
-Trials from one declared fact are correlated, so cite the fact-clustered intervals: leak
-0/12 facts [0%, 24%], over-block 1/12 facts [1%, 35%]. "0%" means no leak was observed at
-this sample size, not that leaks are impossible.
-
-**The over-block number is extractor-dependent and tuned.** The same harness on
-`llama3.2:3b` gives 64% over-block (leak still 0%), and this domain's `value_qualifiers`
-were fitted to its own observed failures.
-
-A **blind** test on a second, unrelated domain (consumer lending: percentages, currency,
-durations) with its vocabulary declared before any run measures the honest starting point:
-
-Vocabularies were declared before any run in every case marked blind, including two
-documents chosen mechanically rather than by a human (`scripts/select_eval_document.py`)
-and one whose vocabulary was written by an author who had never seen this codebase.
-
-Current per-domain numbers are in [Status](#status) below and are re-measured on every
-full run; they are not duplicated here, because two tables of the same thing drift.
-
-The first row is a real product-strategy memo (kept private; not vendored), with source quotes
-pulled programmatically from the file. Its first run held **11 of 11** correct values,
-because business prose writes prices as `$249` and the parser required the number first.
-That is now fixed, along with three measurement bugs that twice produced a false ~28% leak
-rate. The single remaining hold is `$95-145` -- a **range**, which the schema cannot
-express and the gate correctly refuses to confirm.
-
-**Leak rate was 0% in every configuration** — two value spaces, four vocabularies, blind
-and tuned. The safety property generalises; the coverage cost is earned per-domain by
-declaring vocabulary, and an undeclared qualifier always costs a HELD, never a leak.
-Details in [`docs/HALLUGATE.md`](docs/HALLUGATE.md).
-
-Both rates are always reported together. Either alone is meaningless: a gate that blocks
-everything has a 0% leak rate, and an early version of this pipeline did exactly that.
-
-Full write-up, including a live false-BLOCK bug and its fix, is in
-[`docs/HALLUGATE.md`](docs/HALLUGATE.md).
+Before the standalone domain gate, the verdict was backed by [RCK](https://github.com/NORTHTEKDevs/rck),
+a bipolar-VSA fact store, and measured on pre-parsed `(subject, relation, object)` triples:
+**0.0%** false-VERIFIED across 3,000 adversarial trials (N=1500 absent + N=1500 corrupted,
+`results/guarantee_measurement.json`), at **34%** verify coverage. That backend is now
+optional research code — the clean-clone acceptance check asserts the domain gate does not
+need it — and those triple-level numbers are superseded by the live-extraction measurements
+above. Kept here because they are real and reproducible, not because they are the current
+claim. Full RCK-era write-up: [`RESULTS.md`](RESULTS.md), [`FINAL-REPORT.md`](FINAL-REPORT.md).
+</details>
 
 ### Status
 
 ### What is proven, and by what
 
 Every claim below is re-checked by `python scripts/harden.py` in about 80 seconds, and by
-CI on every push. It does not merely run the proofs -- it then **breaks the code ten ways
+CI on every push. It does not merely run the proofs -- it then **breaks the code twelve ways
 and requires each proof to notice**. A surviving mutant fails the build, because it marks a
 defence that nothing tests.
 
 ```
 PROOFS
-  full suite                                          778 passed
+  full suite                                          816 passed
   value grammar vs exact-arithmetic oracle             13 passed
   residue and conditional verdict paths                79 passed
   safety invariants I1-I7                               9 passed
 DOMAINS
-  every shipped domain loads, validates, lints clean   35 loaded, 0 bad
-MUTATION -- each proof must CATCH a broken defence    10 mutants, 10 caught
+  every shipped domain loads, validates, lints clean   43 loaded, 0 bad
+MUTATION -- each proof must CATCH a broken defence    12 mutants, 12 caught
 
-HARDEN PASSED: 15/15 checks in 77s
+HARDEN PASSED: 19/19 checks in 148s
 ```
 
 | | |
@@ -354,6 +276,12 @@ python scripts/run_domain_bench.py --model llama3.2:3b
 
 ## How it works
 
+The current domain gate is a slot-filling extractor plus a parameter-free comparator:
+prose in, a claim in the declared vocabulary out, adjudicated against the fact set. The
+diagram below is the **earlier RCK tool-call design** (`<kb_q>` protocol, `verify_claim`),
+kept for readers of the RCK-era write-ups; the shape is the same, the extraction path
+differs.
+
 ```
  user question
       |
@@ -401,23 +329,20 @@ whether its own claim is true.
 
 **Honest limits, stated plainly:**
 
-- **Extractor recall is the exponent.** The guarantee only covers claims the extraction
-  step actually routes through the gate. A claim the model asserts in free text without
-  emitting a KB lookup bypasses verification entirely — v1 relies on a tool-call
-  protocol (`<kb_q>...</kb_q>`), not a neural free-text claim extractor. A missed
-  extraction is a missed gate check.
-- **And the current metric cannot see those misses.** `gated_hallucination_rate`
-  (`factgate/bench/runner.py:264-266`) is `gate_blocked_total / gate_claims_total`, where
-  `gate_claims_total` counts only claims that were successfully extracted. An untagged
-  prose claim contributes to neither the numerator nor the denominator, so it is invisible
-  to the metric rather than counted as a leak. Read that number as "of the claims the gate
-  saw, how many did it block" — never as an end-to-end leak rate. Measuring the real
-  end-to-end rate requires a free-text extractor that does not yet exist here.
-- **Domain-bounded.** The guarantee holds only for facts within RCK's stored domain.
-  Anything RCK was never given is neither confirmed nor denied — it abstains.
-- **Conservative coverage.** 34% true-verify coverage means most true facts currently
-  abstain rather than confirm. This is a deliberate, measured, safe failure direction —
-  not a defect being hidden.
+- **Extractor recall is the exponent, and it is now measured.** The guarantee only covers
+  claims the extraction step routes through the gate. That denominator was unmeasured for
+  most of the project's life; it no longer is. `scripts/routing_coverage.py` asks four
+  natural framings per fact and finds **99%** of values a model asserts in prose reach the
+  gate, with **0** wrong figures reaching a user unguarded (see
+  [Does the gate see what the model says](#does-the-gate-actually-see-what-the-model-says)).
+  The domain gate uses a slot-filling extractor (`factgate/domain/link.py`) with
+  deterministic grounding guards, not a tool-call protocol — the `<kb_q>` path below is the
+  earlier RCK design.
+- **Domain-bounded.** The guarantee holds only for facts within the declared fact set.
+  Anything the fact set was never given is neither confirmed nor denied — it abstains.
+- **Conservative coverage.** Roughly 16% of correct values are held rather than confirmed
+  (Status, below). This is a deliberate, measured, safe failure direction — a review queue,
+  not a wrong answer — not a defect being hidden.
 - **Compositional implicature is out of scope.** The gate verifies triples
   (subject, relation, object), not multi-step logical entailment or pragmatic inference
   layered on top of verified facts.
