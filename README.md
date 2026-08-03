@@ -42,7 +42,7 @@ clean-clone acceptance check on every run.
 
 ## Measured results
 
-Every number is read from a file in [`results/`](results/) and re-checked by
+Every number is read from a file in [`results/`](https://github.com/NORTHTEKDevs/factgate/blob/main/results/) and re-checked by
 `python scripts/harden.py`. The authoritative measurements are three, each with its own
 section below:
 
@@ -51,7 +51,7 @@ section below:
   fail.
 - **Does the gate see what the model says** — routing coverage: **99%** of values a model
   asserts in natural prose reach the gate, **0** wrong figures reach a user unguarded.
-- **Status** — the current per-domain leak and over-block rates, re-measured on every run:
+- **Measured behaviour** — the current per-domain leak and over-block rates, re-measured on every run:
   **0/366 leak, 33/209 = 16% over-block** across fifteen domains, eleven authored blind.
 
 <details>
@@ -64,10 +64,8 @@ a bipolar-VSA fact store, and measured on pre-parsed `(subject, relation, object
 optional research code — the clean-clone acceptance check asserts the domain gate does not
 need it — and those triple-level numbers are superseded by the live-extraction measurements
 above. Kept here because they are real and reproducible, not because they are the current
-claim. Full RCK-era write-up: [`RESULTS.md`](RESULTS.md), [`FINAL-REPORT.md`](FINAL-REPORT.md).
+claim. Full RCK-era write-up: [`RESULTS.md`](https://github.com/NORTHTEKDevs/factgate/blob/main/RESULTS.md), [`FINAL-REPORT.md`](https://github.com/NORTHTEKDevs/factgate/blob/main/FINAL-REPORT.md).
 </details>
-
-### Status
 
 ### What is proven, and by what
 
@@ -189,7 +187,7 @@ every verdict a real model produced.
 
 The measurements above are rates. A pilot is the gate run **as if deployed** on one document,
 with a human confirming every verdict against it — the question a deployment asks, not the
-leak rate. Full report: [`docs/PILOT.md`](docs/PILOT.md).
+leak rate. Full report: [`docs/PILOT.md`](https://github.com/NORTHTEKDevs/factgate/blob/main/docs/PILOT.md).
 
 A realistic cold-chain vaccine storage sheet (dual-unit temperature ranges, sub-zero storage,
 excursion allowances, conditional in-use windows), 26 natural questions, a local model and
@@ -249,7 +247,7 @@ reviewing the held queue, the two real documents cost a review pass each, and th
 evaluation corpora are not in this repository so those two rows cannot be reproduced from
 a clone. What is verified is stated above and re-runnable for the four public domains.
 
-New authors should start with [`docs/AUTHORING.md`](docs/AUTHORING.md).
+New authors should start with [`docs/AUTHORING.md`](https://github.com/NORTHTEKDevs/factgate/blob/main/docs/AUTHORING.md).
 
 Two harnesses verify the things a test suite cannot:
 
@@ -373,7 +371,7 @@ whether its own claim is true.
 - **Domain-bounded.** The guarantee holds only for facts within the declared fact set.
   Anything the fact set was never given is neither confirmed nor denied — it abstains.
 - **Conservative coverage.** Roughly 16% of correct values are held rather than confirmed
-  (Status, below). This is a deliberate, measured, safe failure direction — a review queue,
+  (Measured behaviour, below). This is a deliberate, measured, safe failure direction — a review queue,
   not a wrong answer — not a defect being hidden.
 - **Compositional implicature is out of scope.** The gate verifies triples
   (subject, relation, object), not multi-step logical entailment or pragmatic inference
@@ -387,7 +385,7 @@ gfx1151) integrated GPU — no discrete GPU, no cloud. 200 stable steps complete
 53k RCK-grounded examples; the checkpoint shows a 100% tool-call rate and 0 gate leaks on
 held-out prompts (table above). Full training log, the ROCm-on-iGPU stability issues hit
 and worked around, and honest limits of that run are in
-[`docs/ROCM-STRIX-HALO-TRAINING.md`](docs/ROCM-STRIX-HALO-TRAINING.md).
+[`docs/ROCM-STRIX-HALO-TRAINING.md`](https://github.com/NORTHTEKDevs/factgate/blob/main/docs/ROCM-STRIX-HALO-TRAINING.md).
 
 ## Reproduce
 

@@ -32,3 +32,4 @@ results/domain_gate_bench_rain-*
 
 # Derived artifacts from private source documents (domain spec sets "private": true)
 results/private/
+dist/

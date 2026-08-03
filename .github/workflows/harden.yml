@@ -21,3 +21,9 @@ jobs:
         run: python scripts/harden.py
       - name: clean-clone acceptance
         run: python scripts/acceptance.py
+      - name: wheel builds and installs standalone
+        run: |
+          pip install build
+          python -m build --wheel
+          pip install --force-reinstall dist/*.whl
+          cd /tmp && python -c "import factgate; from factgate.domain.gate import gate_claim; from factgate.domain.factset import FactSet; fs=FactSet.from_dict({'domain':'d','entities':{'x':['ex']},'relations':{'p':{'kind':'quantity'}},'facts':[{'s':'x','r':'p','o':'5 mg','source':'It is 5 mg.'}]}); assert gate_claim(fs,'ex','p','5 mg').status=='VERIFIED'; print('wheel ok', factgate.__version__)"

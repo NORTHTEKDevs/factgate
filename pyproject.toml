@@ -4,40 +4,50 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "factgate"
-version = "0.1.0"
-description = "Fact-verification gate for LLM claims backed by RCK (relational compositional knowledge)."
+version = "0.3.0"
+description = "A hallucination gate whose verdict is a comparison, not a judgement: parameter-free fact verification for LLM claims over a declared domain."
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.11"
 authors = [
-    { name = "Kristian Baer / Northtek" },
+    { name = "Northtek", email = "info@northtek.io" },
+]
+keywords = [
+    "llm", "hallucination", "guardrails", "fact-checking", "verification",
+    "fail-closed", "grounding", "rag",
 ]
 classifiers = [
     # No "License :: OSI Approved :: ..." classifier here on purpose: setuptools >= 77
     # hard-errors when a legacy license classifier is combined with the SPDX `license`
     # field above, which made `pip install -e .` fail outright for anyone following the
     # README. The SPDX expression is the supported way to declare this.
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-# numpy was declared but never imported anywhere in factgate/; it is a
-# transitive need of the optional rck engine, which declares it itself.
+# The domain gate (factgate.domain) is dependency-free by design. pydantic is used only by
+# the research data-generation code that ships alongside it.
 dependencies = [
     "pydantic>=2.0",
 ]
 
 [project.urls]
 Homepage = "https://github.com/NORTHTEKDevs/factgate"
-RCK = "https://github.com/NORTHTEKDevs/rck"
+Documentation = "https://github.com/NORTHTEKDevs/factgate/blob/main/docs/HALLUGATE.md"
+Issues = "https://github.com/NORTHTEKDevs/factgate/issues"
+Changelog = "https://github.com/NORTHTEKDevs/factgate/blob/main/CHANGELOG.md"
 
-# rck is not on PyPI. Install it separately as an editable local
-# package before running factgate, e.g.:
-#   pip install -e ../rck
-# See README.md.
-
+# The optional rck knowledge-base backend is research code from an earlier design and is
+# not on PyPI; the domain gate does not need it (asserted by scripts/acceptance.py on
+# every run). To use it anyway: pip install -e ../rck
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0",
+    "build>=1.0",
 ]
 
 [tool.setuptools.packages.find]

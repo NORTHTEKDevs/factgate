@@ -5,4 +5,4 @@ The supported surface is `factgate.domain` (the parameter-free gate) plus `factg
 alongside it and carries no stability promise.
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
