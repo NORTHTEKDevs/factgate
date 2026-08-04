@@ -650,7 +650,9 @@ It failed on the first run, and one failure was a real public-facing defect:
 **Four test modules hard-required `rck`, which is not on PyPI.** A stranger running
 `pytest tests/` got four collection ERRORS and zero tests executed -- a repo that looks
 broken on arrival. Optional dependencies must skip, not explode. They now use
-`pytest.importorskip`, so a fresh clone reports **292 passed, 4 skipped, 0 errors**.
+`pytest.importorskip`, so a fresh clone reports **654 passed, 4 skipped, 0 errors** (as
+of v0.3.0; the figure was 292 when this section was first written and grows with the
+suite).
 
 (The other failure was in the acceptance script itself: it invoked pytest before installing
 it. Worth recording, because a harness that reports a false failure trains you to ignore it.)
@@ -662,7 +664,7 @@ documented API works from outside the repo       PASS
 domain gate needs no knowledge-base engine       PASS
 README quickstart test passes in the fresh env   PASS
 every shipped demo domain loads clean            PASS
-full test suite passes in the fresh env          PASS   292 passed, 4 skipped
+full test suite passes in the fresh env          PASS   654 passed, 4 skipped
 ```
 
 ## 13. Soaking the live pipeline

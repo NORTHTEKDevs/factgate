@@ -257,8 +257,9 @@ python scripts/soak.py          # live pipeline, safety invariants on every verd
 ```
 
 `acceptance.py` found that four test modules hard-required an optional dependency, so a
-fresh clone got four collection errors and ran zero tests. It now reports 292 passed,
-4 skipped. `soak.py`'s first full campaign adjudicated **142 live verdicts across eight
+fresh clone got four collection errors and ran zero tests. A clean-clone run now reports
+654 passed, 4 skipped -- fewer than the full suite's 816 because the minimal environment
+runs only the tests that need no optional extras. `soak.py`'s first full campaign adjudicated **142 live verdicts across eight
 domains with every safety invariant holding** -- the first check here that exercises the
 configuration production would actually run.
 
